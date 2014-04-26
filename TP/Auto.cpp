@@ -7,6 +7,7 @@
 
 #include "Auto.h"
 #include "ManejoTiempos.h"
+#include <stdio.h>
 
 Auto::Auto() {
 	patente = generarPatenteRandom();
@@ -27,7 +28,7 @@ int Auto::llenar(){
 		return 0;
 
 	int tiempoPorLitro = numeroAlAzar(tiempoPorLitroMin, tiempoPorLitroMax);
-	float tiempo = (float)(tiempoPorLitro * capacidadTanque);
+	int tiempo = tiempoPorLitro * capacidadTanque;
 	//Esperamos a que se termine el tiempo determinado:
 	usleep(tiempo);
 
