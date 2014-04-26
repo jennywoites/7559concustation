@@ -15,8 +15,8 @@ class Auto {
 		int capacidadTanque;
 		bool lleno;
 
-		static const int cantidadLetras = 3;
-		static const int cantidadNumeros = 3;
+		static const unsigned int cantidadLetras = 3;
+		static const unsigned int cantidadNumeros = 3;
 		static const int capacidadMin = 10;
 		static const int capacidadMax = 70;
 
