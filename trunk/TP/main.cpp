@@ -8,16 +8,18 @@
 #include <stdio.h>
 #include "Auto.h"
 #include "ManejoTiempos.h"
+#include "GeneradorAutos.h"
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 
 int main(void){
 	inicializarRandom();
-	printf("Número al azar del 1 al 10: %d\n", numeroAlAzar(1,10));
-	printf("Valor de variable aleatoria exponencial de media 1: %f\n", tiempoAlAzarExponencial(1));
-
-	Auto fitito;
-	printf("Patente aleatoria de un auto: %s\n", fitito.getPatente().c_str());
-	printf("Le llené %d litros al auto\n", fitito.llenar());
-	return 0;
+	GeneradorAutos generator(15000000);
+	pid_t id = generator.generar();
+	if (id == 0) exit (0);
+	wait(NULL);
+	exit(0);
 }
 
 
