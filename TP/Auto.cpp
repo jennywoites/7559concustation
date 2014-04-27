@@ -7,7 +7,7 @@
 
 #include "Auto.h"
 #include "ManejoTiempos.h"
-#include <stdio.h>
+#include <unistd.h>
 
 Auto::Auto() {
 	patente = generarPatenteRandom();
