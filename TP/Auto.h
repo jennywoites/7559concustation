@@ -20,7 +20,7 @@ class Auto {
 		static const int capacidadMin = 10;
 		static const int capacidadMax = 70;
 
-		//estas dos estan en milisegundos
+		//estas dos estan en microsegundos
 		static const int tiempoPorLitroMin = 10;
 		static const int tiempoPorLitroMax = 1000;
 
