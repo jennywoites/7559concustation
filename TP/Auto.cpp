@@ -15,6 +15,12 @@ Auto::Auto() {
 	lleno = false;
 }
 
+Auto::Auto(std::string patente, int capacidad){
+	this->capacidadTanque = capacidad;
+	this->patente = patente;
+	this->lleno = false;
+}
+
 Auto::~Auto() {
 
 }
@@ -27,7 +33,7 @@ int Auto::llenar(){
 	if (lleno)
 		return 0;
 
-	int tiempoPorLitro = numeroAlAzar(tiempoPorLitroMin, tiempoPorLitroMax);
+	int tiempoPorLitro = numeroAlAzar(TIEMPO_POR_LITRO_MIN, TIEMPO_POR_LITRO_MAX);
 	int tiempo = tiempoPorLitro * capacidadTanque;
 	//Esperamos a que se termine el tiempo determinado:
 	usleep(tiempo);
@@ -37,15 +43,15 @@ int Auto::llenar(){
 }
 
 int Auto::generarTanqueRandom() const{
-	return numeroAlAzar(capacidadMin,capacidadMax);
+	return numeroAlAzar(CAPACIDAD_MIN,CAPACIDAD_MAX);
 }
 
 std::string Auto::generarPatenteRandom() const{
 	std::string pat = "";
-	for (unsigned int i = 0; i < cantidadLetras; i++){
+	for (unsigned int i = 0; i < CANTIDAD_LETRAS; i++){
 		pat += 'A' + numeroAlAzar(0,25);
 	}
-	for (unsigned int i = 0; i < cantidadNumeros; i++){
+	for (unsigned int i = 0; i < CANTIDAD_NUMEROS; i++){
 		pat += '0' + numeroAlAzar(0,9);
 	}
 	return pat;

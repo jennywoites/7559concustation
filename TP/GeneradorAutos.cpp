@@ -12,7 +12,7 @@
 #include <sstream>
 #include <string>
 #include <stdio.h>
-
+#include <stdlib.h>
 using namespace std;
 
 GeneradorAutos::GeneradorAutos(float media) {
@@ -34,10 +34,10 @@ std::string generarMensaje(int numAuto, string patente){
 	return mensaje;
 }
 
-pid_t GeneradorAutos::generar(){
+void GeneradorAutos::generar(){
 	pid_t id = fork();
 	if (id != 0)
-		return id;
+		return;
 	inicializarRandom();
 	int numAuto = 0;
 	while(true){ //TODO: con la variable de la signal handler
@@ -49,7 +49,7 @@ pid_t GeneradorAutos::generar(){
 		numAuto++;
 	}
 
-	return 0; //yo no soy el principal!
+	exit(0);
 }
 
 
