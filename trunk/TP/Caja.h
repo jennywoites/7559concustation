@@ -7,13 +7,14 @@
 
 #ifndef CAJA_H_
 #define CAJA_H_
+#include "MecanismoConcurrencia/MemoriaCompartida.h"
 
 class Caja {
 private:
-	float plata;
+	MemoriaCompartida<float> plata;
 public:
 	Caja();
-	Caja(int plataInicial);
+	Caja(float plataInicial);
 	virtual ~Caja();
 
 	void depositar(float plata_a_agregar);

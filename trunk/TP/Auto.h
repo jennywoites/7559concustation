@@ -15,19 +15,20 @@ class Auto {
 		int capacidadTanque;
 		bool lleno;
 
-		static const unsigned int cantidadLetras = 3;
-		static const unsigned int cantidadNumeros = 3;
-		static const int capacidadMin = 10;
-		static const int capacidadMax = 70;
+		static const unsigned int CANTIDAD_LETRAS = 3;
+		static const unsigned int CANTIDAD_NUMEROS = 3;
+		static const int CAPACIDAD_MIN = 10;
+		static const int CAPACIDAD_MAX = 70;
 
 		//estas dos estan en microsegundos
-		static const int tiempoPorLitroMin = 10;
-		static const int tiempoPorLitroMax = 1000;
+		static const int TIEMPO_POR_LITRO_MIN = 10;
+		static const int TIEMPO_POR_LITRO_MAX = 1000;
 
 	public:
 
 		/*Crea auto con patente aleatoria, y tanque aleatorio*/
 		Auto();
+		Auto(std::string, int);
 		virtual ~Auto();
 
 		/*Devuelve la patente del auto*/

@@ -6,17 +6,18 @@
  */
 
 #include "Caja.h"
+#include "constantesArchivos.h"
 
 Caja::Caja() {
-	plata = 0;
+	plata = MemoriaCompartida<float>(ARCHIVO_CAJA, CAJA);
 }
 
-Caja::Caja(int plataInicial){
-	plata = plataInicial;
+Caja::Caja(float plataInicial){
+	plata = MemoriaCompartida<float>(ARCHIVO_CAJA, CAJA);
+	plata.escribir(plataInicial);
 }
 
 Caja::~Caja() {
-
 }
 
 void Caja::depositar(float plata_a_agregar){
@@ -24,9 +25,9 @@ void Caja::depositar(float plata_a_agregar){
 		//deberia lanzar una excepcion
 		return;
 	}
-	plata += plata_a_agregar;
+	plata.incrementar(plata_a_agregar);
 }
 
 float Caja::verMonto() const{
-	return plata;
+	return plata.leer();
 }

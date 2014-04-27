@@ -6,7 +6,9 @@
  */
 
 #include <stdio.h>
+#include <iostream>
 #include "Auto.h"
+#include "Jefe.h"
 #include "ManejoTiempos.h"
 #include "GeneradorAutos.h"
 #include <unistd.h>
@@ -15,9 +17,12 @@
 
 int main(void){
 	inicializarRandom();
-	GeneradorAutos generator(15000000);
-	pid_t id = generator.generar();
-	if (id == 0) exit (0);
+	GeneradorAutos generator(3000000);
+	generator.generar();
+
+	Jefe jefe("Martinez");
+	jefe.atenderAutos();
+
 	wait(NULL);
 	exit(0);
 }

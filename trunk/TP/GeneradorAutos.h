@@ -19,7 +19,7 @@ public:
 	GeneradorAutos(float media);
 	virtual ~GeneradorAutos();
 
-	pid_t generar();
+	void generar();
 
 };
 
