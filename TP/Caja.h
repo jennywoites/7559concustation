@@ -23,6 +23,8 @@ public:
 
 	void cerrar();
 
+	void abrir();
+
 };
 
 #endif /* CAJA_H_ */
