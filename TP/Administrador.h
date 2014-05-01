@@ -7,14 +7,20 @@
 
 #ifndef ADMINISTRADOR_H_
 #define ADMINISTRADOR_H_
+#include "Caja.h"
 
-namespace std {
+using namespace std;
 
 class Administrador {
+private:
+	Caja caja;
+	float plata_anterior;
+	float media;
 public:
-	Administrador();
+	Administrador(float);
 	virtual ~Administrador();
+
+	void mirarDinero();
 };
 
-} /* namespace std */
 #endif /* ADMINISTRADOR_H_ */

@@ -6,16 +6,37 @@
  */
 
 #include "Administrador.h"
+#include "ManejoTiempos.h"
+#include <unistd.h>
+#include <stdlib.h>
+#include <cmath>
 
-namespace std {
-
-Administrador::Administrador() {
-	// TODO Auto-generated constructor stub
-
+Administrador::Administrador(float m) {
+	plata_anterior = 0;
+	media = m;
 }
 
 Administrador::~Administrador() {
-	// TODO Auto-generated destructor stub
+
 }
 
-} /* namespace std */
+void Administrador::mirarDinero(){
+	if (fork() != 0)
+		return;
+	while (true){ //envio de señal
+		float espera = tiempoAlAzarExponencial(media);
+		int tiempo_entero = floor(espera);
+		usleep(tiempo_entero);
+
+		cout << "Administrador: voy a la caja\n"; //a cout o log, despues lo vemos
+		float plata_actual = caja.verMonto();
+		if (plata_anterior != plata_actual){
+			plata_anterior = plata_actual;
+			cout << "Administrador: Hay mas plata!\n"
+		}else{
+			cout << "Administrador: Hay la misma cantidad de plata :(\n";
+		}
+	}
+	exit(0);
+}
+
