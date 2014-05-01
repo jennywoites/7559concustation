@@ -30,6 +30,7 @@ void Empleado::atenderAutos(){
 	if (id != 0)
 		return;
 	Auto autito;
+	caja.abrir();
 	while(leerAuto(&autito)){
 		int surtidor = tomarSurtidor();
 		int litros = autito.llenar();
