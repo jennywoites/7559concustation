@@ -14,16 +14,18 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include "Caja.h"
 
 int main(void){
-	inicializarRandom();
-	GeneradorAutos generator(3000000);
-	generator.generar();
 
-	Jefe jefe("Martinez");
-	jefe.atenderAutos();
+	Caja caja(0);
+	caja.depositar(1000);
+	/*if (caja.verMonto() == 1000){
+		cout << "Todo ok!"<<endl;
+	}else{
+		cout << "TODO MAL " << caja.verMonto() << endl;
+	}*/
 
-	wait(NULL);
 	exit(0);
 }
 
