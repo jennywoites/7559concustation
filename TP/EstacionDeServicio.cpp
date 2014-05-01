@@ -8,6 +8,16 @@
 #include "EstacionDeServicio.h"
 #include <sys/wait.h>
 
+EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos){
+	cantEmpleados = empleados;
+	cantSurtidores = surtidores;
+	mediaAutos = mediaGenAutos;
+}
+
+EstacionDeServicio::~EstacionDeServicio() {
+	// TODO Auto-generated destructor stub
+}
+
 void EstacionDeServicio::crearEmpleados(){
 	for(int i = 0; i<cantEmpleados; i++){
 		Empleado e ("0"+i, cantSurtidores);
@@ -19,13 +29,17 @@ void EstacionDeServicio::abrir(float plataInicial){
 	//abrir Log
 	//caja.abrir();
 	crearEmpleados();
-	Jefe j ("UltraAlterMaster");
+
+	PipeAutos generacion;
+
+	Jefe j ("UltraAlterMaster", generacion);
 	j.atenderAutos();
-	GeneradorAutos g (mediaAutos);
+	GeneradorAutos g (mediaAutos);//, &generacion);
 	g.generar();
 	Administrador a (100); //FIXME
 	a.mirarDinero();
 }
+
 
 void EstacionDeServicio::esperarCierre(){
 	while (wait(NULL)) {
@@ -42,13 +56,4 @@ void EstacionDeServicio::cerrar(){
 	caja.cerrar();
 	// finalizar log
 	esperarCierre();
-}
-
-EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos){ {
-	cantEmpleados = empleados;
-	cantSurtidores = surtidores;
-	mediaAutos = mediaGenAutos;
-}
-
-EstacionDeServicio::~EstacionDeServicio() {
 }
