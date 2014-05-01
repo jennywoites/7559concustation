@@ -21,6 +21,8 @@ public:
 
 	float verMonto() const;
 
+	void cerrar();
+
 };
 
 #endif /* CAJA_H_ */

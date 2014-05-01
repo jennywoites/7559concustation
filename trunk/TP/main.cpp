@@ -15,17 +15,17 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include "Caja.h"
+#include "Administrador.h"
+
 
 int main(void){
 
+	Administrador admin(10000);
+	admin.mirarDinero();
 	Caja caja(0);
-	caja.depositar(1000);
-	/*if (caja.verMonto() == 1000){
-		cout << "Todo ok!"<<endl;
-	}else{
-		cout << "TODO MAL " << caja.verMonto() << endl;
-	}*/
-
+	wait(NULL);
+	cout <<"Cierro la caja\n";
+	caja.cerrar();
 	exit(0);
 }
 
