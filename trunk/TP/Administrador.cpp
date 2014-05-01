@@ -32,7 +32,7 @@ void Administrador::mirarDinero(){
 		float plata_actual = caja.verMonto();
 		if (plata_anterior != plata_actual){
 			plata_anterior = plata_actual;
-			cout << "Administrador: Hay mas plata!\n"
+			cout << "Administrador: Hay mas plata!\n";
 		}else{
 			cout << "Administrador: Hay la misma cantidad de plata :(\n";
 		}
