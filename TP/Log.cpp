@@ -24,6 +24,7 @@ Log::~Log() {
 void Log::escribir(){
 	if (fork() != 0)
 		return;
+	open(archivo.c_str(), O_CREAT);
 	int salida = open(archivo.c_str(), O_WRONLY);
 	dup2(salida,1);
 
@@ -33,5 +34,6 @@ void Log::escribir(){
 		if (LOG_MODO == LOG_DEBUG)
 			std::cout << letra;
 	}
+	std::cout <<"Se cerro el log"<<endl;
 	exit(0);
 }
