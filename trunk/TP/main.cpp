@@ -19,13 +19,11 @@
 
 
 int main(void){
-
+	Caja caja(0);
 	Administrador admin(10000);
 	admin.mirarDinero();
-	Caja caja(0);
 	wait(NULL);
 	cout <<"Cierro la caja\n";
-	caja.cerrar();
 	exit(0);
 }
 
