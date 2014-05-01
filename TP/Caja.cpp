@@ -31,3 +31,7 @@ void Caja::depositar(float plata_a_agregar){
 float Caja::verMonto() const{
 	return plata.leer();
 }
+
+void Caja::cerrar(){
+	plata.liberar();
+}

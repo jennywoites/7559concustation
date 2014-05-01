@@ -19,6 +19,7 @@ Empleado::Empleado(std::string name, int cantidadSurtidores) {
 		MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
 		this->surtidores.push_back(surtidor);
 	}
+	caja = Caja();
 }
 
 Empleado::~Empleado() {
@@ -36,6 +37,7 @@ void Empleado::atenderAutos(){
 		float plata = litros * PRECIO_POR_LITRO;
 		caja.depositar(plata);
 	}
+	caja.cerrar();
 	exit(0);
 }
 

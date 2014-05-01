@@ -23,7 +23,9 @@ Administrador::~Administrador() {
 void Administrador::mirarDinero(){
 	if (fork() != 0)
 		return;
-	while (true){ //envio de señal
+
+	int i = 0;
+	while (i < 10){ //envio de señal
 		float espera = tiempoAlAzarExponencial(media);
 		int tiempo_entero = floor(espera);
 		usleep(tiempo_entero);
@@ -36,7 +38,9 @@ void Administrador::mirarDinero(){
 		}else{
 			cout << "Administrador: Hay la misma cantidad de plata :(\n";
 		}
+		i++;
 	}
+	caja.cerrar();
 	exit(0);
 }
 
