@@ -6,6 +6,7 @@
  */
 
 #include "EstacionDeServicio.h"
+#include <sys/wait.h>
 
 void EstacionDeServicio::crearEmpleados(){
 	for(int i = 0; i<cantEmpleados; i++){
@@ -26,12 +27,21 @@ void EstacionDeServicio::abrir(float plataInicial){
 	a.mirarDinero();
 }
 
+void EstacionDeServicio::esperarCierre(){
+	while (wait(NULL)) {
+	   if (errno == ECHILD) {
+	      break;
+	   }
+	}
+}
+
 void EstacionDeServicio::cerrar(){
 	// enviar senial a generador
 	// esperar cierre
 	// senial a admin
 	caja.cerrar();
 	// finalizar log
+	esperarCierre();
 }
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos){ {
