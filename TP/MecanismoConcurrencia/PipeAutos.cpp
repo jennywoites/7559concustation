@@ -6,7 +6,10 @@
  */
 
 #include "PipeAutos.h"
-
+#include "../structAuto.h"
+#include <iostream>
+#include <stdlib.h>
+#include <string.h>
 using namespace std;
 
 PipeAutos::PipeAutos() {
@@ -19,10 +22,17 @@ PipeAutos::~PipeAutos() {
 }
 
 bool PipeAutos :: leerAuto ( Auto* autito ) {
-	ssize_t leido = Pipe::leer(static_cast<void*>(autito), sizeof(*autito));
-	return (leido==sizeof(*autito));
+	char serial[7];
+	ssize_t leido = Pipe::leer(static_cast<void*>(serial), sizeof(serial));
+	//FIXME: des-serializar
+	*autito = Auto(serial, 10);
+	return (leido==sizeof(serial));
 }
 
 bool PipeAutos :: escribirAuto ( const Auto autito ) {
-	return Pipe::escribir(static_cast<const void*>(&autito), sizeof(autito));
+	//FIXME: serializar
+	char serial[7];
+	strcpy(serial, "FIXME!");
+	ssize_t escrito = Pipe::escribir(static_cast<const void*>(serial), sizeof(serial));
+	return (escrito==sizeof(serial));
 }
