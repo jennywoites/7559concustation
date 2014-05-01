@@ -23,6 +23,7 @@ private:
 	Caja caja;
 
 	void crearEmpleados();
+	void EstacionDeServicio::esperarCierre();
 public:
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos);
 	virtual ~EstacionDeServicio();
