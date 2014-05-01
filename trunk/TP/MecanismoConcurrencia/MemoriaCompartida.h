@@ -145,7 +145,6 @@ template <class T> T MemoriaCompartida<T>::leer() const {
 }
 
 template<class T> void MemoriaCompartida<T>::incrementar(const T& valor){
-	cout << *(this->ptrDatos) << endl;
 	*(this->ptrDatos) += valor;
 }
 
