@@ -18,6 +18,11 @@ PipeAutos::~PipeAutos() {
 	// TODO Auto-generated destructor stub
 }
 
-ssize_t PipeAutos :: leer ( void* buffer,const int buffSize ) {
-	return Pipe::leer(buffer, buffSize);
+bool PipeAutos :: leerAuto ( Auto* autito ) {
+	ssize_t leido = Pipe::leer(static_cast<void*>(autito), sizeof(*autito));
+	return (leido==sizeof(*autito));
+}
+
+bool PipeAutos :: escribirAuto ( const Auto autito ) {
+	return Pipe::escribir(static_cast<const void*>(&autito), sizeof(autito));
 }

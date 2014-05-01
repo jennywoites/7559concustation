@@ -9,6 +9,7 @@
 #define PIPEAUTOS_H_
 
 #include "Pipe.h"
+#include "../Auto.h"
 
 using namespace std;
 
@@ -17,7 +18,8 @@ public:
 	PipeAutos();
 	virtual ~PipeAutos();
 
-	ssize_t leer ( void* buffer,const int buffSize );
+	bool leerAuto ( Auto* autito );
+	bool escribirAuto ( const Auto autito );
 };
 
 #endif /* PIPEAUTOS_H_ */
