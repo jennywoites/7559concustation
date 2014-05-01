@@ -10,7 +10,7 @@
 #include <string>
 #include "Auto.h"
 #include "MecanismoConcurrencia/MemoriaCompartida.h"
-
+#include "MecanismoConcurrencia/PipeAutos.h"
 using namespace std;
 
 class Jefe {
@@ -22,8 +22,10 @@ private:
 	std::string nombre;
 	int cantidadDespachada;
 	int cantidadAtendida;
+	PipeAutos arribos;
+
 public:
-	Jefe(std::string);
+	Jefe(std::string, const PipeAutos& canal);
 	virtual ~Jefe();
 
 	void atenderAutos();

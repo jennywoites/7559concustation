@@ -11,10 +11,12 @@
 #include <iostream>
 #include "constantesArchivos.h"
 
-Jefe::Jefe(std::string n) {
+Jefe::Jefe(std::string n, const PipeAutos& canal) {
 	nombre = n;
 	cantidadAtendida = 0;
 	cantidadDespachada = 0;
+
+	arribos = canal;
 
 	cantEmpleadosDisponibles = MemoriaCompartida<int>(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 }
@@ -23,11 +25,8 @@ Jefe::~Jefe() {
 }
 
 bool Jefe::leerAuto(Auto* autito){
-	//FIXME: pipe
-	std::string patente = "FIX143";
-	int capacidad = 10;
-	*autito = Auto(patente, capacidad);
-	return (cantidadDespachada %10 == 0);
+	bool status = arribos.leerAuto(autito);
+	return status;
 }
 
 void Jefe::atenderAutos(){
