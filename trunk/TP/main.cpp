@@ -39,7 +39,16 @@ void pruebaPipeAutos(void){
 	}
 }
 
+void pruebaGenPipeAutos(void){
+	PipeAutos generacion;
+	Jefe j ("UltraAlterMaster", generacion);
+	j.atenderAutos();
+	GeneradorAutos g (100000, generacion);
+	g.generar();
+}
+
 int main(void){
 	//prueba1();
-	pruebaPipeAutos();
+	//pruebaPipeAutos();
+	pruebaGenPipeAutos();
 }
