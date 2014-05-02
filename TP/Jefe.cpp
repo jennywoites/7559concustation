@@ -39,18 +39,20 @@ void Jefe::atenderAutos(){
 	Log::abrir_log();
 	Auto autito;
 
-	Log::enviarMensaje("Se ha iniciado el Proceso Jefe.");
+	Log::enviarMensaje("Se ha iniciado el Proceso Jefe "+ nombre + ".");
 
 	cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 
 	while (leerAuto(&autito)){
+		Log::enviarMensaje("Jefe " + nombre + ": Hay auto para ser atendido, patente " + string(autito.getPatente()));
 		if (!hayEmpleados()){
 			cantidadDespachada++;
 			mensajeDespachante(autito.getPatente());
-			continue;
+		}else{
+			cantidadAtendida++;
+			tomarEmpleado();
+			enviarAutoAEmpleado(autito);
 		}
-		tomarEmpleado();
-		enviarAutoAEmpleado(autito);
 	}
 
 	arribos.cerrar();
@@ -87,6 +89,6 @@ void Jefe::mensajeDespachante(std::string patente){
 }
 
 bool Jefe::enviarAutoAEmpleado(const Auto& autito){
-	Log::enviarMensaje("Jefe envia un auto por el pipe hacia empleados");
+	Log::enviarMensaje("Jefe envia el auto por el pipe hacia empleados");
 	return envios.escribirAuto(autito);
 }
