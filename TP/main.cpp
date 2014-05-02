@@ -7,14 +7,16 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "Auto.h"
-#include "Jefe.h"
-#include "Empleado.h"
-#include "ManejoTiempos.h"
-#include "GeneradorAutos.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+
+#include "Auto.h"
+#include "Jefe.h"
+#include "Empleado.h"
+#include "EstacionDeServicio.h"
+#include "ManejoTiempos.h"
+#include "GeneradorAutos.h"
 #include "Caja.h"
 #include "Administrador.h"
 #include "Log.h"
@@ -49,11 +51,11 @@ void pruebaGenPipeAutos(void){
 }
 
 void pruebaAtPipeAutos(void){
-	PipeAutos atencion;
-	PipeAutos generacion;
-
 	Administrador admin(300000);
 	admin.mirarDinero(3.50);
+
+	PipeAutos atencion;
+	PipeAutos generacion;
 
     Empleado e ("0", 0, atencion);
 	Jefe j ("UltraAlterMaster", generacion, atencion);
@@ -62,9 +64,11 @@ void pruebaAtPipeAutos(void){
 
 	g.generar();
 	generacion.cerrar();
-	sleep(2);
+
 	e.atenderAutos();
 	atencion.cerrar();
+
+	wait(NULL);
 	wait(NULL);
 	wait(NULL);
 	wait(NULL);
@@ -94,15 +98,48 @@ void prueba_log(){
 	wait(NULL);//log
 }
 
+void prueba_memoria(){
+	PipeAutos atencion;
+	PipeAutos generacion;
+
+	Administrador admin(300000);
+	admin.mirarDinero(3.50);
+
+	generacion.cerrar();
+	atencion.cerrar();
+
+	cout << "Prueba no finalizada" <<  endl;
+	wait(NULL);
+}
+
+void prueba_signal_gen(){
+	PipeAutos generacion;
+	GeneradorAutos g (6000000, generacion);
+	pid_t gen = g.generar();
+
+	Administrador admin(300000);
+	pid_t adm = admin.mirarDinero(3.50);
+
+	sleep(7);
+	kill(gen, SIGINT);
+	kill(adm, SIGINT);
+	generacion.cerrar();
+	wait(NULL);
+}
+
 int main(void){
 	//prueba1();
 	//pruebaPipeAutos();
 	//pruebaGenPipeAutos();
 	//prueba_log();
-
 	//pruebaAtPipeAutos();
+	//prueba_memoria();
+	//prueba_signal_gen();
 
-	prueba_log();
+	EstacionDeServicio e(1,0,10000000);
+	e.abrir(20.0);
+	sleep(5);
+	e.cerrar();
 
 	exit(0);
 }

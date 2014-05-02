@@ -22,7 +22,7 @@ public:
 	GeneradorAutos(float media, const PipeAutos&);
 	virtual ~GeneradorAutos();
 
-	void generar();
+	pid_t generar();
 
 };
 

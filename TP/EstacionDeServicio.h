@@ -21,6 +21,8 @@ private:
 	int cantEmpleados;
 	int cantSurtidores;
 	int mediaAutos;
+	pid_t generador;
+	pid_t administrador;
 	Caja caja;
 
 	void crearEmpleados(const PipeAutos&);
