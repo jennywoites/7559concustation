@@ -9,14 +9,17 @@
 #define GENERADORAUTOS_H_
 
 #include "Auto.h"
+#include "MecanismoConcurrencia/PipeAutos.h"
+
 using namespace std;
 
 class GeneradorAutos {
 private:
 	float media;
+	PipeAutos envios;
 
 public:
-	GeneradorAutos(float media);
+	GeneradorAutos(float media, const PipeAutos&);
 	virtual ~GeneradorAutos();
 
 	void generar();

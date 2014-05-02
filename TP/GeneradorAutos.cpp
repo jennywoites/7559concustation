@@ -15,8 +15,9 @@
 #include <stdlib.h>
 using namespace std;
 
-GeneradorAutos::GeneradorAutos(float media) {
+GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal) {
 	this->media = media;
+	envios = canal;
 }
 
 GeneradorAutos::~GeneradorAutos() {
@@ -43,7 +44,7 @@ void GeneradorAutos::generar(){
 	while(true){ //TODO: con la variable de la signal handler
 		Auto autito;
 		cout << generarMensaje(numAuto, autito.getPatente());
-		//Todo: mandar autito por pipe
+		envios.escribirAuto(autito);
 		int tiempo = (int) tiempoAlAzarExponencial(media);
 		usleep(tiempo);
 		numAuto++;
