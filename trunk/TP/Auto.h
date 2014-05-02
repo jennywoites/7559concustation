@@ -9,6 +9,12 @@
 #define AUTO_H_
 #include <string>
 
+struct auto_serial{
+	char patente[7];
+	int capacidad;
+	bool lleno;
+};
+
 class Auto {
 	private:
 		std::string patente;
@@ -36,6 +42,9 @@ class Auto {
 
 		/*Llena el tanque del auto, informando cuanto se lleno. Esto demora un cierto tiempo.*/
 		int llenar();
+
+		struct auto_serial serializar() const;
+		void deserializar(struct auto_serial);
 	private:
 		int generarTanqueRandom() const;
 		std::string generarPatenteRandom() const;

@@ -16,9 +16,9 @@
 #include <sys/wait.h>
 #include "Caja.h"
 #include "Administrador.h"
+#include "MecanismoConcurrencia/PipeAutos.h"
 
-
-int main(void){
+void prueba1(void){
 	Caja caja(0);
 	Administrador admin(10000);
 	admin.mirarDinero();
@@ -27,4 +27,19 @@ int main(void){
 	exit(0);
 }
 
+void pruebaPipeAutos(void){
+	PipeAutos pipe;
+	if (fork()==0){
+		Auto a("ABC123", 10);
+		pipe.escribirAuto(a);
+	}else{
+		Auto b;
+		cout << pipe.leerAuto(&b) << endl;
+		cout << b.getPatente() << endl;
+	}
+}
 
+int main(void){
+	//prueba1();
+	pruebaPipeAutos();
+}
