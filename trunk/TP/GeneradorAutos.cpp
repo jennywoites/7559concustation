@@ -7,6 +7,7 @@
 
 #include "GeneradorAutos.h"
 #include "ManejoTiempos.h"
+#include "Log.h"
 #include <unistd.h>
 #include <iostream>
 #include <sstream>
