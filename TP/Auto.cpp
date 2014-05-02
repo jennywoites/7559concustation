@@ -8,6 +8,7 @@
 #include "Auto.h"
 #include "ManejoTiempos.h"
 #include <unistd.h>
+#include <string.h>
 
 Auto::Auto() {
 	patente = generarPatenteRandom();
@@ -55,4 +56,18 @@ std::string Auto::generarPatenteRandom() const{
 		pat += '0' + numeroAlAzar(0,9);
 	}
 	return pat;
+}
+
+struct auto_serial Auto::serializar() const{
+	struct auto_serial s;
+	s.capacidad = capacidadTanque;
+	s.lleno = lleno;
+	strcpy(s.patente, patente.c_str());
+	return s;
+}
+
+void Auto::deserializar(struct auto_serial serie){
+	lleno = serie.lleno;
+	capacidadTanque = serie.capacidad;
+	patente = serie.patente;
 }

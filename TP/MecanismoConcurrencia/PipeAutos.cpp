@@ -21,17 +21,17 @@ PipeAutos::~PipeAutos() {
 }
 
 bool PipeAutos :: leerAuto ( Auto* autito ) {
-	char serial[7];
-	ssize_t leido = Pipe::leer(static_cast<void*>(serial), sizeof(serial));
-	//FIXME: des-serializar
-	*autito = Auto(serial, 10);
-	return (leido==sizeof(serial));
+	struct auto_serial serie;
+	ssize_t leido = Pipe::leer(static_cast<void*>(&serie), sizeof(struct auto_serial));
+	if (leido!=sizeof(struct auto_serial))
+		return false;
+
+	autito->deserializar(serie);
+	return true;
 }
 
 bool PipeAutos :: escribirAuto ( const Auto autito ) {
-	//FIXME: serializar
-	char serial[7];
-	strcpy(serial, "FIXME!");
-	ssize_t escrito = Pipe::escribir(static_cast<const void*>(serial), sizeof(serial));
-	return (escrito==sizeof(serial));
+	struct auto_serial serie = autito.serializar();
+	ssize_t escrito = Pipe::escribir(static_cast<const void*>(&serie), sizeof(struct auto_serial));
+	return (escrito==sizeof(struct auto_serial));
 }
