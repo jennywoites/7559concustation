@@ -76,16 +76,22 @@ void prueba_log(){
 	Log::abrir_log();
 	Log::enviarMensaje("El proceso principal abre el log");
 
-	Caja caja ();
+	Caja caja;
 	Administrador admin(10000);
-
 
 	cout << "Voy a hacer que el admin empiece" <<endl;
 	admin.mirarDinero(3.50);
-	Log::cerrar_log();
-	wait(NULL);
 
-	wait(NULL);
+	usleep(10000);
+	Log::enviarMensaje("Voy a depositar 5");
+	caja.abrir();
+	caja.depositar(5);
+	caja.cerrar();
+
+	Log::cerrar_log();
+	wait(NULL);//admin
+
+	wait(NULL);//log
 }
 
 int main(void){
@@ -94,15 +100,9 @@ int main(void){
 	//pruebaGenPipeAutos();
 	//prueba_log();
 
-//	Log log("log.jem");
-//	log.escribir();
-//	Log::abrir_log();
-//	Log::enviarMensaje("El proceso principal abre el log");
-//
-//
-	pruebaAtPipeAutos();
-//
-//	Log::cerrar_log();
+	//pruebaAtPipeAutos();
+
+	prueba_log();
 
 	exit(0);
 }
