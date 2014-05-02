@@ -29,16 +29,24 @@ void EstacionDeServicio::abrir(float plataInicial){
 	//abrir Log
 	//caja.abrir();
 	PipeAutos atencion;
-	crearEmpleados(atencion);
-
 	PipeAutos generacion;
+
+	//Creo los empleados, el generador, el administrador y el jefe y los mando
+	// a que atiendan. Cada uno crea sus procesos correspondientes
+	crearEmpleados(atencion);
 
 	Jefe j ("UltraAlterMaster", generacion, atencion);
 	j.atenderAutos();
+
 	GeneradorAutos g (mediaAutos, generacion);
 	g.generar();
+
 	Administrador a (100); //FIXME
 	a.mirarDinero();
+
+	//Cierro los pipes que abri como escritor
+	atencion.cerrar();
+	generacion.cerrar();
 }
 
 
