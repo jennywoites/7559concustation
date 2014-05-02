@@ -12,6 +12,8 @@ EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaG
 	cantEmpleados = empleados;
 	cantSurtidores = surtidores;
 	mediaAutos = mediaGenAutos;
+	generador = 0;
+	administrador = 0;
 }
 
 EstacionDeServicio::~EstacionDeServicio() {
@@ -28,40 +30,42 @@ void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 void EstacionDeServicio::abrir(float plataInicial){
 	//abrir Log
 
-	Administrador a (300000); //FIXME
-	a.mirarDinero(plataInicial);
+	Administrador a (3000000); //FIXME
+	administrador = a.mirarDinero(plataInicial);
 
 	PipeAutos atencion;
-	PipeAutos generacion;
 
 	//Creo los empleados, el generador, el administrador y el jefe y los mando
 	// a que atiendan. Cada uno crea sus procesos correspondientes
 	crearEmpleados(atencion);
 
+	PipeAutos generacion;
+
 	Jefe j ("UltraAlterMaster", generacion, atencion);
 	j.atenderAutos();
 
-	GeneradorAutos g (mediaAutos, generacion);
-	g.generar();
-
-	//Cierro los pipes que abri como escritor
+	//Cierro pipe de atencion
 	atencion.cerrar();
+
+	GeneradorAutos g (mediaAutos, generacion);
+	generador = g.generar();
+
+	//Cierro pipe de generacion
 	generacion.cerrar();
 }
 
 
 void EstacionDeServicio::esperarCierre(){
-	while (wait(NULL)) {
-	   if (errno == ECHILD) {
-	      break;
-	   }
+	int i = cantEmpleados + 1 + 1;
+	while (i >0) {
+		wait(NULL);
+		i--;
 	}
 }
 
 void EstacionDeServicio::cerrar(){
-	// enviar senial a generador
-	// esperar cierre
-	// senial a admin
+	kill(generador, SIGINT);	// envia senial a generador
+	esperarCierre();	// esperar cierre
+	kill(administrador, SIGINT);	// envia senial a generador
 	// finalizar log
-	esperarCierre();
 }

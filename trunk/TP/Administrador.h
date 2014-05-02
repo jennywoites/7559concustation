@@ -20,7 +20,7 @@ public:
 	Administrador(float);
 	virtual ~Administrador();
 
-	void mirarDinero(float);
+	pid_t mirarDinero(float);
 };
 
 #endif /* ADMINISTRADOR_H_ */

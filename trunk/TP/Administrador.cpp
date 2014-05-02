@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <cmath>
 #include <sstream>
+#include "MecanismoConcurrencia/SIGINT_Handler.h"
+#include "MecanismoConcurrencia/SignalHandler.h"
 #include "Log.h"
 
 Administrador::Administrador(float m) {
@@ -22,9 +24,10 @@ Administrador::~Administrador() {
 
 }
 
-void Administrador::mirarDinero(float inicial){
-	if (fork() != 0)
-		return;
+pid_t Administrador::mirarDinero(float inicial){
+	pid_t id = fork();
+	if (id != 0)
+		return id;
 
 	Log::abrir_log();
 	Log::enviarMensaje("Administrador abre el log");
@@ -32,8 +35,11 @@ void Administrador::mirarDinero(float inicial){
 	caja.abrir(inicial);
 	plata_anterior = inicial;
 
+	SIGINT_Handler sigint_handler;
+	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+
 	int i = 10;
-	while (i > 0){ //envio de señal
+	while (sigint_handler.getGracefulQuit() == 0 ) {
 		float espera = tiempoAlAzarExponencial(media);
 		int tiempo_entero = floor(espera);
 		usleep(tiempo_entero);
@@ -52,6 +58,8 @@ void Administrador::mirarDinero(float inicial){
 		i--;
 	}
 	caja.cerrar();
+	SignalHandler :: destruir ();
+	cout << "Administrador deja de revisar caja y se cierra" << endl;
 	Log::cerrar_log();
 	exit(0);
 }

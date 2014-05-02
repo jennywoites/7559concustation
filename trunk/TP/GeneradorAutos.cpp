@@ -13,6 +13,8 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+#include "MecanismoConcurrencia/SIGINT_Handler.h"
+#include "MecanismoConcurrencia/SignalHandler.h"
 using namespace std;
 
 GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal) {
@@ -34,16 +36,22 @@ std::string generarMensaje(int numAuto, string patente){
 	return mensaje;
 }
 
-void GeneradorAutos::generar(){
+pid_t GeneradorAutos::generar(){
 	pid_t id = fork();
 	if (id != 0)
-		return;
+		return id;
+
 	inicializarRandom();
+
+	SIGINT_Handler sigint_handler;
+	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+
 	int numAuto = 0;
 
 	Log::abrir_log();
 	Log::enviarMensaje("Generador de Autos: llamenme Ford. Roque Ford");
-	while(numAuto<5){ //TODO: con la variable de la signal handler
+	
+	while (sigint_handler.getGracefulQuit() == 0 ) {
 		Auto autito;
 		Log::enviarMensaje(generarMensaje(numAuto, autito.getPatente()));
 		envios.escribirAuto(autito);
@@ -54,6 +62,9 @@ void GeneradorAutos::generar(){
 	Log::enviarMensaje("FordMachine: llego la crisis del 30, ya no hay mas trabajo por hacer");
 	Log::enviarMensaje("FordMachine: Cierro el canal de autos");
 	envios.cerrar();
+	SignalHandler :: destruir ();
+	cout << "Generador deja de generar y se cierra" << endl;
+	
 	Log::enviarMensaje("Fin de proceso Generador de Autos");
 	exit(0);
 }
