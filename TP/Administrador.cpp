@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <cmath>
+#include <sstream>
 #include "Log.h"
 
 Administrador::Administrador(float m) {
@@ -39,14 +40,15 @@ void Administrador::mirarDinero(float inicial){
 
 		Log::enviarMensaje("Administrador: voy a la caja");
 		float plata_actual = caja.verMonto();
-		cout << plata_actual << endl;
+		stringstream ss;
+		ss<<plata_actual;
 		if (plata_anterior != plata_actual){
 			plata_anterior = plata_actual;
-			Log::enviarMensaje("Administrador: Hay mas plata!");
+			Log::enviarMensaje("Administrador: Hay mas plata! ahora hay $" + ss.str());
 		}else{
-			Log::enviarMensaje("Administrador: Hay la misma cantidad de plata :(");
+			Log::enviarMensaje("Administrador: Hay la misma cantidad de plata :( hay $"+ ss.str());
 		}
-		cout << "Administrador fue a la caja \n";
+		cout << "El administrador fue a la caja \n";
 		i--;
 	}
 	caja.cerrar();
