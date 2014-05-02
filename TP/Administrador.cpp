@@ -49,6 +49,7 @@ void Administrador::mirarDinero(){
 		i--;
 	}
 	caja.cerrar();
+	Log::cerrar_log();
 	exit(0);
 }
 
