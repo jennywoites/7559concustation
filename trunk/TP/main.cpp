@@ -21,9 +21,9 @@
 #include "MecanismoConcurrencia/PipeAutos.h"
 
 void prueba1(void){
-	Caja caja(0);
+	Caja caja();
 	Administrador admin(10000);
-	admin.mirarDinero();
+	admin.mirarDinero(3.50);
 	wait(NULL);
 	cout <<"Cierro la caja\n";
 }
@@ -51,6 +51,10 @@ void pruebaGenPipeAutos(void){
 void pruebaAtPipeAutos(void){
 	PipeAutos atencion;
 	PipeAutos generacion;
+
+	Administrador admin(300000);
+	admin.mirarDinero(3.50);
+
     Empleado e ("0", 0, atencion);
 	Jefe j ("UltraAlterMaster", generacion, atencion);
 	j.atenderAutos();
@@ -72,12 +76,12 @@ void prueba_log(){
 	Log::abrir_log();
 	Log::enviarMensaje("El proceso principal abre el log");
 
-	Caja caja (0);
+	Caja caja ();
 	Administrador admin(10000);
 
 
 	cout << "Voy a hacer que el admin empiece" <<endl;
-	admin.mirarDinero();
+	admin.mirarDinero(3.50);
 	Log::cerrar_log();
 	wait(NULL);
 
@@ -88,7 +92,17 @@ int main(void){
 	//prueba1();
 	//pruebaPipeAutos();
 	//pruebaGenPipeAutos();
-	cout << getpid() << endl;
+	//prueba_log();
+
+//	Log log("log.jem");
+//	log.escribir();
+//	Log::abrir_log();
+//	Log::enviarMensaje("El proceso principal abre el log");
+//
+//
 	pruebaAtPipeAutos();
+//
+//	Log::cerrar_log();
+
 	exit(0);
 }

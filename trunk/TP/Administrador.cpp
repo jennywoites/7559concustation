@@ -15,21 +15,21 @@
 Administrador::Administrador(float m) {
 	plata_anterior = 0;
 	media = m;
-	//caja = Caja();
 }
 
 Administrador::~Administrador() {
 
 }
 
-void Administrador::mirarDinero(){
+void Administrador::mirarDinero(float inicial){
 	if (fork() != 0)
 		return;
 
-	caja.abrir();
 	Log::abrir_log();
-
 	Log::enviarMensaje("Administrador abre el log");
+
+	caja.abrir(inicial);
+	plata_anterior = inicial;
 
 	int i = 10;
 	while (i > 0){ //envio de señal
@@ -39,6 +39,7 @@ void Administrador::mirarDinero(){
 
 		Log::enviarMensaje("Administrador: voy a la caja");
 		float plata_actual = caja.verMonto();
+		cout << plata_actual << endl;
 		if (plata_anterior != plata_actual){
 			plata_anterior = plata_actual;
 			Log::enviarMensaje("Administrador: Hay mas plata!");

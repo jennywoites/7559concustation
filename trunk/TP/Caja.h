@@ -14,7 +14,6 @@ private:
 	MemoriaCompartida<float> plata;
 public:
 	Caja();
-	Caja(float plataInicial);
 	virtual ~Caja();
 
 	void depositar(float plata_a_agregar);
@@ -24,6 +23,7 @@ public:
 	void cerrar();
 
 	void abrir();
+	void abrir(float);
 
 };
 
