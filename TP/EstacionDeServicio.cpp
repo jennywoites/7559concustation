@@ -27,7 +27,10 @@ void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 
 void EstacionDeServicio::abrir(float plataInicial){
 	//abrir Log
-	//caja.abrir();
+
+	Administrador a (300000); //FIXME
+	a.mirarDinero(plataInicial);
+
 	PipeAutos atencion;
 	PipeAutos generacion;
 
@@ -40,9 +43,6 @@ void EstacionDeServicio::abrir(float plataInicial){
 
 	GeneradorAutos g (mediaAutos, generacion);
 	g.generar();
-
-	Administrador a (100); //FIXME
-	a.mirarDinero();
 
 	//Cierro los pipes que abri como escritor
 	atencion.cerrar();
@@ -62,7 +62,6 @@ void EstacionDeServicio::cerrar(){
 	// enviar senial a generador
 	// esperar cierre
 	// senial a admin
-	caja.cerrar();
 	// finalizar log
 	esperarCierre();
 }

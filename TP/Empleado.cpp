@@ -13,13 +13,11 @@
 Empleado::Empleado(std::string name, int cantidadSurtidores, const PipeAutos& pipe) {
 	nombre = name;
 	cantidadAtendidos = 0;
-	disponibilidad = MemoriaCompartida<int>(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 
 	for (int i = 0; i < cantidadSurtidores; i++){
 		MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
 		this->surtidores.push_back(surtidor);
 	}
-	caja = Caja();
 	arribos = pipe;
 }
 
@@ -30,12 +28,15 @@ void Empleado::atenderAutos(){
 	pid_t id = fork();
 	if (id != 0)
 		return;
+
 	Auto autito;
 	caja.abrir();
+	disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 	disponibilidad.incrementar(1);
 	while(leerAuto(&autito)){
 		cout << autito.getPatente() << endl;
 		disponibilidad.incrementar(1);
+		caja.depositar(100);
 		continue;
 
 		int surtidor = tomarSurtidor();
@@ -46,6 +47,11 @@ void Empleado::atenderAutos(){
 		disponibilidad.incrementar(1);
 	}
 	caja.cerrar();
+	disponibilidad.liberar();
+	for (unsigned int i = 0; i < surtidores.size(); i++){
+		this->surtidores.at(i).liberar();
+	}
+
 	exit(0);
 }
 

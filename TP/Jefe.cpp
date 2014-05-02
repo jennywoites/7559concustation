@@ -21,8 +21,6 @@ Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten) {
 
 	arribos = gen;
 	envios = aten;
-
-	cantEmpleadosDisponibles = MemoriaCompartida<int>(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 }
 
 Jefe::~Jefe() {
@@ -43,6 +41,8 @@ void Jefe::atenderAutos(){
 
 	Log::enviarMensaje("Se ha iniciado el Proceso Jefe.");
 
+	cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
+
 	while (leerAuto(&autito)){
 		if (!hayEmpleados()){
 			cantidadDespachada++;
@@ -58,6 +58,8 @@ void Jefe::atenderAutos(){
 	envios.cerrar();
 	Log::enviarMensaje("Jefe cierra el pipe de escritura envios");
 	Log::enviarMensaje("Fin del proceso Jefe");
+
+	cantEmpleadosDisponibles.liberar();
 
 	Log::cerrar_log();
 	exit(0);

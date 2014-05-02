@@ -9,15 +9,6 @@
 #include "constantesArchivos.h"
 
 Caja::Caja() {
-	//plata = MemoriaCompartida<float>();
-}
-
-Caja::Caja(float plataInicial){
-	plata = MemoriaCompartida<float>(ARCHIVO_CAJA, CAJA);
-	plata.escribir(plataInicial);
-	plata.liberar();
-	//plata = MemoriaCompartida<float>();
-
 }
 
 Caja::~Caja() {
@@ -41,4 +32,9 @@ void Caja::cerrar(){
 
 void Caja::abrir(){
 	plata.crear(ARCHIVO_CAJA, CAJA);
+}
+
+void Caja::abrir(float plataInicial){
+	plata.crear(ARCHIVO_CAJA, CAJA);
+	plata.escribir(plataInicial);
 }

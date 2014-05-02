@@ -24,7 +24,7 @@ private:
 	MemoriaCompartida<int> disponibilidad;
 	Caja caja;
 	PipeAutos arribos;
-	std::vector<MemoriaCompartida<bool> > surtidores;
+	std::vector< MemoriaCompartida<bool> > surtidores;
 public:
 	Empleado(std::string, int, const PipeAutos&);
 	virtual ~Empleado();

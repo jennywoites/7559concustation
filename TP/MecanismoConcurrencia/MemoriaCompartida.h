@@ -99,39 +99,33 @@ template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const std::string& 
 }
 
 template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const MemoriaCompartida& origen ):shmId(origen.shmId) {
-	void* tmpPtr = shmat ( origen.shmId,NULL,0 );
+	//void* tmpPtr = shmat ( origen.shmId,NULL,0 );
+	this->ptrDatos = origen.ptrDatos;
 
-	if ( tmpPtr != (void*) -1 ) {
-		this->ptrDatos = static_cast<T*> (tmpPtr);
-	} else {
-		std::string mensaje = std::string("Error en shmat(): ") + std::string(strerror(errno));
-		throw mensaje;
-	}
+//	if ( tmpPtr != (void*) -1 ) {
+//		this->ptrDatos = static_cast<T*> (tmpPtr);
+//	} else {
+//		std::string mensaje = std::string("Error en shmat(): ") + std::string(strerror(errno));
+//		throw mensaje;
+//	}
 }
 
 template <class T> MemoriaCompartida<T>::~MemoriaCompartida () {
-	int errorDt = shmdt ( static_cast<void*> (this->ptrDatos) );
 
-	if ( errorDt != -1 ) {
-		int procAdosados = this->cantidadProcesosAdosados ();
-		if ( procAdosados == 0 ) {
-			shmctl ( this->shmId,IPC_RMID,NULL );
-		}
-	} else {
-		std::cerr << "Error en shmdt(): " << strerror(errno) << std::endl;
-	}
 }
 
 template <class T> MemoriaCompartida<T>& MemoriaCompartida<T>::operator= ( const MemoriaCompartida& origen ) {
 	this->shmId = origen.shmId;
-	void* tmpPtr = shmat ( this->shmId,NULL,0 );
+	this->ptrDatos = origen.ptrDatos;
 
-	if ( tmpPtr != (void*) -1 ) {
-		this->ptrDatos = static_cast<T*> (tmpPtr);
-	} else {
-		std::string mensaje = std::string("Error en shmat(): ") + std::string(strerror(errno));
-		throw mensaje;
-	}
+	//void* tmpPtr = shmat ( this->shmId,NULL,0 );
+
+	//if ( tmpPtr != (void*) -1 ) {
+		//this->ptrDatos = static_cast<T*> (tmpPtr);
+	//} else {
+		//std::string mensaje = std::string("Error en shmat(): ") + std::string(strerror(errno));
+		//throw mensaje;
+	//}
 
 	return *this;
 }

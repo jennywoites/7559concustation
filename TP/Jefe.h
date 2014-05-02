@@ -15,9 +15,6 @@ using namespace std;
 
 class Jefe {
 private:
-	//pipe lectura desde el generador
-	//memoria compartida de cant de empleados
-	//pipe de escritura de autos hacia empleados
 	MemoriaCompartida<int> cantEmpleadosDisponibles;
 	std::string nombre;
 	int cantidadDespachada;
