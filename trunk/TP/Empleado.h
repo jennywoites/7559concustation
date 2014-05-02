@@ -9,6 +9,7 @@
 #define EMPLEADO_H_
 
 #include "MecanismoConcurrencia/MemoriaCompartida.h"
+#include "MecanismoConcurrencia/PipeAutos.h"
 #include "Caja.h"
 #include "Auto.h"
 #include <vector>
@@ -22,14 +23,15 @@ private:
 	int cantidadAtendidos;
 	MemoriaCompartida<int> disponibilidad;
 	Caja caja;
+	PipeAutos arribos;
 	std::vector<MemoriaCompartida<bool> > surtidores;
 public:
-	Empleado(std::string,int);
+	Empleado(std::string, int, const PipeAutos&);
 	virtual ~Empleado();
 
 	void atenderAutos();
 private:
-	bool leerAuto(Auto*) const;
+	bool leerAuto(Auto*);
 	int tomarSurtidor();
 	void devolverSurtidor(int);
 };

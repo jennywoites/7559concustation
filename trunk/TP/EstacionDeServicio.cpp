@@ -18,9 +18,9 @@ EstacionDeServicio::~EstacionDeServicio() {
 	// TODO Auto-generated destructor stub
 }
 
-void EstacionDeServicio::crearEmpleados(){
+void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 	for(int i = 0; i<cantEmpleados; i++){
-		Empleado e ("0"+i, cantSurtidores);
+		Empleado e ("0"+i, cantSurtidores, pipe);
 		e.atenderAutos();
 	}
 }
@@ -28,11 +28,12 @@ void EstacionDeServicio::crearEmpleados(){
 void EstacionDeServicio::abrir(float plataInicial){
 	//abrir Log
 	//caja.abrir();
-	crearEmpleados();
+	PipeAutos atencion;
+	crearEmpleados(atencion);
 
 	PipeAutos generacion;
 
-	Jefe j ("UltraAlterMaster", generacion);
+	Jefe j ("UltraAlterMaster", generacion, atencion);
 	j.atenderAutos();
 	GeneradorAutos g (mediaAutos, generacion);
 	g.generar();
