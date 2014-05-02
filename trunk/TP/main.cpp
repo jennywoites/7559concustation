@@ -16,6 +16,7 @@
 #include <sys/wait.h>
 #include "Caja.h"
 #include "Administrador.h"
+#include "Log.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
 
 void prueba1(void){
@@ -50,5 +51,21 @@ void pruebaGenPipeAutos(void){
 int main(void){
 	//prueba1();
 	//pruebaPipeAutos();
-	pruebaGenPipeAutos();
+	//pruebaGenPipeAutos();
+	Log log("log.jem");
+	log.escribir();
+	Log::abrir_log();
+	Log::enviarMensaje("El proceso principal abre el log");
+
+	Caja caja (0);
+	Administrador admin(10000);
+
+
+	cout << "Voy a hacer que el admin empiece" <<endl;
+	admin.mirarDinero();
+	Log::cerrar_log();
+	wait(NULL);
+
+	wait(NULL);
+	exit(0);
 }
