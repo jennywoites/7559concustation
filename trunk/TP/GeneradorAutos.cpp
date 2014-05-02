@@ -41,7 +41,7 @@ void GeneradorAutos::generar(){
 		return;
 	inicializarRandom();
 	int numAuto = 0;
-	while(true){ //TODO: con la variable de la signal handler
+	while(numAuto<5){ //TODO: con la variable de la signal handler
 		Auto autito;
 		cout << generarMensaje(numAuto, autito.getPatente());
 		envios.escribirAuto(autito);
@@ -49,6 +49,7 @@ void GeneradorAutos::generar(){
 		usleep(tiempo);
 		numAuto++;
 	}
+	envios.cerrar();
 
 	exit(0);
 }

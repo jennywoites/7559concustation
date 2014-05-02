@@ -46,6 +46,8 @@ void Jefe::atenderAutos(){
 		tomarEmpleado();
 		enviarAutoAEmpleado(autito);
 	}
+	arribos.cerrar();
+	envios.cerrar();
 	exit(0);
 }
 

@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Auto.h"
 #include "Jefe.h"
+#include "Empleado.h"
 #include "ManejoTiempos.h"
 #include "GeneradorAutos.h"
 #include <unistd.h>
@@ -25,7 +26,6 @@ void prueba1(void){
 	admin.mirarDinero();
 	wait(NULL);
 	cout <<"Cierro la caja\n";
-	exit(0);
 }
 
 void pruebaPipeAutos(void){
@@ -42,16 +42,31 @@ void pruebaPipeAutos(void){
 
 void pruebaGenPipeAutos(void){
 	PipeAutos generacion;
-	Jefe j ("UltraAlterMaster", generacion);
+	Jefe j ("UltraAlterMaster", generacion, generacion);
 	j.atenderAutos();
-	GeneradorAutos g (100000, generacion);
+	GeneradorAutos g (1000000, generacion);
 	g.generar();
 }
 
-int main(void){
-	//prueba1();
-	//pruebaPipeAutos();
-	//pruebaGenPipeAutos();
+void pruebaAtPipeAutos(void){
+	PipeAutos atencion;
+	PipeAutos generacion;
+    Empleado e ("0", 0, atencion);
+	Jefe j ("UltraAlterMaster", generacion, atencion);
+	j.atenderAutos();
+	GeneradorAutos g (1000000, generacion);
+
+	g.generar();
+	generacion.cerrar();
+	sleep(2);
+	e.atenderAutos();
+	atencion.cerrar();
+	wait(NULL);
+	wait(NULL);
+	wait(NULL);
+}
+
+void prueba_log(){
 	Log log("log.jem");
 	log.escribir();
 	Log::abrir_log();
@@ -67,5 +82,13 @@ int main(void){
 	wait(NULL);
 
 	wait(NULL);
+}
+
+int main(void){
+	//prueba1();
+	//pruebaPipeAutos();
+	//pruebaGenPipeAutos();
+	cout << getpid() << endl;
+	pruebaAtPipeAutos();
 	exit(0);
 }

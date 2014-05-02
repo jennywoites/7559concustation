@@ -14,7 +14,6 @@ Empleado::Empleado(std::string name, int cantidadSurtidores, const PipeAutos& pi
 	nombre = name;
 	cantidadAtendidos = 0;
 	disponibilidad = MemoriaCompartida<int>(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
-	disponibilidad.incrementar(1);
 
 	for (int i = 0; i < cantidadSurtidores; i++){
 		MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
@@ -33,8 +32,10 @@ void Empleado::atenderAutos(){
 		return;
 	Auto autito;
 	caja.abrir();
+	disponibilidad.incrementar(1);
 	while(leerAuto(&autito)){
 		cout << autito.getPatente() << endl;
+		disponibilidad.incrementar(1);
 		continue;
 
 		int surtidor = tomarSurtidor();
