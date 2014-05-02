@@ -138,7 +138,7 @@ int main(void){
 
 	EstacionDeServicio e(1,0,10000000);
 	e.abrir(20.0);
-	sleep(5);
+	sleep(15);
 	e.cerrar();
 
 	exit(0);
