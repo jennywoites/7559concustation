@@ -11,12 +11,13 @@
 #include <iostream>
 #include "constantesArchivos.h"
 
-Jefe::Jefe(std::string n, const PipeAutos& canal) {
+Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten) {
 	nombre = n;
 	cantidadAtendida = 0;
 	cantidadDespachada = 0;
 
-	arribos = canal;
+	arribos = gen;
+	envios = aten;
 
 	cantEmpleadosDisponibles = MemoriaCompartida<int>(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 }
@@ -43,7 +44,7 @@ void Jefe::atenderAutos(){
 			continue;
 		}
 		tomarEmpleado();
-		enviarAutoAEmpleado(&autito);
+		enviarAutoAEmpleado(autito);
 	}
 	exit(0);
 }
@@ -64,6 +65,6 @@ void Jefe::mensajeDespachante(std::string patente){
 	cout << mensaje;
 }
 
-void Jefe::enviarAutoAEmpleado(const Auto* autito){
-
+bool Jefe::enviarAutoAEmpleado(const Auto& autito){
+	return envios.escribirAuto(autito);
 }

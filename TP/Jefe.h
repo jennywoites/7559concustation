@@ -23,9 +23,10 @@ private:
 	int cantidadDespachada;
 	int cantidadAtendida;
 	PipeAutos arribos;
+	PipeAutos envios;
 
 public:
-	Jefe(std::string, const PipeAutos& canal);
+	Jefe(std::string, const PipeAutos&, const PipeAutos&);
 	virtual ~Jefe();
 
 	void atenderAutos();
@@ -36,7 +37,7 @@ private:
 	bool hayEmpleados();
 	void mensajeDespachante(std::string );
 	void tomarEmpleado();
-	void enviarAutoAEmpleado(const Auto*);
+	bool enviarAutoAEmpleado(const Auto&);
 };
 
 #endif /* JEFE_H_ */
