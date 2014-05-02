@@ -47,7 +47,7 @@ pid_t Administrador::mirarDinero(float inicial){
 		Log::enviarMensaje("Administrador: voy a la caja");
 		float plata_actual = caja.verMonto();
 		stringstream ss;
-		ss<<plata_actual;
+		ss << plata_actual;
 		if (plata_anterior != plata_actual){
 			plata_anterior = plata_actual;
 			Log::enviarMensaje("Administrador: Hay mas plata! ahora hay $" + ss.str());
