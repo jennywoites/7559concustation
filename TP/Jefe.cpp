@@ -11,6 +11,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sstream>
 #include "constantesArchivos.h"
 #include "Log.h"
 
@@ -69,7 +70,9 @@ void Jefe::atenderAutos(){
 
 bool Jefe::hayEmpleados(){
 	int cant_empleados = cantEmpleadosDisponibles.leer();
-	Log::enviarMensaje("Jefe: cantidad de empleados disponibles es " + cant_empleados);
+	stringstream ss;
+	ss << cant_empleados;
+	Log::enviarMensaje("Jefe: cantidad de empleados disponibles es " + ss.str());
 	return (cant_empleados > 0);
 }
 

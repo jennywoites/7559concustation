@@ -27,7 +27,7 @@ Log::~Log() {
 void Log::escribir(){
 	if (fork() != 0)
 		return;
-	open(archivo.c_str(), O_CREAT|0666);
+	open(archivo.c_str(), O_CREAT, 0666);
 	int salida = open(archivo.c_str(), O_WRONLY);
 	//Cambio las lecturas y escrituras del proceso
 	dup2(salida,1);
