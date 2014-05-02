@@ -6,6 +6,7 @@
  */
 
 #include "EstacionDeServicio.h"
+#include "Log.h"
 #include <sys/wait.h>
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos){
@@ -28,7 +29,9 @@ void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 }
 
 void EstacionDeServicio::abrir(float plataInicial){
-	//abrir Log
+	Log log("log.jem");
+	log.escribir();
+	Log::abrir_log();
 
 	Administrador a (3000000); //FIXME
 	administrador = a.mirarDinero(plataInicial);
@@ -67,5 +70,5 @@ void EstacionDeServicio::cerrar(){
 	kill(generador, SIGINT);	// envia senial a generador
 	esperarCierre();	// esperar cierre
 	kill(administrador, SIGINT);	// envia senial a generador
-	// finalizar log
+	Log::cerrar_log();
 }
