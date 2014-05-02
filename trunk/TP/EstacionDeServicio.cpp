@@ -34,7 +34,7 @@ void EstacionDeServicio::abrir(float plataInicial){
 
 	Jefe j ("UltraAlterMaster", generacion);
 	j.atenderAutos();
-	GeneradorAutos g (mediaAutos);//, &generacion);
+	GeneradorAutos g (mediaAutos, generacion);
 	g.generar();
 	Administrador a (100); //FIXME
 	a.mirarDinero();
