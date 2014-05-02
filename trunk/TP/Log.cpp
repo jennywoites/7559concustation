@@ -56,7 +56,7 @@ void Log::cerrar_log(){
 }
 
 void Log::enviarMensaje(std::string msj){
-	while (msj.size() < LONGITUD_MENSAJE-1){
+	while (msj.size() < LONGITUD_MENSAJE){
 		msj += '\0';
 	}
 	Log::pipe.escribir(msj.c_str(), msj.size());
