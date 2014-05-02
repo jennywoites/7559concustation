@@ -30,7 +30,7 @@ bool PipeAutos :: leerAuto ( Auto* autito ) {
 	return true;
 }
 
-bool PipeAutos :: escribirAuto ( const Auto autito ) {
+bool PipeAutos :: escribirAuto ( const Auto& autito ) {
 	struct auto_serial serie = autito.serializar();
 	ssize_t escrito = Pipe::escribir(static_cast<const void*>(&serie), sizeof(struct auto_serial));
 	return (escrito==sizeof(struct auto_serial));

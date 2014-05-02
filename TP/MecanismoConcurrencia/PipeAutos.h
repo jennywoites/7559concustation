@@ -19,7 +19,7 @@ public:
 	virtual ~PipeAutos();
 
 	bool leerAuto ( Auto* autito );
-	bool escribirAuto ( const Auto autito );
+	bool escribirAuto ( const Auto& autito );
 };
 
 #endif /* PIPEAUTOS_H_ */
