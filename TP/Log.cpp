@@ -32,13 +32,14 @@ void Log::escribir(){
 	//Cambio las lecturas y escrituras del proceso
 	dup2(salida,1);
 	Log::pipe.setearModo(Pipe::LECTURA);
-	dup2(Log::pipe.getFdLectura(),0);
+//	dup2(Log::pipe.getFdLectura(),0);
 	unsigned int numEntrada = 1;
+	bool fin = false;
 
-	while (!std::cin.eof()){
+	while (!fin){
 		mensaje_log_t msj;
-		std::cin.get(msj.mensaje, LONGITUD_MENSAJE * sizeof(char));
-		if (LOG_MODO == LOG_DEBUG)
+		fin = pipe.leer(msj.mensaje, LONGITUD_MENSAJE * sizeof(char)) == 0;
+		if (LOG_MODO == LOG_DEBUG and !fin)
 			std::cout << numEntrada++ << ". " << msj.mensaje << endl;
 	}
 	std::cout <<"Se cerro el log"<<endl;
