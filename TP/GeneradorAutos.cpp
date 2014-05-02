@@ -24,14 +24,13 @@ GeneradorAutos::~GeneradorAutos() {
 }
 
 std::string generarMensaje(int numAuto, string patente){
-	std::string mensaje = "Generador de Autos: Auto ";
+	std::string mensaje = "FordMachine: Auto ";
 
 	stringstream ss;
 	ss << numAuto;//add number to the stream
 	mensaje += ss.str();
 	mensaje += " creado, patente: ";
 	mensaje += patente;
-	mensaje += "\n";
 	return mensaje;
 }
 
@@ -41,16 +40,21 @@ void GeneradorAutos::generar(){
 		return;
 	inicializarRandom();
 	int numAuto = 0;
+
+	Log::abrir_log();
+	Log::enviarMensaje("Generador de Autos: llamenme Ford. Roque Ford");
 	while(numAuto<5){ //TODO: con la variable de la signal handler
 		Auto autito;
-		cout << generarMensaje(numAuto, autito.getPatente());
+		Log::enviarMensaje(generarMensaje(numAuto, autito.getPatente()));
 		envios.escribirAuto(autito);
 		int tiempo = (int) tiempoAlAzarExponencial(media);
 		usleep(tiempo);
 		numAuto++;
 	}
+	Log::enviarMensaje("FordMachine: llego la crisis del 30, ya no hay mas trabajo por hacer");
+	Log::enviarMensaje("FordMachine: Cierro el canal de autos");
 	envios.cerrar();
-
+	Log::enviarMensaje("Fin de proceso Generador de Autos");
 	exit(0);
 }
 
