@@ -6,7 +6,6 @@
  */
 
 #include "PipeAutos.h"
-#include "../structAuto.h"
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
