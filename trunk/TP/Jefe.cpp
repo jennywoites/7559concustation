@@ -83,12 +83,6 @@ void Jefe::tomarEmpleado(){
 
 void Jefe::mensajeDespachante(std::string patente){
 	Log::enviarMensaje("Jefe " + nombre + ": " + " Se ha despachado al auto de patente " + patente + " por no haber empleados libres");
-	std::string mensaje = "Jefe " + nombre + ": ";
-	mensaje += " Se ha despachado al auto de patente ";
-	mensaje += patente;
-	mensaje	+= " por no haber empleados libres\n";
-	cout << mensaje;
-	Log::enviarMensaje(mensaje);
 }
 
 bool Jefe::enviarAutoAEmpleado(const Auto& autito){
