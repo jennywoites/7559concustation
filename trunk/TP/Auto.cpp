@@ -6,9 +6,14 @@
  */
 
 #include "Auto.h"
-#include "ManejoTiempos.h"
+
 #include <unistd.h>
 #include <string.h>
+#include <iostream>
+
+#include "ManejoTiempos.h"
+
+using namespace std;
 
 Auto::Auto() {
 	patente = generarPatenteRandom();
@@ -20,6 +25,10 @@ Auto::Auto(std::string patente, int capacidad){
 	this->capacidadTanque = capacidad;
 	this->patente = patente;
 	this->lleno = false;
+}
+
+void Auto::imprimir(){
+	cout << "Se atendio el auto, cuya patente es: " << patente << "Se le cargaron " << capacidadTanque << "litros." << endl;
 }
 
 Auto::~Auto() {

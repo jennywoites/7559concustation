@@ -16,10 +16,13 @@ private:
 	Caja caja;
 	float plata_anterior;
 	float media;
+
+	void printDebug(std::string);
+	void printDebug(std::string, int);
+
 public:
 	Administrador(float);
 	virtual ~Administrador();
-
 	pid_t mirarDinero(float);
 };
 

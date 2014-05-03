@@ -45,6 +45,8 @@ class Auto {
 
 		struct auto_serial serializar() const;
 		void deserializar(struct auto_serial);
+		void imprimir();
+
 	private:
 		int generarTanqueRandom() const;
 		std::string generarPatenteRandom() const;
