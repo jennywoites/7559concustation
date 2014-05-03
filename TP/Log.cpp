@@ -6,10 +6,12 @@
  */
 
 #include "Log.h"
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <iostream>
+#include <sstream>
 
 Pipe Log::pipe;
 
@@ -53,6 +55,12 @@ Pipe* Log::abrir_log(){
 
 void Log::cerrar_log(){
 	pipe.cerrar();
+}
+
+void Log::enviarMensaje(std::string msj, int numero){
+	stringstream ss;
+	ss << numero;
+	enviarMensaje(msj + ss.str());
 }
 
 void Log::enviarMensaje(std::string msj){

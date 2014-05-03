@@ -6,11 +6,12 @@
  */
 
 #include "Empleado.h"
-#include "Log.h"
-#include "constantesArchivos.h"
+
 #include <unistd.h>
 #include <stdlib.h>
-#include <sstream>
+
+#include "Log.h"
+#include "constantesArchivos.h"
 
 Empleado::Empleado(std::string name, const PipeAutos& pipe) {
 	nombre = name;
@@ -21,53 +22,80 @@ Empleado::Empleado(std::string name, const PipeAutos& pipe) {
 Empleado::~Empleado() {
 }
 
+void Empleado::printDebug(std::string msj){
+	Log::enviarMensaje("Empleado " + nombre + ": " + msj);
+}
+
+void Empleado::printDebug(std::string msj, int numero){
+	Log::enviarMensaje("Empleado " + nombre + ": " + msj, numero);
+}
+
+void Empleado::printDebug(std::string msj, float numero){
+	Log::enviarMensaje("Empleado " + nombre + ": " + msj, numero);
+}
+
 void Empleado::atenderAutos(int cantidadSurtidores){
 	pid_t id = fork();
 	if (id != 0)
 		return;
 
 	Log::abrir_log();
-	Log::enviarMensaje("Se ha iniciado el Proceso Empleado "+ nombre + ".");
+	printDebug("Se ha iniciado el Proceso.");
 	Auto autito;
 	caja.abrir();
+	printDebug("Abri la caja.");
+
 	disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 	disponibilidad.incrementar(1);
-	Log::enviarMensaje("Empleado: "+ nombre + " me pongo a disposicion del Jefe.");
+	printDebug("Me pongo a disposicion del Jefe.");
 
 	for (int i = 0; i < cantidadSurtidores; i++){
 		MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
 		this->surtidores.push_back(surtidor);
+		printDebug("Asocio surtidor numero: ",i);
 	}
 
 	while(leerAuto(&autito)){
-		Log::enviarMensaje("Empleado: " + nombre + ": Hay auto para ser atendido, patente " + string(autito.getPatente()));
+
+		printDebug("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 		int surtidor = tomarSurtidor();
-		stringstream num;
-		num << surtidor;
-		Log::enviarMensaje("Empleado: " + nombre + ": Logre tomar el surtidor " + num.str());
+		printDebug("Logre tomar el surtidor ",surtidor);
+
 		int litros = autito.llenar();
+		printDebug("Llene el tanque. Cantidad de litros: ",litros);
 		devolverSurtidor(surtidor);
-		Log::enviarMensaje("Empleado: " + nombre + ": He devuelto el surtidor " + num.str());
+		printDebug("He devuelto el surtidor numero ",surtidor);
+
 		float plata = litros * PRECIO_POR_LITRO;
 		caja.depositar(plata);
-		num << plata;
-		Log::enviarMensaje("Empleado: " + nombre + ": Deposito en caja " + num.str());
+		printDebug("Deposito en caja $", plata);
+
+		printDebug("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
+		autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
 		disponibilidad.incrementar(1);
-		Log::enviarMensaje("Empleado: " + nombre + ": Me pongo en disponibilidad ");
+		printDebug("Estoy disponible para el jefe");
 	}
 
 	caja.cerrar();
+	printDebug("Cerre la caja.");
+
 	disponibilidad.liberar();
-	for (unsigned int i = 0; i < surtidores.size(); i++){
+	printDebug("Libere el pipe de escritura disponibilidad");
+
+	for (int i = 0; i < int(surtidores.size()); i++){
 		this->surtidores.at(i).liberar();
+		printDebug("Libere el surtido numero ", i);
 	}
 
+	printDebug("Finalice mi proceso correctamente.");
 	Log::cerrar_log();
 	exit(0);
 }
 
 bool Empleado::leerAuto(Auto* autito){
+	printDebug("Voy a leer un auto. Si no hay, me duermo.");
 	bool status = arribos.leerAuto(autito);
+	printDebug("Lei un auto.");
 	return status;
 }
 

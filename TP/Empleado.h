@@ -30,6 +30,10 @@ private:
 	static const bool USO = true;
 	static const bool DESUSO = false;
 
+	void printDebug(std::string);
+	void printDebug(std::string, int);
+	void printDebug(std::string, float);
+
 public:
 	Empleado(std::string, const PipeAutos&);
 	virtual ~Empleado();

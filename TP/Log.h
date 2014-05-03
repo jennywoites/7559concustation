@@ -7,7 +7,9 @@
 
 #ifndef LOG_H_
 #define LOG_H_
+
 #include <string>
+
 #include "MecanismoConcurrencia/Pipe.h"
 
 using namespace std;
@@ -45,6 +47,8 @@ public:
 	static Pipe* abrir_log();
 	static void cerrar_log();
 	static void enviarMensaje(std::string);
+	static void enviarMensaje(std::string, int);
+
 };
 
 #endif /* LOG_H_ */
