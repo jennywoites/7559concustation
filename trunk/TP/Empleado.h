@@ -13,6 +13,7 @@
 #include "Caja.h"
 #include "Auto.h"
 #include <vector>
+#include <stdexcept>
 using namespace std;
 
 class Empleado {
@@ -25,11 +26,15 @@ private:
 	Caja caja;
 	PipeAutos arribos;
 	std::vector< MemoriaCompartida<bool> > surtidores;
+
+	static const bool USO = true;
+	static const bool DESUSO = false;
+
 public:
-	Empleado(std::string, int, const PipeAutos&);
+	Empleado(std::string, const PipeAutos&);
 	virtual ~Empleado();
 
-	void atenderAutos();
+	void atenderAutos(int);
 private:
 	bool leerAuto(Auto*);
 	int tomarSurtidor();

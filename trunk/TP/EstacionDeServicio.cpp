@@ -23,15 +23,15 @@ EstacionDeServicio::~EstacionDeServicio() {
 
 void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 	for(int i = 0; i<cantEmpleados; i++){
-		Empleado e ("0"+i, cantSurtidores, pipe);
-		e.atenderAutos();
+		Empleado e ("0"+i, pipe);
+		e.atenderAutos(cantSurtidores);
 	}
 }
 
 void EstacionDeServicio::abrir(float plataInicial){
-	Log log("log.jem");
-	log.escribir();
-	Log::abrir_log();
+	//Log log("log.jem");
+	//log.escribir();
+	//Log::abrir_log();
 
 	Administrador a (3000000); //FIXME
 	administrador = a.mirarDinero(plataInicial);
@@ -70,5 +70,5 @@ void EstacionDeServicio::cerrar(){
 	kill(generador, SIGINT);	// envia senial a generador
 	esperarCierre();	// esperar cierre
 	kill(administrador, SIGINT);	// envia senial a generador
-	Log::cerrar_log();
+	//Log::cerrar_log();
 }

@@ -57,7 +57,7 @@ void pruebaAtPipeAutos(void){
 	PipeAutos atencion;
 	PipeAutos generacion;
 
-    Empleado e ("0", 0, atencion);
+    Empleado e ("0", atencion);
 	Jefe j ("UltraAlterMaster", generacion, atencion);
 	j.atenderAutos();
 	GeneradorAutos g (1000000, generacion);
@@ -65,7 +65,7 @@ void pruebaAtPipeAutos(void){
 	g.generar();
 	generacion.cerrar();
 
-	e.atenderAutos();
+	e.atenderAutos(0);
 	atencion.cerrar();
 
 	wait(NULL);
@@ -136,9 +136,9 @@ int main(void){
 	//prueba_memoria();
 	//prueba_signal_gen();
 
-	EstacionDeServicio e(1,0,10000000);
+	EstacionDeServicio e(1,2,10000000);
 	e.abrir(20.0);
-	sleep(15);
+	sleep(25);
 	e.cerrar();
 
 	exit(0);
