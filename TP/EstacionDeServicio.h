@@ -27,6 +27,9 @@ private:
 
 	void crearEmpleados(const PipeAutos&);
 	void esperarCierre();
+	void printDebug(std::string);
+	void printDebug(std::string, int);
+
 public:
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos);
 	virtual ~EstacionDeServicio();
