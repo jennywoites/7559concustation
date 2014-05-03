@@ -6,12 +6,13 @@
  */
 
 #include "Jefe.h"
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sstream>
+
 #include "constantesArchivos.h"
 #include "Log.h"
 
@@ -24,11 +25,20 @@ Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten) {
 	envios = aten;
 }
 
-Jefe::~Jefe() {
+Jefe::~Jefe(){}
+
+void Jefe::printDebug(std::string msj){
+	Log::enviarMensaje("Jefe " + nombre + ": " + msj);
 }
+
+void Jefe::printDebug(std::string msj, int numero){
+	Log::enviarMensaje("Jefe " + nombre + ": " + msj, numero);
+}
+
 
 bool Jefe::leerAuto(Auto* autito){
 	bool status = arribos.leerAuto(autito);
+	printDebug("Lei un auto.");
 	return status;
 }
 
@@ -40,52 +50,54 @@ void Jefe::atenderAutos(){
 	Log::abrir_log();
 	Auto autito;
 
-	Log::enviarMensaje("Se ha iniciado el Proceso Jefe "+ nombre + ".");
+	printDebug("Se ha iniciado el Proceso.");
 
 	cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
+	printDebug("Se creo la memoria compartida: cantidad de empleados disponibles.");
 
 	while (leerAuto(&autito)){
-		Log::enviarMensaje("Jefe " + nombre + ": Hay auto para ser atendido, patente " + string(autito.getPatente()));
+		printDebug("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 		if (!hayEmpleados()){
 			cantidadDespachada++;
+			printDebug("La cantidad de autos despachados es de: ", cantidadDespachada);
 			mensajeDespachante(autito.getPatente());
 		}else{
 			cantidadAtendida++;
+			printDebug("La cantidad de autos atendidos es de: ", cantidadAtendida);
 			tomarEmpleado();
 			enviarAutoAEmpleado(autito);
 		}
 	}
 
 	arribos.cerrar();
-	Log::enviarMensaje("Jefe cierra el pipe de lectura arribos");
+	printDebug("Cierro el pipe de lectura arribos");
 	envios.cerrar();
-	Log::enviarMensaje("Jefe cierra el pipe de escritura envios");
-	Log::enviarMensaje("Fin del proceso Jefe");
+	printDebug("Cierro el pipe de escritura envios");
 
 	cantEmpleadosDisponibles.liberar();
+	printDebug("Libero la memoria compartida: cantidad de Empleados disponibles.");
 
+	printDebug("Fin del proceso.");
 	Log::cerrar_log();
 	exit(0);
 }
 
 bool Jefe::hayEmpleados(){
 	int cant_empleados = cantEmpleadosDisponibles.leer();
-	stringstream ss;
-	ss << cant_empleados;
-	Log::enviarMensaje("Jefe: cantidad de empleados disponibles es " + ss.str());
+	printDebug("La cantidad de empleados disponibles es ", cant_empleados);
 	return (cant_empleados > 0);
 }
 
 void Jefe::tomarEmpleado(){
-	Log::enviarMensaje("Jefe toma un empleado disponible.");
+	printDebug("Tomo un empleado disponible.");
 	cantEmpleadosDisponibles.incrementar(-1);
 }
 
 void Jefe::mensajeDespachante(std::string patente){
-	Log::enviarMensaje("Jefe " + nombre + ": " + " Se ha despachado al auto de patente " + patente + " por no haber empleados libres");
+	printDebug("Se ha despachado al auto de patente " + patente + " por no haber empleados libres");
 }
 
 bool Jefe::enviarAutoAEmpleado(const Auto& autito){
-	Log::enviarMensaje("Jefe envia el auto por el pipe hacia empleados");
+	printDebug("Envio el auto por el pipe hacia empleados");
 	return envios.escribirAuto(autito);
 }

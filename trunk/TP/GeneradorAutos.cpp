@@ -6,16 +6,19 @@
  */
 
 #include "GeneradorAutos.h"
-#include "ManejoTiempos.h"
-#include "Log.h"
+
 #include <unistd.h>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "ManejoTiempos.h"
+#include "Log.h"
 #include "MecanismoConcurrencia/SIGINT_Handler.h"
 #include "MecanismoConcurrencia/SignalHandler.h"
+
 using namespace std;
 
 GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal) {
@@ -23,8 +26,7 @@ GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal) {
 	envios = canal;
 }
 
-GeneradorAutos::~GeneradorAutos() {
-}
+GeneradorAutos::~GeneradorAutos(){}
 
 std::string generarMensaje(int numAuto, string patente){
 	std::string mensaje = "FordMachine: Auto ";

@@ -35,6 +35,8 @@ private:
 	void mensajeDespachante(std::string );
 	void tomarEmpleado();
 	bool enviarAutoAEmpleado(const Auto&);
+	void printDebug(std::string);
+	void printDebug(std::string,int);
 };
 
 #endif /* JEFE_H_ */
