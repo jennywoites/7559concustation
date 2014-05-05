@@ -21,6 +21,7 @@ public:
 	void crear(const std::string& nombre,const int valorInicial );
 	int wait () const; // decrementa
 	int signal () const; // incrementa
+	int getVal () const; // obtiene el valor, DEBUG only
 	void eliminar () const;
 };
 
