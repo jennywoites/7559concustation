@@ -84,7 +84,6 @@ void Empleado::atenderAutos(int cantidadSurtidores){
 bool Empleado::leerAuto(Auto* autito){
 	Log::enviarMensaje("Voy a leer un auto. Si no hay, me duermo.");
 	bool status = arribos.leerAuto(autito);
-	Log::enviarMensaje("Lei un auto.");
 	return status;
 }
 
