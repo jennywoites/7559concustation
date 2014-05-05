@@ -20,11 +20,11 @@ EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaG
 EstacionDeServicio::~EstacionDeServicio() {}
 
 void EstacionDeServicio::printDebug(std::string msj){
-	Log::enviarMensaje("Estacion de Servicio: " + msj);
+	//Log::enviarMensaje("Estacion de Servicio: " + msj);
 }
 
 void EstacionDeServicio::printDebug(std::string msj, int numero){
-	Log::enviarMensaje("Estacion de Servicio: " + msj, numero);
+	//Log::enviarMensaje("Estacion de Servicio: " + msj, numero);
 }
 
 
@@ -38,12 +38,12 @@ void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 }
 
 void EstacionDeServicio::abrir(float plataInicial){
-	//Log log("log.jem");
-	//log.escribir();
+	Log log("log.jem");
+	log.escribir();
 	//Log::abrir_log();
 	printDebug("Comienzo a funcionar. ABIERTO");
 
-	Administrador a (3000000); //FIXME
+	Administrador a (30000000); //FIXME
 	administrador = a.mirarDinero(plataInicial);
 	printDebug("Creo mi administrador con dinero inicial $",plataInicial);
 
