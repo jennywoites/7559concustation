@@ -9,6 +9,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
+#include "../Log.h"
+
 using namespace std;
 
 PipeAutos::PipeAutos() {
@@ -17,7 +19,9 @@ PipeAutos::PipeAutos() {
 }
 
 void PipeAutos::crear(const std::string& nombre) {
-	Pipe::crear(nombre);
+	Pipe::crear();
+	controlLectura.crear(nombre, 1);
+	//FIXME
 }
 
 PipeAutos::~PipeAutos() {
@@ -26,7 +30,15 @@ PipeAutos::~PipeAutos() {
 
 bool PipeAutos :: leerAuto ( Auto* autito ) {
 	struct auto_serial serie;
+	Log::enviarMensaje("Debug: valor de Semaph ", controlLectura.getVal());
+	Log::enviarMensaje("hago wait");
+	controlLectura.wait();
+	Log::enviarMensaje("ingrese pipeLectura");
+	Log::enviarMensaje("Debug: valor de Semaph ", controlLectura.getVal());
 	ssize_t leido = Pipe::leer(static_cast<void*>(&serie), sizeof(struct auto_serial));
+	Log::enviarMensaje("hago signal");
+	controlLectura.signal();
+	Log::enviarMensaje("Debug: valor de Semaph liberado ", controlLectura.getVal());
 	if (leido!=sizeof(struct auto_serial))
 		return false;
 
@@ -38,4 +50,12 @@ bool PipeAutos :: escribirAuto ( const Auto& autito ) {
 	struct auto_serial serie = autito.serializar();
 	ssize_t escrito = Pipe::escribir(static_cast<const void*>(&serie), sizeof(struct auto_serial));
 	return (escrito==sizeof(struct auto_serial));
+}
+
+void PipeAutos::cerrar(){
+	Pipe::cerrar();
+}
+
+void PipeAutos::liberar(){
+	controlLectura.eliminar();
 }
