@@ -22,7 +22,7 @@ Log::Log(std::string path) {
 	archivo = path;
 	escritor = "";
 	Log::pipe = Pipe();
-	Log::pipe.crear(ARCHIVO_LOG);
+	Log::pipe.crear();
 }
 
 Log::~Log() {
