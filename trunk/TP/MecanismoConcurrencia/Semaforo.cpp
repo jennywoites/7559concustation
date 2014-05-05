@@ -52,6 +52,10 @@ int Semaforo :: signal () const {
 	return resultado;
 }
 
+int Semaforo :: getVal () const {
+	return semctl(this->id, 0, GETVAL, 0);
+}
+
 void Semaforo :: eliminar () const {
 	semctl ( this->id,0,IPC_RMID );
 }
