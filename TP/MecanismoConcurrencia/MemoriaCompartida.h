@@ -71,12 +71,12 @@ template <class T> void MemoriaCompartida<T>::liberar() {
 		int procAdosados = this->cantidadProcesosAdosados ();
 		if ( procAdosados == 0 ) {
 			shmctl ( this->shmId,IPC_RMID,NULL );
+			control.eliminar();
 		}
 	} else {
 		std::string mensaje = std::string("Error en shmdt(): ") + std::string(strerror(errno));
 		throw mensaje;
 	}
-	control.eliminar();
 }
 
 template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const std::string& archivo,const char letra ):shmId(0),ptrDatos(NULL) {
