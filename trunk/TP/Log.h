@@ -11,6 +11,7 @@
 #include <string>
 
 #include "MecanismoConcurrencia/Pipe.h"
+#include "constantesArchivos.h"
 
 using namespace std;
 #define LONGITUD_MENSAJE 140

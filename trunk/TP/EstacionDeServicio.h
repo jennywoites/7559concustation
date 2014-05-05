@@ -13,6 +13,7 @@
 #include "Administrador.h"
 #include "GeneradorAutos.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
+#include "constantesArchivos.h"
 
 using namespace std;
 

@@ -16,6 +16,10 @@ PipeAutos::PipeAutos() {
 
 }
 
+void PipeAutos::crear(const std::string& nombre) {
+	Pipe::crear(nombre);
+}
+
 PipeAutos::~PipeAutos() {
 	// TODO Auto-generated destructor stub
 }
