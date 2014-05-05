@@ -63,9 +63,9 @@ void Jefe::atenderAutos(){
 			mensajeDespachante(autito.getPatente());
 		}else{
 			cantidadAtendida++;
-			printDebug("La cantidad de autos atendidos es de: ", cantidadAtendida);
 			tomarEmpleado();
 			enviarAutoAEmpleado(autito);
+			printDebug("La cantidad de autos que atendi es de: ", cantidadAtendida);
 		}
 	}
 
