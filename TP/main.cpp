@@ -25,7 +25,7 @@
 void prueba1(void){
 	Caja caja();
 	Administrador admin(10000);
-	admin.mirarDinero(3.50);
+	admin.mirarDinero();
 	wait(NULL);
 	cout <<"Cierro la caja\n";
 }
@@ -52,7 +52,7 @@ void pruebaGenPipeAutos(void){
 
 void pruebaAtPipeAutos(void){
 	Administrador admin(3000000);
-	pid_t adm = admin.mirarDinero(3.50);
+	pid_t adm = admin.mirarDinero();
 
 	PipeAutos atencion;
 
@@ -89,7 +89,7 @@ void prueba_log(){
 	Administrador admin(10000);
 
 	cout << "Voy a hacer que el admin empiece" <<endl;
-	admin.mirarDinero(3.50);
+	admin.mirarDinero();
 
 	usleep(10000);
 	Log::enviarMensaje("Voy a depositar 5");
@@ -108,7 +108,7 @@ void prueba_memoria(){
 	PipeAutos generacion;
 
 	Administrador admin(300000);
-	admin.mirarDinero(3.50);
+	admin.mirarDinero();
 
 	generacion.cerrar();
 	atencion.cerrar();
@@ -123,7 +123,7 @@ void prueba_signal_gen(){
 	pid_t gen = g.generar();
 
 	Administrador admin(300000);
-	pid_t adm = admin.mirarDinero(3.50);
+	pid_t adm = admin.mirarDinero();
 
 	sleep(7);
 	kill(gen, SIGINT);
@@ -142,7 +142,7 @@ void crearEmpleados(const PipeAutos& pipe){
 
 void pruebaSurtido(){
 	Administrador a (3000000000); //FIXME
-	pid_t administrador = a.mirarDinero(3.50);
+	pid_t administrador = a.mirarDinero();
 
 	PipeAutos atencion;
 
@@ -183,9 +183,9 @@ int main(void){
 	//prueba_signal_gen();
 	//pruebaSurtido();
 
-	EstacionDeServicio e (5, 0, 300000);
-	e.abrir(3.50);
-	sleep(15);
+	EstacionDeServicio e (2, 0, 300000);
+	e.abrir();
+	sleep(5);
 	e.cerrar();
 
 	exit(0);

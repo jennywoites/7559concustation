@@ -25,6 +25,8 @@ private:
 	pid_t generador;
 	pid_t administrador;
 	Caja caja;
+	PipeAutos atencion;
+	PipeAutos generacion;
 
 	void crearEmpleados(const PipeAutos&);
 	void esperarCierre();
@@ -35,7 +37,7 @@ public:
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos);
 	virtual ~EstacionDeServicio();
 
-	void abrir(float plataInicial);
+	void abrir();
 	void cerrar();
 };
 

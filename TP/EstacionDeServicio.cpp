@@ -41,7 +41,7 @@ void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 	}
 }
 
-void EstacionDeServicio::abrir(float plataInicial){
+void EstacionDeServicio::abrir(){
 	Log log("log.jem");
 	log.escribir();
 	//Log::abrir_log();
@@ -49,10 +49,10 @@ void EstacionDeServicio::abrir(float plataInicial){
 	printDebug("Comienzo a funcionar. ABIERTO");
 
 	Administrador a (30000000); //FIXME
-	administrador = a.mirarDinero(plataInicial);
-	printDebug("Creo mi administrador con dinero inicial $",plataInicial);
+	administrador = a.mirarDinero();
+	printDebug("Creo mi administrador");
 
-	PipeAutos atencion;
+	//PipeAutos atencion;
 	atencion.crear(ARCHIVO_ATENCION);
 	printDebug("Creo el pipe de atencion de autos.");
 
@@ -62,7 +62,7 @@ void EstacionDeServicio::abrir(float plataInicial){
 
 	printDebug("Termine de crear todos los empleados.");
 
-	PipeAutos generacion;
+	//PipeAutos generacion;
 	generacion.crear(ARCHIVO_GENERACION);
 	printDebug("Creo el pipe de generacion de autos.");
 
@@ -102,6 +102,10 @@ void EstacionDeServicio::cerrar(){
 	printDebug("Envie signal de finalizar al generador");
 
 	esperarCierre();	// esperar cierre
+
+	atencion.liberar();
+	generacion.liberar();
+
 	printDebug("Espere a todos mis hijos: empleados, jefe y generador de autos.");
 
 	kill(administrador, SIGINT);	// envia senial a generador
