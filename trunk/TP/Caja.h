@@ -23,7 +23,6 @@ public:
 	void cerrar();
 
 	void abrir();
-	void abrir(float);
 
 };
 
