@@ -23,7 +23,7 @@ private:
 public:
 	Administrador(float);
 	virtual ~Administrador();
-	pid_t mirarDinero(float);
+	pid_t mirarDinero();
 };
 
 #endif /* ADMINISTRADOR_H_ */

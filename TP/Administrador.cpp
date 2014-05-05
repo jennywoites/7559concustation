@@ -25,7 +25,7 @@ Administrador::~Administrador() {
 
 }
 
-pid_t Administrador::mirarDinero(float inicial){
+pid_t Administrador::mirarDinero(){
 	pid_t id = fork();
 	if (id != 0)
 		return id;
@@ -34,9 +34,8 @@ pid_t Administrador::mirarDinero(float inicial){
 	Log::setEscritor("Administrador");
 	Log::enviarMensaje("Abro el log.");
 
-	caja.abrir(inicial);
-	plata_anterior = inicial;
-	Log::enviarMensaje("Abro caja con un monto inicial de $",inicial);
+	caja.abrir();
+	Log::enviarMensaje("Abro la caja");
 
 	SIGINT_Handler sigint_handler;
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);

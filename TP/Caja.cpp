@@ -34,7 +34,3 @@ void Caja::abrir(){
 	plata.crear(ARCHIVO_CAJA, CAJA);
 }
 
-void Caja::abrir(float plataInicial){
-	plata.crear(ARCHIVO_CAJA, CAJA);
-	plata.escribir(plataInicial);
-}
