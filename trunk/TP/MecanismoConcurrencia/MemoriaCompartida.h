@@ -8,6 +8,7 @@
 #include <string.h>
 #include <iostream>
 #include <errno.h>
+#include "Semaforo.h"
 
 using namespace std;
 
@@ -18,6 +19,8 @@ private:
 	T*	ptrDatos;
 
 	int	cantidadProcesosAdosados() const;
+
+	Semaforo control;
 
 public:
 	MemoriaCompartida ();
@@ -37,6 +40,7 @@ template <class T> MemoriaCompartida<T>::MemoriaCompartida ():shmId(0),ptrDatos(
 }
 
 template <class T> void MemoriaCompartida<T>::crear ( const std::string& archivo,const char letra ) {
+	control.crear(archivo.c_str(), 1);
 	key_t clave = ftok ( archivo.c_str(),letra );
 
 	if ( clave > 0 ) {
@@ -72,6 +76,7 @@ template <class T> void MemoriaCompartida<T>::liberar() {
 		std::string mensaje = std::string("Error en shmdt(): ") + std::string(strerror(errno));
 		throw mensaje;
 	}
+	control.eliminar();
 }
 
 template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const std::string& archivo,const char letra ):shmId(0),ptrDatos(NULL) {
@@ -131,15 +136,22 @@ template <class T> MemoriaCompartida<T>& MemoriaCompartida<T>::operator= ( const
 }
 
 template <class T> void MemoriaCompartida<T>::escribir ( const T& dato ) {
+	control.wait();
 	*(this->ptrDatos) = dato;
+	control.signal();
 }
 
 template <class T> T MemoriaCompartida<T>::leer() const {
-	return *(this->ptrDatos);
+	control.wait();
+	T leido = *(this->ptrDatos);
+	control.signal();
+	return leido;
 }
 
 template<class T> void MemoriaCompartida<T>::incrementar(const T& valor){
+	control.wait();
 	*(this->ptrDatos) += valor;
+	control.signal();
 }
 
 template <class T> int MemoriaCompartida<T> :: cantidadProcesosAdosados () const {
