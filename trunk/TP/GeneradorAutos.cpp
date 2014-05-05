@@ -29,7 +29,7 @@ GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal) {
 GeneradorAutos::~GeneradorAutos(){}
 
 std::string generarMensaje(int numAuto, string patente){
-	std::string mensaje = "FordMachine: Auto ";
+	std::string mensaje = "Auto ";
 
 	stringstream ss;
 	ss << numAuto;//add number to the stream
@@ -52,7 +52,9 @@ pid_t GeneradorAutos::generar(){
 	int numAuto = 0;
 
 	Log::abrir_log();
-	Log::enviarMensaje("Generador de Autos: llamenme Ford. Roque Ford");
+	Log::setEscritor("Generador de Autos");
+	Log::enviarMensaje("llamenme Ford. Roque Ford");
+	Log::setEscritor("FordMachine");
 	
 	while (sigint_handler.getGracefulQuit() == 0 ) {
 		Auto autito;
@@ -62,8 +64,8 @@ pid_t GeneradorAutos::generar(){
 		usleep(tiempo);
 		numAuto++;
 	}
-	Log::enviarMensaje("FordMachine: llego la crisis del 30, ya no hay mas trabajo por hacer");
-	Log::enviarMensaje("FordMachine: Cierro el canal de autos");
+	Log::enviarMensaje("Llego la crisis del 30, ya no hay mas trabajo por hacer");
+	Log::enviarMensaje("Cierro el canal de autos");
 	envios.cerrar();
 	SignalHandler :: destruir ();
 	cout << "Generador deja de generar y se cierra" << endl;
