@@ -5,14 +5,12 @@
 Pipe :: Pipe() : lectura(false), escritura(false) {
 }
 
-void Pipe :: crear(const std::string& nombre) {
+void Pipe :: crear() {
 	lectura = true;
 	escritura = true;
 	pipe ( this->descriptores );
 	/*fcntl ( this->descriptors[0],F_SETFL,O_NONBLOCK );
 	fcntl ( this->descriptors[1],F_SETFL,O_NONBLOCK );*/
-	controlLectura.crear(nombre, 1);
-	//FIXME
 }
 
 Pipe::~Pipe() {
@@ -44,11 +42,7 @@ ssize_t Pipe :: leer ( void* buffer,const int buffSize ) {
 		this->escritura = false;
 	}
 	
-	controlLectura.wait();
-	std::cout << "pipeLectura  " << getpid() << std::endl;
-	ssize_t leido =  read ( this->descriptores[LECTURA],buffer,buffSize );
-	controlLectura.signal();
-	return leido;
+	return  read ( this->descriptores[LECTURA],buffer,buffSize );
 }
 
 int Pipe :: getFdLectura () const {
@@ -75,5 +69,4 @@ void Pipe :: cerrar () {
 		close ( this->descriptores[ESCRITURA] );
 		this->escritura = false;
 	}
-	controlLectura.eliminar();
 }

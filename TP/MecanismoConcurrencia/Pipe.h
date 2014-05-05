@@ -3,7 +3,6 @@
 
 #include <unistd.h>
 #include <fcntl.h>
-#include "Semaforo.h"
 
 class Pipe {
 
@@ -11,14 +10,13 @@ private:
 	int descriptores[2];
 	bool lectura;
 	bool escritura;
-	Semaforo controlLectura;
 
 public:
 	static const int LECTURA = 0;
 	static const int ESCRITURA = 1;
 
 	Pipe();
-	void crear(const std::string& nombre);
+	void crear();
 	virtual ~Pipe();
 
 	void setearModo ( const int modo );
