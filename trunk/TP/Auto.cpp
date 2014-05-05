@@ -28,7 +28,8 @@ Auto::Auto(std::string patente, int capacidad){
 }
 
 void Auto::imprimir(){
-	cout << "Se atendio el auto, cuya patente es: " << patente << "Se le cargaron " << capacidadTanque << "litros." << endl;
+	cout << "Se atendio el auto, cuya patente es: " << patente << "Se le cargaron " << capacidadTanque << " litros." << endl;
+	//TODO: deberia ir al Log
 }
 
 Auto::~Auto() {
