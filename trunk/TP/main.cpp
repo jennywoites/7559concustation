@@ -51,23 +51,28 @@ void pruebaGenPipeAutos(void){
 }
 
 void pruebaAtPipeAutos(void){
-	Administrador admin(300000);
-	admin.mirarDinero(3.50);
+	Administrador admin(3000000);
+	pid_t adm = admin.mirarDinero(3.50);
 
 	PipeAutos atencion;
-	PipeAutos generacion;
 
     Empleado e ("0", atencion);
+    e.atenderAutos(0);
+
+    PipeAutos generacion;
+
 	Jefe j ("UltraAlterMaster", generacion, atencion);
 	j.atenderAutos();
-	GeneradorAutos g (1000000, generacion);
-
-	g.generar();
-	generacion.cerrar();
-
-	e.atenderAutos(0);
 	atencion.cerrar();
 
+	GeneradorAutos g (1000000, generacion);
+
+	pid_t gen = g.generar();
+	generacion.cerrar();
+
+	sleep(4);
+	kill(gen, SIGINT);
+	kill(adm, SIGINT);
 	wait(NULL);
 	wait(NULL);
 	wait(NULL);
@@ -127,6 +132,47 @@ void prueba_signal_gen(){
 	wait(NULL);
 }
 
+void crearEmpleados(const PipeAutos& pipe){
+	for(int i = 0; i<1; i++){
+		std::string nombre = "0" + i; //FIXME: Obtener el nombre para un empleado
+		Empleado e (nombre, pipe);
+		e.atenderAutos(0);
+	}
+}
+
+void pruebaSurtido(){
+	Administrador a (3000000000); //FIXME
+	pid_t administrador = a.mirarDinero(3.50);
+
+	PipeAutos atencion;
+
+	//Creo los empleados, el generador, el administrador y el jefe y los mando
+	// a que atiendan. Cada uno crea sus procesos correspondientes
+	crearEmpleados(atencion);
+
+	PipeAutos generacion;
+
+	Jefe j ("UltraAlterMaster", generacion, atencion);
+	j.atenderAutos();
+
+	//Cierro pipe de atencion
+	atencion.cerrar();
+
+	GeneradorAutos g (300000, generacion);
+	pid_t generador = g.generar();
+
+	//Cierro pipe de generacion
+	generacion.cerrar();
+
+	sleep(2);
+	kill(generador, SIGINT);
+	kill(administrador, SIGINT);
+	wait(NULL);
+	wait(NULL);
+	wait(NULL);
+	wait(NULL);
+}
+
 int main(void){
 	//prueba1();
 	//pruebaPipeAutos();
@@ -135,10 +181,11 @@ int main(void){
 	//pruebaAtPipeAutos();
 	//prueba_memoria();
 	//prueba_signal_gen();
+	//pruebaSurtido();
 
-	EstacionDeServicio e(1,2,10000000);
-	e.abrir(20.0);
-	sleep(25);
+	EstacionDeServicio e (1, 0, 3000000);
+	e.abrir(3.50);
+	sleep(5);
 	e.cerrar();
 
 	exit(0);
