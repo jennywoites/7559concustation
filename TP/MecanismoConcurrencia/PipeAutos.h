@@ -10,10 +10,13 @@
 
 #include "Pipe.h"
 #include "../Auto.h"
+#include "Semaforo.h"
 
 using namespace std;
 
 class PipeAutos: public Pipe {
+private:
+	Semaforo controlLectura;
 public:
 	PipeAutos();
 	void crear(const std::string& nombre);
@@ -21,6 +24,8 @@ public:
 
 	bool leerAuto ( Auto* autito );
 	bool escribirAuto ( const Auto& autito );
+	void cerrar();
+	void liberar();
 };
 
 #endif /* PIPEAUTOS_H_ */
