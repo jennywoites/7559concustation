@@ -58,13 +58,13 @@ void Empleado::atenderAutos(int cantidadSurtidores){
 	while(leerAuto(&autito)){
 
 		printDebug("Hay auto para ser atendido, patente " + string(autito.getPatente()));
-		int surtidor = tomarSurtidor();
-		printDebug("Logre tomar el surtidor ",surtidor);
+		//int surtidor = tomarSurtidor();
+		//printDebug("Logre tomar el surtidor ",surtidor);
 
 		int litros = autito.llenar();
 		printDebug("Llene el tanque. Cantidad de litros: ",litros);
-		devolverSurtidor(surtidor);
-		printDebug("He devuelto el surtidor numero ",surtidor);
+		//devolverSurtidor(surtidor);
+		//printDebug("He devuelto el surtidor numero ",surtidor);
 
 		float plata = litros * PRECIO_POR_LITRO;
 		caja.depositar(plata);
