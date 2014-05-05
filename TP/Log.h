@@ -31,23 +31,28 @@ private:
 	std::string archivo;
 
 	static Pipe pipe;
-	static int valor;
+	static std::string escritor;
 
+	/* CONSTANTES DE MODO DEL LOG */
 	static const int LOG_DEBUG = 0;
 	static const int LOG_RELEASE = 1;
 	static const int LOG_MODO = LOG_DEBUG;
 
+	/* CONSTANTES PARA SETEO DE ENTRADA */
+
 public:
+
 	Log(std::string path);
 	virtual ~Log();
 
 	void escribir();
 
-
+	static void setEscritor(std::string);
 	static Pipe* abrir_log();
 	static void cerrar_log();
 	static void enviarMensaje(std::string);
 	static void enviarMensaje(std::string, int);
+	static void enviarMensaje(std::string, float);
 
 };
 

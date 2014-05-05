@@ -20,11 +20,11 @@ EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaG
 EstacionDeServicio::~EstacionDeServicio() {}
 
 void EstacionDeServicio::printDebug(std::string msj){
-	//Log::enviarMensaje("Estacion de Servicio: " + msj);
+	//Log::enviarMensaje(msj);
 }
 
 void EstacionDeServicio::printDebug(std::string msj, int numero){
-	//Log::enviarMensaje("Estacion de Servicio: " + msj, numero);
+	//Log::enviarMensaje(msj, numero);
 }
 
 
@@ -41,6 +41,7 @@ void EstacionDeServicio::abrir(float plataInicial){
 	Log log("log.jem");
 	log.escribir();
 	//Log::abrir_log();
+	//Log::setEscritor("Estacion de Servicio");
 	printDebug("Comienzo a funcionar. ABIERTO");
 
 	Administrador a (30000000); //FIXME
@@ -53,6 +54,7 @@ void EstacionDeServicio::abrir(float plataInicial){
 	//Creo los empleados, el generador, el administrador y el jefe y los mando
 	// a que atiendan. Cada uno crea sus procesos correspondientes
 	crearEmpleados(atencion);
+
 	printDebug("Termine de crear todos los empleados.");
 
 	PipeAutos generacion;

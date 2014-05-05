@@ -14,11 +14,13 @@
 #include <sstream>
 
 Pipe Log::pipe;
+std::string Log::escritor;
 
 using namespace std;
 
 Log::Log(std::string path) {
 	archivo = path;
+	escritor = "";
 	Log::pipe = Pipe();
 }
 
@@ -27,6 +29,7 @@ Log::~Log() {
 }
 
 void Log::escribir(){
+
 	if (fork() != 0)
 		return;
 	open(archivo.c_str(), O_CREAT, 0666);
@@ -57,13 +60,25 @@ void Log::cerrar_log(){
 	pipe.cerrar();
 }
 
+void Log::setEscritor(std::string writer){
+	Log::escritor = writer;
+}
+
 void Log::enviarMensaje(std::string msj, int numero){
 	stringstream ss;
 	ss << numero;
 	enviarMensaje(msj + ss.str());
 }
 
+void Log::enviarMensaje(std::string msj, float numero){
+	stringstream ss;
+	ss << numero;
+	enviarMensaje(msj + ss.str());
+}
+
+
 void Log::enviarMensaje(std::string msj){
+	msj = escritor + string(": ") + msj;
 	while (msj.size() < LONGITUD_MENSAJE){
 		msj += '\0';
 	}

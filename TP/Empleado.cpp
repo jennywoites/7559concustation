@@ -22,80 +22,69 @@ Empleado::Empleado(std::string name, const PipeAutos& pipe) {
 Empleado::~Empleado() {
 }
 
-void Empleado::printDebug(std::string msj){
-	Log::enviarMensaje("Empleado " + nombre + ": " + msj);
-}
-
-void Empleado::printDebug(std::string msj, int numero){
-	Log::enviarMensaje("Empleado " + nombre + ": " + msj, numero);
-}
-
-void Empleado::printDebug(std::string msj, float numero){
-	Log::enviarMensaje("Empleado " + nombre + ": " + msj, numero);
-}
-
 void Empleado::atenderAutos(int cantidadSurtidores){
 	pid_t id = fork();
 	if (id != 0)
 		return;
 
 	Log::abrir_log();
-	printDebug("Se ha iniciado el Proceso.");
+	Log::setEscritor("Empleado " + nombre);
+	Log::enviarMensaje("Se ha iniciado el Proceso.");
 	Auto autito;
 	caja.abrir();
-	printDebug("Abri la caja.");
+	Log::enviarMensaje("Abri la caja.");
 
 	disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 	disponibilidad.incrementar(1);
-	printDebug("Me pongo a disposicion del Jefe.");
+	Log::enviarMensaje("Me pongo a disposicion del Jefe.");
 
 	for (int i = 0; i < cantidadSurtidores; i++){
 		MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
 		this->surtidores.push_back(surtidor);
-		printDebug("Asocio surtidor numero: ",i);
+		Log::enviarMensaje("Asocio surtidor numero: ",i);
 	}
 
 	while(leerAuto(&autito)){
 
-		printDebug("Hay auto para ser atendido, patente " + string(autito.getPatente()));
+		Log::enviarMensaje("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 		//int surtidor = tomarSurtidor();
 		//printDebug("Logre tomar el surtidor ",surtidor);
 
 		int litros = autito.llenar();
-		printDebug("Llene el tanque. Cantidad de litros: ",litros);
+		Log::enviarMensaje("Llene el tanque. Cantidad de litros: ",litros);
 		//devolverSurtidor(surtidor);
 		//printDebug("He devuelto el surtidor numero ",surtidor);
 
 		float plata = litros * PRECIO_POR_LITRO;
 		caja.depositar(plata);
-		printDebug("Deposito en caja $", plata);
+		Log::enviarMensaje("Deposito en caja $", plata);
 
-		printDebug("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
+		Log::enviarMensaje("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
 		autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
 		disponibilidad.incrementar(1);
-		printDebug("Estoy disponible para el jefe");
+		Log::enviarMensaje("Estoy disponible para el jefe");
 	}
 
 	caja.cerrar();
-	printDebug("Cerre la caja.");
+	Log::enviarMensaje("Cerre la caja.");
 
 	disponibilidad.liberar();
-	printDebug("Libere el pipe de escritura disponibilidad");
+	Log::enviarMensaje("Libere el pipe de escritura disponibilidad");
 
 	for (int i = 0; i < int(surtidores.size()); i++){
 		this->surtidores.at(i).liberar();
-		printDebug("Libere el surtido numero ", i);
+		Log::enviarMensaje("Libere el surtido numero ", i);
 	}
 
-	printDebug("Finalice mi proceso correctamente.");
+	Log::enviarMensaje("Finalice mi proceso correctamente.");
 	Log::cerrar_log();
 	exit(0);
 }
 
 bool Empleado::leerAuto(Auto* autito){
-	printDebug("Voy a leer un auto. Si no hay, me duermo.");
+	Log::enviarMensaje("Voy a leer un auto. Si no hay, me duermo.");
 	bool status = arribos.leerAuto(autito);
-	printDebug("Lei un auto.");
+	Log::enviarMensaje("Lei un auto.");
 	return status;
 }
 
