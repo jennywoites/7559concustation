@@ -16,6 +16,7 @@ using namespace std;
 class PipeAutos: public Pipe {
 public:
 	PipeAutos();
+	void crear(const std::string& nombre);
 	virtual ~PipeAutos();
 
 	bool leerAuto ( Auto* autito );

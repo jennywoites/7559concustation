@@ -8,6 +8,7 @@
 #include "EstacionDeServicio.h"
 #include "Log.h"
 #include <sys/wait.h>
+#include <sstream>
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos){
 	cantEmpleados = empleados;
@@ -30,7 +31,10 @@ void EstacionDeServicio::printDebug(std::string msj, int numero){
 
 void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
 	for(int i = 0; i<cantEmpleados; i++){
-		std::string nombre = "0" + i; //FIXME: Obtener el nombre para un empleado
+		stringstream ss;
+		ss << i;
+		std::string nombre;
+		nombre = ss.str(); //FIXME: Obtener el nombre para un empleado
 		Empleado e (nombre, pipe);
 		printDebug("Cree el empleado " + nombre);
 		e.atenderAutos(cantSurtidores);
@@ -49,6 +53,7 @@ void EstacionDeServicio::abrir(float plataInicial){
 	printDebug("Creo mi administrador con dinero inicial $",plataInicial);
 
 	PipeAutos atencion;
+	atencion.crear(ARCHIVO_ATENCION);
 	printDebug("Creo el pipe de atencion de autos.");
 
 	//Creo los empleados, el generador, el administrador y el jefe y los mando
@@ -58,6 +63,7 @@ void EstacionDeServicio::abrir(float plataInicial){
 	printDebug("Termine de crear todos los empleados.");
 
 	PipeAutos generacion;
+	generacion.crear(ARCHIVO_GENERACION);
 	printDebug("Creo el pipe de generacion de autos.");
 
 	Jefe j ("UltraAlterMaster", generacion, atencion);
@@ -101,5 +107,5 @@ void EstacionDeServicio::cerrar(){
 	kill(administrador, SIGINT);	// envia senial a generador
 	printDebug("Envie signal de finalizar al administrador");
 
-	//Log::cerrar_log();
+	Log::cerrar_log();
 }
