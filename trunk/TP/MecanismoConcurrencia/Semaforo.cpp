@@ -3,9 +3,9 @@
 Semaforo :: Semaforo ():id(0), valorInicial(0) {
 }
 
-void Semaforo :: crear ( const std::string& nombre,const int valorInicial){
+void Semaforo :: crear ( const std::string& nombre, char letra,const int valorInicial){
 	this->valorInicial = valorInicial;
-	key_t clave = ftok (nombre.c_str(),'a' );
+	key_t clave = ftok (nombre.c_str(), letra);
 	this->id = semget ( clave,1,0666 | IPC_CREAT );
 
 	this->inicializar ();
