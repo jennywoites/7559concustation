@@ -14,6 +14,9 @@
 #define CAJA 'C'
 #define ARCHIVO_SURTIDORES "TP/Empleado.h"
 #define SURTIDOR 'S'
+#define ARCHIVO_GENERACION "TP/GeneradorAutos.h"
+#define ARCHIVO_ATENCION "TP/Auto.h"
+#define ARCHIVO_LOG "TP/Log.h"
 
 
 #endif /* CONSTANTESARCHIVOS_H_ */
