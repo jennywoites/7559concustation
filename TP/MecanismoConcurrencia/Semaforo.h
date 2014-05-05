@@ -18,7 +18,7 @@ public:
 	Semaforo();
 	~Semaforo();
 
-	void crear(const std::string& nombre,const int valorInicial );
+	void crear(const std::string& nombre, char letra, const int valorInicial );
 	int wait () const; // decrementa
 	int signal () const; // incrementa
 	int getVal () const; // obtiene el valor, DEBUG only

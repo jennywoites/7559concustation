@@ -20,7 +20,7 @@ PipeAutos::PipeAutos() {
 
 void PipeAutos::crear(const std::string& nombre) {
 	Pipe::crear();
-	controlLectura.crear(nombre, 1);
+	controlLectura.crear(nombre, PIPE, 1);
 	//FIXME
 }
 

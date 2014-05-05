@@ -40,7 +40,7 @@ template <class T> MemoriaCompartida<T>::MemoriaCompartida ():shmId(0),ptrDatos(
 }
 
 template <class T> void MemoriaCompartida<T>::crear ( const std::string& archivo,const char letra ) {
-	control.crear(archivo.c_str(), 1);
+	control.crear(archivo.c_str(), letra, 1);
 	key_t clave = ftok ( archivo.c_str(),letra );
 
 	if ( clave > 0 ) {

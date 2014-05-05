@@ -17,6 +17,7 @@ using namespace std;
 class PipeAutos: public Pipe {
 private:
 	Semaforo controlLectura;
+	static const char PIPE = 'p';
 public:
 	PipeAutos();
 	void crear(const std::string& nombre);
