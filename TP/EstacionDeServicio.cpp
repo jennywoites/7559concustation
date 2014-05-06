@@ -14,7 +14,7 @@
 
 #include "Log.h"
 
-#define ARCH_NOMBRES "nombres.jem"
+#define ARCH_NOMBRES "TP/nombres.jem"
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos){
 	cantEmpleados = empleados;
@@ -34,9 +34,8 @@ void EstacionDeServicio::printDebug(std::string msj, int numero){
 	//Log::enviarMensaje(msj, numero);
 }
 
-void EstacionDeServicio::agregarNombres(vector<std::string> nombres){
-	//FIXME: Ver como pasar el vector para que se modifique adentro
-	//FIXME: Usar el archivo para obtener los nombres
+void EstacionDeServicio::agregarNombres(vector<std::string>& nombres){
+	//FIXME: Usar bien el archivo para obtener los nombres, verificar si existe
 
     ifstream archNombres(ARCH_NOMBRES);
 
@@ -49,7 +48,8 @@ void EstacionDeServicio::agregarNombres(vector<std::string> nombres){
     	name = new char [linea.size() + 1];
     	strcpy(name, linea.c_str());
     	cout << linea << endl;
-    	//nombres.push_back(name);
+    	nombres.push_back(name);
+    	cout << name << endl;
     	delete name;
     }
 
@@ -57,7 +57,7 @@ void EstacionDeServicio::agregarNombres(vector<std::string> nombres){
 
 }
 
-std::string EstacionDeServicio::obtenerNombre(vector<std::string> nombres, int i){
+std::string EstacionDeServicio::obtenerNombre(vector<std::string>& nombres, int i){
 	std::string nombre;
 	int largo = nombres.size();
 	if(largo == 0){
