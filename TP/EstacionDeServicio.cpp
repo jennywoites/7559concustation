@@ -6,9 +6,15 @@
  */
 
 #include "EstacionDeServicio.h"
-#include "Log.h"
+
 #include <sys/wait.h>
 #include <sstream>
+#include <iostream>
+#include <fstream>
+
+#include "Log.h"
+
+#define ARCH_NOMBRES "nombres.jem"
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos){
 	cantEmpleados = empleados;
@@ -28,13 +34,47 @@ void EstacionDeServicio::printDebug(std::string msj, int numero){
 	//Log::enviarMensaje(msj, numero);
 }
 
+void EstacionDeServicio::agregarNombres(vector<std::string> nombres){
+	//FIXME: Ver como pasar el vector para que se modifique adentro
+	//FIXME: Usar el archivo para obtener los nombres
 
-void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
-	for(int i = 0; i<cantEmpleados; i++){
+    ifstream archNombres(ARCH_NOMBRES);
+
+    cout << "El archivo existe" << endl;
+
+    char* name;
+    string linea;
+
+    while (getline(archNombres, linea)) {
+    	name = new char [linea.size() + 1];
+    	strcpy(name, linea.c_str());
+    	cout << linea << endl;
+    	//nombres.push_back(name);
+    	delete name;
+    }
+
+    archNombres.close();
+
+}
+
+std::string EstacionDeServicio::obtenerNombre(vector<std::string> nombres, int i){
+	std::string nombre;
+	int largo = nombres.size();
+	if(largo == 0){
 		stringstream ss;
 		ss << i;
-		std::string nombre;
-		nombre = ss.str(); //FIXME: Obtener el nombre para un empleado
+		nombre = ss.str();
+	}else{
+		nombre = nombres.at(i%largo);
+	}
+	return nombre;
+}
+
+void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
+	vector<std::string> nombres;
+	agregarNombres(nombres);
+	for(int i = 0; i<cantEmpleados; i++){
+		std::string nombre = obtenerNombre(nombres,i);
 		Empleado e (nombre, pipe, surtidores);
 		printDebug("Cree el empleado " + nombre);
 		e.atenderAutos(cantSurtidores);
