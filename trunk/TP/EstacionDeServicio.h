@@ -7,6 +7,9 @@
 
 #ifndef ESTACIONDESERVICIO_H_
 #define ESTACIONDESERVICIO_H_
+
+#include <vector>
+
 #include "Caja.h"
 #include "Empleado.h"
 #include "Jefe.h"
@@ -15,6 +18,7 @@
 #include "MecanismoConcurrencia/PipeAutos.h"
 #include "constantesArchivos.h"
 #include "MecanismoConcurrencia/Semaforo.h"
+
 
 using namespace std;
 
@@ -30,10 +34,15 @@ private:
 	PipeAutos generacion;
 	Semaforo surtidores;
 
+private:
+
 	void crearEmpleados(const PipeAutos&, const Semaforo&);
 	void esperarCierre();
 	void printDebug(std::string);
 	void printDebug(std::string, int);
+	void agregarNombres(vector<std::string>);
+	std::string obtenerNombre(vector<std::string>, int);
+
 
 public:
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos);
