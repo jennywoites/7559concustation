@@ -16,5 +16,7 @@
 #define SURTIDOR 'S'
 #define ARCHIVO_GENERACION "TP/GeneradorAutos.h"
 #define ARCHIVO_ATENCION "TP/Auto.h"
+#define ARCHIVO_ACCESO_SURTIDORES "TP/MecanismoConcurrencia/Semaforo.h"
+#define ACCESO_SURTIDORES 'A'
 
 #endif /* CONSTANTESARCHIVOS_H_ */

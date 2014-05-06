@@ -14,6 +14,7 @@
 #include "GeneradorAutos.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
 #include "constantesArchivos.h"
+#include "MecanismoConcurrencia/Semaforo.h"
 
 using namespace std;
 
@@ -27,8 +28,9 @@ private:
 	Caja caja;
 	PipeAutos atencion;
 	PipeAutos generacion;
+	Semaforo surtidores;
 
-	void crearEmpleados(const PipeAutos&);
+	void crearEmpleados(const PipeAutos&, const Semaforo&);
 	void esperarCierre();
 	void printDebug(std::string);
 	void printDebug(std::string, int);

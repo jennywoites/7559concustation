@@ -29,13 +29,13 @@ void EstacionDeServicio::printDebug(std::string msj, int numero){
 }
 
 
-void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe){
+void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
 	for(int i = 0; i<cantEmpleados; i++){
 		stringstream ss;
 		ss << i;
 		std::string nombre;
 		nombre = ss.str(); //FIXME: Obtener el nombre para un empleado
-		Empleado e (nombre, pipe);
+		Empleado e (nombre, pipe, surtidores);
 		printDebug("Cree el empleado " + nombre);
 		e.atenderAutos(cantSurtidores);
 	}
@@ -58,7 +58,8 @@ void EstacionDeServicio::abrir(){
 
 	//Creo los empleados, el generador, el administrador y el jefe y los mando
 	// a que atiendan. Cada uno crea sus procesos correspondientes
-	crearEmpleados(atencion);
+	surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M= cantidad de surtidores
+	crearEmpleados(atencion,surtidores);
 
 	printDebug("Termine de crear todos los empleados.");
 
@@ -105,6 +106,7 @@ void EstacionDeServicio::cerrar(){
 
 	atencion.liberar();
 	generacion.liberar();
+	surtidores.eliminar();
 
 	printDebug("Espere a todos mis hijos: empleados, jefe y generador de autos.");
 
