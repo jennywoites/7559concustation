@@ -13,10 +13,11 @@
 #include "Log.h"
 #include "constantesArchivos.h"
 
-Empleado::Empleado(std::string name, const PipeAutos& pipe) {
+Empleado::Empleado(std::string name, const PipeAutos& pipe, const Semaforo& semaforo) {
 	nombre = name;
 	cantidadAtendidos = 0;
 	arribos = pipe;
+	accesoSurtidores = semaforo;
 }
 
 Empleado::~Empleado() {
@@ -88,7 +89,10 @@ bool Empleado::leerAuto(Auto* autito){
 }
 
 int Empleado::tomarSurtidor(){
-	//llamo a semaforo de surtidores: s.p()
+	//Espero a que me dejen solicitar el surtidor. Me habilitan cuando hay un surtidor que pueda tomar
+	accesoSurtidores.wait();
+	Log::enviarMensaje("Estoy buscando un surtidor libre.");
+
 	//busco surtidor que NO este en uso
 	for (unsigned int i = 0; i < surtidores.size(); i++){
 		if (surtidores.at(i).leer() == DESUSO){ //esto rompe FIXME
@@ -96,10 +100,12 @@ int Empleado::tomarSurtidor(){
 			return i;
 		}
 	}
+
 	return -1;
 }
 
 void Empleado::devolverSurtidor(int surtidor){
+	Log::enviarMensaje("Estoy por devolver el surtidor");
 	surtidores.at(surtidor).escribir(false);
-	//s.v()
+	accesoSurtidores.signal();
 }

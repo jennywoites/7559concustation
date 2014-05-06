@@ -8,12 +8,15 @@
 #ifndef EMPLEADO_H_
 #define EMPLEADO_H_
 
+#include <vector>
+#include <stdexcept>
+
 #include "MecanismoConcurrencia/MemoriaCompartida.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
 #include "Caja.h"
 #include "Auto.h"
-#include <vector>
-#include <stdexcept>
+#include "MecanismoConcurrencia/Semaforo.h"
+
 using namespace std;
 
 class Empleado {
@@ -25,6 +28,7 @@ private:
 	MemoriaCompartida<int> disponibilidad;
 	Caja caja;
 	PipeAutos arribos;
+	Semaforo accesoSurtidores;
 	std::vector< MemoriaCompartida<bool> > surtidores;
 
 	static const bool USO = true;
@@ -35,7 +39,7 @@ private:
 	void printDebug(std::string, float);
 
 public:
-	Empleado(std::string, const PipeAutos&);
+	Empleado(std::string, const PipeAutos&, const Semaforo&);
 	virtual ~Empleado();
 
 	void atenderAutos(int);

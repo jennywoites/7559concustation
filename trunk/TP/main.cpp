@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <sstream>
 
 #include "Auto.h"
 #include "Jefe.h"
@@ -21,6 +22,7 @@
 #include "Administrador.h"
 #include "Log.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
+#include "MecanismoConcurrencia/Semaforo.h"
 
 void prueba1(void){
 	Caja caja();
@@ -55,8 +57,10 @@ void pruebaAtPipeAutos(void){
 	pid_t adm = admin.mirarDinero();
 
 	PipeAutos atencion;
+	Semaforo surtidor;
+	surtidor.crear("main.cpp",'a',1);
 
-    Empleado e ("0", atencion);
+    Empleado e ("0", atencion,surtidor);
     e.atenderAutos(0);
 
     PipeAutos generacion;
@@ -69,6 +73,7 @@ void pruebaAtPipeAutos(void){
 
 	pid_t gen = g.generar();
 	generacion.cerrar();
+	surtidor.eliminar();
 
 	sleep(4);
 	kill(gen, SIGINT);
@@ -132,10 +137,13 @@ void prueba_signal_gen(){
 	wait(NULL);
 }
 
-void crearEmpleados(const PipeAutos& pipe){
+void crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
 	for(int i = 0; i<1; i++){
-		std::string nombre = "0" + i; //FIXME: Obtener el nombre para un empleado
-		Empleado e (nombre, pipe);
+		stringstream ss;
+		ss << i;
+		std::string nombre;
+		nombre = ss.str(); //FIXME: Obtener el nombre para un empleado
+		Empleado e (nombre, pipe, surtidores);
 		e.atenderAutos(0);
 	}
 }
@@ -145,10 +153,12 @@ void pruebaSurtido(){
 	pid_t administrador = a.mirarDinero();
 
 	PipeAutos atencion;
+	Semaforo surtidores;
+	surtidores.crear("main.cpp",'A',1);
 
 	//Creo los empleados, el generador, el administrador y el jefe y los mando
 	// a que atiendan. Cada uno crea sus procesos correspondientes
-	crearEmpleados(atencion);
+	crearEmpleados(atencion,surtidores);
 
 	PipeAutos generacion;
 
@@ -163,6 +173,7 @@ void pruebaSurtido(){
 
 	//Cierro pipe de generacion
 	generacion.cerrar();
+	surtidores.eliminar();
 
 	sleep(2);
 	kill(generador, SIGINT);
@@ -183,7 +194,7 @@ int main(void){
 	//prueba_signal_gen();
 	//pruebaSurtido();
 
-	EstacionDeServicio e (2, 3, 300000);
+	EstacionDeServicio e (10, 5, 300000);
 	e.abrir();
 	sleep(5);
 	e.cerrar();
