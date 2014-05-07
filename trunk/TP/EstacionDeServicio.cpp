@@ -49,7 +49,6 @@ void EstacionDeServicio::agregarNombres(vector<std::string>& nombres){
     	strcpy(name, linea.c_str());
     	cout << linea << endl;
     	nombres.push_back(name);
-    	cout << name << endl;
     	delete name;
     }
 
@@ -88,7 +87,7 @@ void EstacionDeServicio::abrir(){
 	//Log::setEscritor("Estacion de Servicio");
 	printDebug("Comienzo a funcionar. ABIERTO");
 
-	Administrador a (30000000); //FIXME
+	Administrador a (3000000); //FIXME
 	administrador = a.mirarDinero();
 	printDebug("Creo mi administrador");
 
