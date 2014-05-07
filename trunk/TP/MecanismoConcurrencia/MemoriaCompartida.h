@@ -34,6 +34,8 @@ public:
 	void escribir ( const T& dato );
 	void incrementar(const T& valor);
 	T leer () const;
+
+	bool modificarValor(const T& valor);
 };
 
 template <class T> MemoriaCompartida<T>::MemoriaCompartida ():shmId(0),ptrDatos(NULL) {
@@ -158,6 +160,19 @@ template <class T> int MemoriaCompartida<T> :: cantidadProcesosAdosados () const
 	shmid_ds estado;
 	shmctl ( this->shmId,IPC_STAT,&estado );
 	return estado.shm_nattch;
+}
+
+template <class T> bool MemoriaCompartida<T>::modificarValor(const T& valor){
+	bool respuesta;
+	control.wait();
+	if (  *(this->ptrDatos) == valor ){
+		respuesta = false;
+	}else{
+		respuesta = true;
+		*(this->ptrDatos) = valor;
+	}
+	control.signal();
+	return respuesta;
 }
 
 #endif
