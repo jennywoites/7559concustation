@@ -13,6 +13,9 @@
 #include "Log.h"
 #include "constantesArchivos.h"
 
+const bool Empleado::USO;
+const bool Empleado::DESUSO;
+
 Empleado::Empleado(std::string name, const PipeAutos& pipe, const Semaforo& semaforo) {
 	nombre = name;
 	cantidadAtendidos = 0;
@@ -35,6 +38,8 @@ void Empleado::atenderAutos(int cantidadSurtidores){
 	caja.abrir();
 	Log::enviarMensaje("Abri la caja.");
 
+	arribos.setearModo(Pipe::LECTURA);
+
 	disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 	disponibilidad.incrementar(1);
 	Log::enviarMensaje("Me pongo a disposicion del Jefe.");
@@ -42,7 +47,7 @@ void Empleado::atenderAutos(int cantidadSurtidores){
 	for (int i = 0; i < cantidadSurtidores; i++){
 		MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
 		this->surtidores.push_back(surtidor);
-		Log::enviarMensaje("Asocio surtidor numero: ",i);
+		//Log::enviarMensaje("Asocio surtidor numero: ",i);
 	}
 
 	while(leerAuto(&autito)){
@@ -95,10 +100,10 @@ int Empleado::tomarSurtidor(){
 
 	//busco surtidor que NO este en uso
 	for (unsigned int i = 0; i < surtidores.size(); i++){
-		if (surtidores.at(i).leer() == DESUSO){ //esto rompe FIXME
-			surtidores.at(i).escribir(true);
+		if (surtidores.at(i).modificarValor(USO))
 			return i;
-		}
+		else
+			Log::enviarMensaje("No logre tomar el surtidor ", int(i));
 	}
 
 	return -1;
@@ -106,6 +111,6 @@ int Empleado::tomarSurtidor(){
 
 void Empleado::devolverSurtidor(int surtidor){
 	Log::enviarMensaje("Estoy por devolver el surtidor");
-	surtidores.at(surtidor).escribir(false);
+	surtidores.at(surtidor).modificarValor(DESUSO);
 	accesoSurtidores.signal();
 }

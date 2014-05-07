@@ -42,6 +42,9 @@ void Jefe::atenderAutos(){
 	Log::setEscritor("Jefe " + nombre);
 	Auto autito;
 
+	arribos.setearModo(Pipe::LECTURA);
+	envios.setearModo(Pipe::ESCRITURA);
+
 	Log::enviarMensaje("Se ha iniciado el Proceso.");
 
 	cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
