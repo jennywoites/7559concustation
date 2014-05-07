@@ -27,7 +27,7 @@
 void prueba1(void){
 	Caja caja();
 	Administrador admin(10000);
-	admin.mirarDinero();
+	admin.administrarCaja();
 	wait(NULL);
 	cout <<"Cierro la caja\n";
 }
@@ -54,7 +54,7 @@ void pruebaGenPipeAutos(void){
 
 void pruebaAtPipeAutos(void){
 	Administrador admin(3000000);
-	pid_t adm = admin.mirarDinero();
+	pid_t adm = admin.administrarCaja();
 
 	PipeAutos atencion;
 	Semaforo surtidor;
@@ -94,7 +94,7 @@ void prueba_log(){
 	Administrador admin(10000);
 
 	cout << "Voy a hacer que el admin empiece" <<endl;
-	admin.mirarDinero();
+	admin.administrarCaja();
 
 	usleep(10000);
 	Log::enviarMensaje("Voy a depositar 5");
@@ -113,7 +113,7 @@ void prueba_memoria(){
 	PipeAutos generacion;
 
 	Administrador admin(300000);
-	admin.mirarDinero();
+	admin.administrarCaja();
 
 	generacion.cerrar();
 	atencion.cerrar();
@@ -122,13 +122,39 @@ void prueba_memoria(){
 	wait(NULL);
 }
 
+void leer(const MemoriaCompartida<int>& sh){
+	int lect = sh.leer();
+	cout << lect << endl;
+}
+
+void pruebaMemComp(){
+	if (fork() == 0){
+		MemoriaCompartida<int> shmem("MecanismosConcurrencia/MemoriaCompartida.h", 'a');
+		shmem.escribir(10);
+		shmem.incrementar(-1);
+		shmem.modificarValor(20);
+		wait(NULL);
+		shmem.liberar();
+		exit(0);
+	}else{
+		MemoriaCompartida<int> shmem;
+		MemoriaCompartida<int> shmem2;
+		shmem.crear("MecanismosConcurrencia/MemoriaCompartida.h", 'a');
+		shmem2 = shmem;
+		usleep(2000);
+		leer(shmem);
+		shmem.liberar();
+		exit(0);
+	}
+}
+
 void prueba_signal_gen(){
 	PipeAutos generacion;
 	GeneradorAutos g (6000000, generacion);
 	pid_t gen = g.generar();
 
 	Administrador admin(300000);
-	pid_t adm = admin.mirarDinero();
+	pid_t adm = admin.administrarCaja();
 
 	sleep(7);
 	kill(gen, SIGINT);
@@ -142,7 +168,7 @@ void crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
 		stringstream ss;
 		ss << i;
 		std::string nombre;
-		nombre = ss.str(); //FIXME: Obtener el nombre para un empleado
+		nombre = ss.str();
 		Empleado e (nombre, pipe, surtidores);
 		e.atenderAutos(0);
 	}
@@ -150,7 +176,7 @@ void crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
 
 void pruebaSurtido(){
 	Administrador a (3000000000); //FIXME
-	pid_t administrador = a.mirarDinero();
+	pid_t administrador = a.administrarCaja();
 
 	PipeAutos atencion;
 	Semaforo surtidores;
@@ -193,6 +219,7 @@ int main(void){
 	//prueba_memoria();
 	//prueba_signal_gen();
 	//pruebaSurtido();
+	//pruebaMemComp();
 
 	EstacionDeServicio e (10, 2, 3000000);
 	e.abrir();
