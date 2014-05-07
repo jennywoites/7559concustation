@@ -194,7 +194,7 @@ int main(void){
 	//prueba_signal_gen();
 	//pruebaSurtido();
 
-	EstacionDeServicio e (10, 5, 300000);
+	EstacionDeServicio e (10, 2, 3000000);
 	e.abrir();
 	sleep(5);
 	e.cerrar();
