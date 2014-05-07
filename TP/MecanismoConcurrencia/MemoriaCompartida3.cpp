@@ -5,7 +5,7 @@
  *      Author: jennifer
  */
 
-#include "MemoriaCompartida.h"
+#include "MemoriaCompartida3.h"
 #include "sys/ipc.h"
 #include "sys/shm.h"
 #include <string.h>
