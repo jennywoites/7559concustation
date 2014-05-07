@@ -17,13 +17,12 @@ private:
 	float plata_anterior;
 	float media;
 
-	void printDebug(std::string);
-	void printDebug(std::string, int);
+	void mirarDinero();
 
 public:
 	Administrador(float);
 	virtual ~Administrador();
-	pid_t mirarDinero();
+	pid_t administrarCaja();
 };
 
 #endif /* ADMINISTRADOR_H_ */

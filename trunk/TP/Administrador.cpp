@@ -25,7 +25,19 @@ Administrador::~Administrador() {
 
 }
 
-pid_t Administrador::mirarDinero(){
+void Administrador::mirarDinero(){
+	Log::enviarMensaje("Voy a la caja");
+	float plata_actual = caja.verMonto();
+	if (plata_anterior != plata_actual){
+		plata_anterior = plata_actual;
+		Log::enviarMensaje("Hay mas plata! ahora hay $", plata_actual);
+	}else{
+		Log::enviarMensaje("Hay la misma cantidad de plata :( hay $", plata_actual);
+	}
+	cout << "El administrador fue a la caja." << endl;
+}
+
+pid_t Administrador::administrarCaja(){
 	pid_t id = fork();
 	if (id != 0)
 		return id;
@@ -40,23 +52,12 @@ pid_t Administrador::mirarDinero(){
 	SIGINT_Handler sigint_handler;
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 
-	int i = 10;
 	while (sigint_handler.getGracefulQuit() == 0 ) {
 		float espera = tiempoAlAzarExponencial(media);
 		int tiempo_entero = floor(espera);
 		Log::enviarMensaje("Me duermo antes de ir a la caja durante: ",tiempo_entero);
 		usleep(tiempo_entero);
-
-		Log::enviarMensaje("Voy a la caja");
-		float plata_actual = caja.verMonto();
-		if (plata_anterior != plata_actual){
-			plata_anterior = plata_actual;
-			Log::enviarMensaje("Hay mas plata! ahora hay $", plata_actual);
-		}else{
-			Log::enviarMensaje("Hay la misma cantidad de plata :( hay $", plata_actual);
-		}
-		cout << "El administrador fue a la caja." << endl;
-		i--;
+		mirarDinero();
 	}
 
 	Log::enviarMensaje("Recibe signal de finalizar funcionamiento.");

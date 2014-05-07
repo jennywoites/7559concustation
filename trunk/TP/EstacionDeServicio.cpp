@@ -88,7 +88,7 @@ void EstacionDeServicio::abrir(){
 	printDebug("Comienzo a funcionar. ABIERTO");
 
 	Administrador a (3000000); //FIXME
-	administrador = a.mirarDinero();
+	administrador = a.administrarCaja();
 	printDebug("Creo mi administrador");
 
 	//PipeAutos atencion;
