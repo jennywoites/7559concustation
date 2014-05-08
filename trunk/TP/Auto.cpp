@@ -9,6 +9,7 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 #include <iostream>
 
 #include "ManejoTiempos.h"
@@ -70,6 +71,7 @@ std::string Auto::generarPatenteRandom() const{
 
 struct auto_serial Auto::serializar() const{
 	struct auto_serial s;
+	memset(static_cast<void*>(&s), 0, sizeof(struct auto_serial));
 	s.capacidad = capacidadTanque;
 	s.lleno = lleno;
 	strcpy(s.patente, patente.c_str());
