@@ -1,16 +1,16 @@
 #ifndef MemoriaCompartida_H_
 #define MemoriaCompartida_H_
 
-#include <sys/types.h>
-#include <sys/ipc.h>
+//#include <sys/types.h>
+//#include <sys/ipc.h>
 #include <sys/shm.h>
-#include <string>
+//#include <string>
 #include <string.h>
 #include <iostream>
 #include <errno.h>
 #include "Semaforo.h"
 
-using namespace std;
+//using namespace std;
 
 template <class T> class MemoriaCompartida {
 
@@ -23,17 +23,17 @@ private:
 	Semaforo control;
 
 public:
-	MemoriaCompartida ();
-	void crear ( const std::string& archivo,const char letra );
-	void liberar ();
+	MemoriaCompartida();
+	void crear(const std::string& archivo, const char letra);
+	void liberar();
 
-	MemoriaCompartida ( const std::string& archivo,const char letra );
-	MemoriaCompartida ( const MemoriaCompartida& origen );
-	~MemoriaCompartida ();
-	MemoriaCompartida<T>& operator= ( const MemoriaCompartida& origen );
-	void escribir ( const T& dato );
+	MemoriaCompartida(const std::string& archivo,const char letra);
+	MemoriaCompartida(const MemoriaCompartida& origen);
+	~MemoriaCompartida();
+	MemoriaCompartida<T>& operator= (const MemoriaCompartida& origen);
+	void escribir(const T& dato);
 	void incrementar(const T& valor);
-	T leer () const;
+	T leer() const;
 
 	bool modificarValor(const T& valor);
 };
@@ -85,12 +85,13 @@ template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const std::string& 
 	crear(archivo, letra);
 }
 
-template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const MemoriaCompartida& origen ):shmId(origen.shmId) {
-	this->ptrDatos = origen.ptrDatos;
+template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const MemoriaCompartida& origen ):
+	shmId(origen.shmId),
+	ptrDatos(origen.ptrDatos)
+{
 }
 
 template <class T> MemoriaCompartida<T>::~MemoriaCompartida () {
-
 }
 
 template <class T> MemoriaCompartida<T>& MemoriaCompartida<T>::operator= ( const MemoriaCompartida& origen ) {
