@@ -18,6 +18,8 @@ class PipeAutos: public Pipe {
 private:
 	Semaforo controlLectura;
 	static const char PIPE = 'p';
+	static const int UN_SEMAFORO = 1;
+
 public:
 	PipeAutos();
 	void crear(const std::string& nombre);
@@ -25,7 +27,6 @@ public:
 
 	bool leerAuto ( Auto* autito );
 	bool escribirAuto ( const Auto& autito );
-	void cerrar();
 	void liberar();
 };
 
