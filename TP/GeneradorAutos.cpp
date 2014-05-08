@@ -28,6 +28,8 @@ GeneradorAutos::~GeneradorAutos(){}
 void GeneradorAutos::comenzarDia(){
 	inicializarRandom();
 
+	envios.setearModo(Pipe::ESCRITURA);
+
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 
 	Log::abrir_log();
