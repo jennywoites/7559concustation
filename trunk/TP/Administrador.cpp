@@ -7,7 +7,6 @@
 
 #include "Administrador.h"
 
-#include <unistd.h>
 #include <stdlib.h>
 #include <cmath>
 
@@ -22,7 +21,13 @@ Administrador::Administrador(float m) {
 }
 
 Administrador::~Administrador() {
+}
 
+void Administrador::pensar(){
+	float espera = tiempoAlAzarExponencial(media);
+	int tiempo_entero = floor(espera);
+	Log::enviarMensaje("Pienso antes de ir a la caja durante: ", tiempo_entero);
+	usleep(tiempo_entero);
 }
 
 void Administrador::mirarDinero(){
@@ -51,19 +56,18 @@ pid_t Administrador::administrarCaja(){
 
 	SIGINT_Handler sigint_handler;
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+	Log::enviarMensaje("Registro el manejo de finalizacion");
 
 	while (sigint_handler.getGracefulQuit() == 0 ) {
-		float espera = tiempoAlAzarExponencial(media);
-		int tiempo_entero = floor(espera);
-		Log::enviarMensaje("Me duermo antes de ir a la caja durante: ",tiempo_entero);
-		usleep(tiempo_entero);
+		pensar();
+
 		mirarDinero();
 	}
 
 	Log::enviarMensaje("Recibe signal de finalizar funcionamiento.");
 	caja.cerrar();
 	Log::enviarMensaje("Cerre la caja");
-	SignalHandler :: destruir ();
+	SignalHandler::destruir ();
 	Log::enviarMensaje("Administrador deja de revisar caja y se cierra");
 	Log::cerrar_log();
 	exit(0);

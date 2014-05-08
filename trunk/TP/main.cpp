@@ -221,7 +221,7 @@ int main(void){
 	//pruebaSurtido();
 	//pruebaMemComp();
 
-	EstacionDeServicio e (10, 2, 3000000);
+	EstacionDeServicio e (10, 2, 3000000, 3000000);
 	e.abrir();
 	sleep(5);
 	e.cerrar();
