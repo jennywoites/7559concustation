@@ -7,25 +7,19 @@
 
 #include "PipeAutos.h"
 #include <iostream>
-#include <stdlib.h>
-#include <string.h>
 #include "../Log.h"
 
-using namespace std;
+//using namespace std;
 
 PipeAutos::PipeAutos() {
-	// TODO Auto-generated constructor stub
-
 }
 
 void PipeAutos::crear(const std::string& nombre) {
 	Pipe::crear();
-	controlLectura.crear(nombre, PIPE, 1);
-	//FIXME
+	controlLectura.crear(nombre, PIPE, UN_SEMAFORO);
 }
 
 PipeAutos::~PipeAutos() {
-	// TODO Auto-generated destructor stub
 }
 
 bool PipeAutos :: leerAuto ( Auto* autito ) {
@@ -50,10 +44,6 @@ bool PipeAutos :: escribirAuto ( const Auto& autito ) {
 	struct auto_serial serie = autito.serializar();
 	ssize_t escrito = Pipe::escribir(static_cast<const void*>(&serie), sizeof(struct auto_serial));
 	return (escrito==sizeof(struct auto_serial));
-}
-
-void PipeAutos::cerrar(){
-	Pipe::cerrar();
 }
 
 void PipeAutos::liberar(){
