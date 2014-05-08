@@ -10,8 +10,6 @@
 #include <stdlib.h>
 #include <cmath>
 
-#include "MecanismoConcurrencia/SIGINT_Handler.h"
-#include "MecanismoConcurrencia/SignalHandler.h"
 #include "ManejoTiempos.h"
 #include "Log.h"
 
@@ -23,6 +21,26 @@ Administrador::Administrador(float m) {
 Administrador::~Administrador() {
 }
 
+void Administrador::comenzarDia(){
+	Log::abrir_log();
+	Log::setEscritor("Administrador");
+	Log::enviarMensaje("Abro el log.");
+
+	caja.abrir();
+	Log::enviarMensaje("Abro la caja");
+
+	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+	Log::enviarMensaje("Registro el manejo de finalizacion");
+}
+
+void Administrador::finalizarDia(){
+	Log::enviarMensaje("Recibe signal de finalizar funcionamiento.");
+	caja.cerrar();
+	Log::enviarMensaje("Cerre la caja");
+	SignalHandler::destruir ();
+	Log::enviarMensaje("Administrador deja de revisar caja y se cierra");
+	Log::cerrar_log();
+}
 void Administrador::pensar(){
 	float espera = tiempoAlAzarExponencial(media);
 	int tiempo_entero = floor(espera);
@@ -47,16 +65,7 @@ pid_t Administrador::administrarCaja(){
 	if (id != 0)
 		return id;
 
-	Log::abrir_log();
-	Log::setEscritor("Administrador");
-	Log::enviarMensaje("Abro el log.");
-
-	caja.abrir();
-	Log::enviarMensaje("Abro la caja");
-
-	SIGINT_Handler sigint_handler;
-	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
-	Log::enviarMensaje("Registro el manejo de finalizacion");
+	comenzarDia();
 
 	while (sigint_handler.getGracefulQuit() == 0 ) {
 		pensar();
@@ -64,12 +73,7 @@ pid_t Administrador::administrarCaja(){
 		mirarDinero();
 	}
 
-	Log::enviarMensaje("Recibe signal de finalizar funcionamiento.");
-	caja.cerrar();
-	Log::enviarMensaje("Cerre la caja");
-	SignalHandler::destruir ();
-	Log::enviarMensaje("Administrador deja de revisar caja y se cierra");
-	Log::cerrar_log();
+	finalizarDia();
 	exit(0);
 }
 
