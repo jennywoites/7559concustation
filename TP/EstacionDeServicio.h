@@ -16,7 +16,6 @@
 #include "Administrador.h"
 #include "GeneradorAutos.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
-#include "constantesArchivos.h"
 #include "MecanismoConcurrencia/Semaforo.h"
 
 
@@ -24,16 +23,16 @@ using namespace std;
 
 class EstacionDeServicio {
 private:
-//	int cantEmpleados;
-//	int cantSurtidores;
-//	int mediaAutos;
+	int cantEmpleados;
+	int cantSurtidores;
+	int mediaAutos;
 	int mediaVerAdmin;
-//	pid_t generador;
+	pid_t generador;
 	pid_t administrador;
-//	Caja caja;
-//	PipeAutos atencion;
-//	PipeAutos generacion;
-//	Semaforo surtidores;
+	Caja caja;
+	PipeAutos atencion;
+	PipeAutos generacion;
+	Semaforo surtidores;
 
 private:
 
