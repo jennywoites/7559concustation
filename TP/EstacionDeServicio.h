@@ -38,8 +38,6 @@ private:
 
 	void crearEmpleados(const PipeAutos&, const Semaforo&);
 	void esperarCierre();
-	void printDebug(std::string);
-	void printDebug(std::string, int);
 	void agregarNombres(vector<std::string>&);
 	std::string obtenerNombre(vector<std::string>&, int);
 
