@@ -24,15 +24,16 @@ using namespace std;
 
 class EstacionDeServicio {
 private:
-	int cantEmpleados;
-	int cantSurtidores;
-	int mediaAutos;
-	pid_t generador;
+//	int cantEmpleados;
+//	int cantSurtidores;
+//	int mediaAutos;
+	int mediaVerAdmin;
+//	pid_t generador;
 	pid_t administrador;
-	Caja caja;
-	PipeAutos atencion;
-	PipeAutos generacion;
-	Semaforo surtidores;
+//	Caja caja;
+//	PipeAutos atencion;
+//	PipeAutos generacion;
+//	Semaforo surtidores;
 
 private:
 
@@ -43,7 +44,7 @@ private:
 
 
 public:
-	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos);
+	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin);
 	virtual ~EstacionDeServicio();
 
 	void abrir();

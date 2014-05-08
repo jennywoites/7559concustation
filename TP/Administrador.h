@@ -17,6 +17,7 @@ private:
 	float plata_anterior;
 	float media;
 
+	void pensar();
 	void mirarDinero();
 
 public:

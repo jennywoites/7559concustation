@@ -22,6 +22,7 @@
 #define SURTIDORES 1
 #define EMPLEADOS 1
 #define MEDIA_AUTOS 100
+#define MEDIA_ADMIN 100
 #define OPC_ERROR -1
 #define OPC_IMPRIMIR_AYUDA 0
 #define OPC_IMPRIMIR_VERSION 1
@@ -34,11 +35,12 @@ void imprimir_ayuda(){
 	cout << "-s --surtidores  Define cantidad de surtidores." << endl;
 	cout << "-e --empleados  Define cantidad de empleados." << endl;
 	cout << "-g --genautos  Define media de generacion de autos." << endl;
+	cout << "-a --veradmin  Define media de visita de administrador a la caja." << endl;
 }
 
 //imprime la version del programa al stdout
 void imprimir_version(){
-	cout << "Trabajo Practico - TPCI" << endl;
+	cout << "Primer Proyecto - 75.59 - TPCI" << endl;
 	cout << "ConcuStation" << endl;
 	cout << "Primer Cuatrimestre - 2014" << endl;
 	cout << "Grupo:" << endl;
@@ -48,10 +50,11 @@ void imprimir_version(){
 }
 
 
-int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpleados, int* mediaAutos){
+int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpleados, int* mediaAutos, int* mediaAdmin){
 	*cantSurtidores = SURTIDORES;
 	*cantEmpleados = EMPLEADOS;
 	*mediaAutos = MEDIA_AUTOS;
+	*mediaAdmin = MEDIA_ADMIN;
 
 	//struct de lineas de comando
 	struct option opciones[]={
@@ -65,7 +68,7 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 
 	char caracter;
 	//mientras haya opciones las lee y las procesa
-	while ((caracter = (getopt_long(argc,argv,"hvs:e:g:",opciones,NULL)))!=-1){
+	while ((caracter = (getopt_long(argc,argv,"hvs:e:g:a:",opciones,NULL)))!=-1){
 		switch(caracter){
 			case 'h'://help
 				return OPC_IMPRIMIR_AYUDA;
@@ -82,6 +85,10 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 			case 'g':
 				if (strcmp(optarg,"-")!=0)
 					*mediaAutos = atoi(optarg);
+					break;
+			case 'a':
+				if (strcmp(optarg,"-")!=0)
+					*mediaAdmin = atoi(optarg);
 				break;
 			case '?'://error
 				return OPC_ERROR;
@@ -90,21 +97,21 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 	return OPC_EXEC;
 }
 
-void atender(int cantSurtidores, int cantEmpleados, int mediaAutos){
-	EstacionDeServicio concuStation (cantEmpleados, cantSurtidores, mediaAutos);
+void atender(int cantSurtidores, int cantEmpleados, int mediaAutos, int mediaAdmin){
+	EstacionDeServicio concuStation (cantEmpleados, cantSurtidores, mediaAutos, mediaAdmin);
 	concuStation.abrir();
 	sleep(10000); //FIXME: tiempo de simu
 	concuStation.cerrar();
 }
 
 int main2(char* argv[], int argc){
-	int cantSurtidores, cantEmpleados, mediaAutos;
+	int cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin;
 
-	int opcion = parsearParametros(argv, argc, &cantSurtidores, &cantEmpleados, &mediaAutos);
+	int opcion = parsearParametros(argv, argc, &cantSurtidores, &cantEmpleados, &mediaAutos, &mediaAdmin);
 
 	switch (opcion){
 		case OPC_EXEC:
-			atender(cantSurtidores, cantEmpleados, mediaAutos);
+			atender(cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin);
 			break;
 		case OPC_IMPRIMIR_AYUDA:
 			imprimir_ayuda();
