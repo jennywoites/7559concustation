@@ -8,6 +8,8 @@
 #ifndef ADMINISTRADOR_H_
 #define ADMINISTRADOR_H_
 #include "Caja.h"
+#include "MecanismoConcurrencia/SIGINT_Handler.h"
+#include "MecanismoConcurrencia/SignalHandler.h"
 
 using namespace std;
 
@@ -16,7 +18,10 @@ private:
 	Caja caja;
 	float plata_anterior;
 	float media;
+	SIGINT_Handler sigint_handler;
 
+	void comenzarDia();
+	void finalizarDia();
 	void pensar();
 	void mirarDinero();
 
