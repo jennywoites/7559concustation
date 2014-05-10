@@ -83,7 +83,7 @@ void pruebaAtPipeAutos(void){
 	wait(NULL);
 	wait(NULL);
 }
-
+/*
 void prueba_log(){
 	Log log("log.jem");
 	log.escribir();
@@ -107,7 +107,7 @@ void prueba_log(){
 
 	wait(NULL);//log
 }
-
+*/
 void prueba_memoria(){
 	PipeAutos atencion;
 	PipeAutos generacion;
@@ -221,7 +221,7 @@ int main(void){
 	//pruebaSurtido();
 	//pruebaMemComp();
 
-	EstacionDeServicio e (10, 2, 3000000, 3000000);
+	EstacionDeServicio e (1, 1, 3000000, 3000000);
 	e.abrir();
 	sleep(5);
 	e.cerrar();

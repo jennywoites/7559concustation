@@ -13,7 +13,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "Log.h"
 #include "constantesArchivos.h"
 
 #define ARCH_NOMBRES "TP/nombres.jem"
@@ -70,53 +69,52 @@ void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe, const Semaforo& s
 	for(int i = 0; i<cantEmpleados; i++){
 		std::string nombre = obtenerNombre(nombres,i);
 		Empleado e (nombre, pipe, surtidores);
-		Log::enviarMensaje("Cree el empleado " + nombre);
+		log.escribirEntrada("Cree el empleado " + nombre);
 		e.atenderAutos(cantSurtidores);
 	}
 }
 
 void EstacionDeServicio::abrir(){
-	Log log("log.jem");
-	log.escribir();
-	//Log::abrir_log();
-	//Log::setEscritor("Estacion de Servicio");
-	Log::enviarMensaje("Comienzo a funcionar. ABIERTO");
+	Log::setModo(Log::MODO_DEBUG_FULL);
+	log.mensajeApertura();
+	log.setEscritor("Estacion de Servicio");
+	log.escribirEntrada("Comienzo a funcionar. ABIERTO");
 
 	Administrador a (mediaVerAdmin);
 	administrador = a.administrarCaja();
-	Log::enviarMensaje("Creo mi administrador");
+	log.escribirEntrada("Creo mi administrador");
 
 	atencion.crear(ARCHIVO_ATENCION);
-	Log::enviarMensaje("Creo el pipe de atencion de autos.");
+	log.escribirEntrada("Creo el pipe de atencion de autos.");
 
 	//Creo los empleados, el generador, el administrador y el jefe y los mando
 	// a que atiendan. Cada uno crea sus procesos correspondientes
 	surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M= cantidad de surtidores
 	crearEmpleados(atencion,surtidores);
 
-	Log::enviarMensaje("Termine de crear todos los empleados.");
+	log.escribirEntrada("Termine de crear todos los empleados.");
 
 
 	generacion.crear(ARCHIVO_GENERACION);
-	Log::enviarMensaje("Creo el pipe de generacion de autos.");
+	log.escribirEntrada("Creo el pipe de generacion de autos.");
 
 	Jefe j ("UltraAlterMaster", generacion, atencion);
-	Log::enviarMensaje("Cree el jefe.");
+	log.escribirEntrada("Cree el jefe.");
 	j.atenderAutos();
-	Log::enviarMensaje("Envie al jefe a atender autos.");
+	log.escribirEntrada("Envie al jefe a atender autos.");
 
 	//Cierro pipe de atencion
 	atencion.cerrar();
-	Log::enviarMensaje("Me desadoso del pipe de atencion.");
+	log.escribirEntrada("Me desadoso del pipe de atencion.");
 
 	GeneradorAutos g (mediaAutos, generacion);
-	Log::enviarMensaje("Creo el generador de autos");
+	log.escribirEntrada("Creo el generador de autos");
 	generador = g.generar();
-	Log::enviarMensaje("Envie al generador a generar autos.");
+	log.escribirEntrada("Envie al generador a generar autos.");
 
 	//Cierro pipe de generacion
 	generacion.cerrar();
-	Log::enviarMensaje("Me desadoso del pipe de generacion de autos.");
+	log.escribirEntrada("Me desadoso del pipe de generacion de autos.");
 }
 
 
@@ -125,15 +123,14 @@ void EstacionDeServicio::esperarCierre(){
 	while (i > 0) {
 		wait(NULL);
 		i--;
-		Log::enviarMensaje("Ya termino uno de mis hijos. Aun me queda esperar a: ", i);
 	}
 }
 
 void EstacionDeServicio::cerrar(){
-	Log::enviarMensaje("Comienzo CIERRE de estacion de servicio.");
+	log.escribirEntrada("Comienzo CIERRE de estacion de servicio.");
 
 	kill(generador, SIGINT);	// envia senial a generador
-	Log::enviarMensaje("Envie signal de finalizar al generador");
+	log.escribirEntrada("Envie signal de finalizar al generador");
 
 	esperarCierre();	// esperar cierre
 
@@ -141,10 +138,12 @@ void EstacionDeServicio::cerrar(){
 	generacion.liberar();
 	surtidores.eliminar();
 
-	Log::enviarMensaje("Espere a todos mis hijos: empleados, jefe y generador de autos.");
+	log.escribirEntrada("Espere a todos mis hijos: empleados, jefe y generador de autos.");
 
 	kill(administrador, SIGINT);	// envia senial a generador
-	Log::enviarMensaje("Envie signal de finalizar al administrador");
+	log.escribirEntrada("Envie signal de finalizar al administrador");
+	wait(NULL); //admin
 
-	Log::cerrar_log();
+	log.escribirEntrada("Ya se cerraron todos los empleados, el jefe, el generador y el administrador");
+	log.mensajeCierre();
 }

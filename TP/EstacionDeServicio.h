@@ -17,7 +17,7 @@
 #include "GeneradorAutos.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
 #include "MecanismoConcurrencia/Semaforo.h"
-
+#include "Log.h"
 
 using namespace std;
 
@@ -33,6 +33,7 @@ private:
 	PipeAutos atencion;
 	PipeAutos generacion;
 	Semaforo surtidores;
+	Log log;
 
 private:
 

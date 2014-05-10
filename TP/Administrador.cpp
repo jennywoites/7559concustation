@@ -22,40 +22,38 @@ Administrador::~Administrador() {
 }
 
 void Administrador::comenzarDia(){
-	Log::abrir_log();
-	Log::setEscritor("Administrador");
-	Log::enviarMensaje("Abro el log.");
+	log.setEscritor("Administrador");
+	log.escribirEntrada("Abro el log");
 
 	caja.abrir();
-	Log::enviarMensaje("Abro la caja");
+	log.escribirEntrada("Abro la caja");
 
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
-	Log::enviarMensaje("Registro el manejo de finalizacion");
+	log.escribirEntrada("Registro el manejo de finalizacion");
 }
 
 void Administrador::finalizarDia(){
-	Log::enviarMensaje("Recibe signal de finalizar funcionamiento.");
+	log.escribirEntrada("Recibe signal de finalizar funcionamiento.");
 	caja.cerrar();
-	Log::enviarMensaje("Cerre la caja");
+	log.escribirEntrada("Cerre la caja");
 	SignalHandler::destruir ();
-	Log::enviarMensaje("Administrador deja de revisar caja y se cierra");
-	Log::cerrar_log();
+	log.escribirEntrada("Administrador deja de revisar caja y se cierra");
 }
 void Administrador::pensar(){
 	float espera = tiempoAlAzarExponencial(media);
 	int tiempo_entero = floor(espera);
-	Log::enviarMensaje("Pienso antes de ir a la caja durante: ", tiempo_entero);
+	log.escribirEntrada("Pienso antes de ir a la caja durante: ", tiempo_entero);
 	usleep(tiempo_entero);
 }
 
 void Administrador::mirarDinero(){
-	Log::enviarMensaje("Voy a la caja");
+	log.escribirEntrada("Voy a la caja");
 	float plata_actual = caja.verMonto();
 	if (plata_anterior != plata_actual){
 		plata_anterior = plata_actual;
-		Log::enviarMensaje("Hay mas plata! ahora hay $", plata_actual);
+		log.escribirEntrada("Hay mas plata! ahora hay $", plata_actual);
 	}else{
-		Log::enviarMensaje("Hay la misma cantidad de plata :( hay $", plata_actual);
+		log.escribirEntrada("Hay la misma cantidad de plata :( hay $", plata_actual);
 	}
 	cout << "El administrador fue a la caja." << endl;
 }

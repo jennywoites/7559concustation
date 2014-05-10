@@ -10,6 +10,7 @@
 #include "Caja.h"
 #include "MecanismoConcurrencia/SIGINT_Handler.h"
 #include "MecanismoConcurrencia/SignalHandler.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ private:
 	float plata_anterior;
 	float media;
 	SIGINT_Handler sigint_handler;
+	Log log;
 
 	void comenzarDia();
 	void finalizarDia();
