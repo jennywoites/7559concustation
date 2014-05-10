@@ -24,15 +24,15 @@ PipeAutos::~PipeAutos() {
 
 bool PipeAutos :: leerAuto ( Auto* autito ) {
 	struct auto_serial serie;
-	Log::enviarMensaje("Debug: valor de Semaph ", controlLectura.getVal());
-	Log::enviarMensaje("hago wait");
+	//Log::enviarMensaje("Debug: valor de Semaph ", controlLectura.getVal());
+	//Log::enviarMensaje("hago wait");
 	controlLectura.wait();
-	Log::enviarMensaje("ingrese pipeLectura");
-	Log::enviarMensaje("Debug: valor de Semaph ", controlLectura.getVal());
+	//Log::enviarMensaje("ingrese pipeLectura");
+	//Log::enviarMensaje("Debug: valor de Semaph ", controlLectura.getVal());
 	ssize_t leido = Pipe::leer(static_cast<void*>(&serie), sizeof(struct auto_serial));
-	Log::enviarMensaje("hago signal");
+	//Log::enviarMensaje("hago signal");
 	controlLectura.signal();
-	Log::enviarMensaje("Debug: valor de Semaph liberado ", controlLectura.getVal());
+	//Log::enviarMensaje("Debug: valor de Semaph liberado ", controlLectura.getVal());
 	if (leido!=sizeof(struct auto_serial))
 		return false;
 
