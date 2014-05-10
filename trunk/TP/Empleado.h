@@ -16,6 +16,7 @@
 #include "Caja.h"
 #include "Auto.h"
 #include "MecanismoConcurrencia/Semaforo.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ private:
 	PipeAutos arribos;
 	Semaforo accesoSurtidores;
 	std::vector< MemoriaCompartida<bool> > surtidores;
+	Log log;
 
 	static const bool USO = true;
 	static const bool DESUSO = false;

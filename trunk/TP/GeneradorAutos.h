@@ -12,6 +12,7 @@
 #include "MecanismoConcurrencia/PipeAutos.h"
 #include "MecanismoConcurrencia/SIGINT_Handler.h"
 #include "MecanismoConcurrencia/SignalHandler.h"
+#include "Log.h"
 
 class GeneradorAutos {
 private:
@@ -19,6 +20,7 @@ private:
 	int numAuto;
 	PipeAutos envios;
 	SIGINT_Handler sigint_handler;
+	Log log;
 
 public:
 	GeneradorAutos(float media, const PipeAutos&);

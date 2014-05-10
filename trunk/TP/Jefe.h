@@ -11,6 +11,7 @@
 #include "Auto.h"
 #include "MecanismoConcurrencia/MemoriaCompartida.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
+#include "Log.h"
 using namespace std;
 
 class Jefe {
@@ -21,6 +22,7 @@ private:
 	int cantidadAtendida;
 	PipeAutos arribos;
 	PipeAutos envios;
+	Log log;
 
 public:
 	Jefe(std::string, const PipeAutos&, const PipeAutos&);

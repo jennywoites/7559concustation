@@ -13,7 +13,6 @@
 #include <stdlib.h>
 
 #include "ManejoTiempos.h"
-#include "Log.h"
 
 using namespace std;
 
@@ -32,20 +31,19 @@ void GeneradorAutos::comenzarDia(){
 
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 
-	Log::abrir_log();
-	Log::setEscritor("Generador de Autos");
-	Log::enviarMensaje("llamenme Ford. Roque Ford");
-	Log::setEscritor("FordMachine");
+	log.setEscritor("Generador de Autos");
+	log.escribirEntrada("llamenme Ford. Roque Ford");
+	log.setEscritor("FordMachine");
 }
 
 void GeneradorAutos::finalizarDia(){
-	Log::enviarMensaje("Llego la crisis del 30, ya no hay mas trabajo por hacer");
-	Log::enviarMensaje("Cierro el canal de autos");
+	log.escribirEntrada("Llego la crisis del 30, ya no hay mas trabajo por hacer");
+	log.escribirEntrada("Cierro el canal de autos");
 	envios.cerrar();
 	SignalHandler :: destruir ();
 	cout << "Generador deja de generar y se cierra" << endl;
 
-	Log::enviarMensaje("Fin de proceso Generador de Autos");
+	log.escribirEntrada("Fin de proceso Generador de Autos");
 }
 
 pid_t GeneradorAutos::generar(){
@@ -57,7 +55,7 @@ pid_t GeneradorAutos::generar(){
 	
 	while (sigint_handler.getGracefulQuit() == 0 ) {
 		Auto autito;
-		Log::enviarMensaje("creado el auto:" + autito.getPatente() + ", numero " , numAuto);
+		log.escribirEntrada("creado el auto:" + autito.getPatente() + ", numero " , numAuto);
 		envios.escribirAuto(autito);
 		int tiempo = (int) tiempoAlAzarExponencial(media);
 		usleep(tiempo);
