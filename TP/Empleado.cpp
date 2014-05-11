@@ -21,6 +21,7 @@ Empleado::Empleado(std::string name, const PipeAutos& pipe, const Semaforo& sema
 	cantidadAtendidos = 0;
 	arribos = pipe;
 	accesoSurtidores = semaforo;
+	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
 Empleado::~Empleado() {

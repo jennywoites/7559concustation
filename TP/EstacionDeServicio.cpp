@@ -24,6 +24,7 @@ EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaG
 	mediaVerAdmin = mediaAdmin;
 	generador = 0;
 	administrador = 0;
+	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
 EstacionDeServicio::~EstacionDeServicio() {}
@@ -75,7 +76,7 @@ void EstacionDeServicio::crearEmpleados(const PipeAutos& pipe, const Semaforo& s
 }
 
 void EstacionDeServicio::abrir(){
-	Log::setModo(Log::MODO_DEBUG_FULL);
+	Log::setModo(Log::MODO_DEBUG);
 	log.mensajeApertura();
 	log.setEscritor("Estacion de Servicio");
 	log.escribirEntrada("Comienzo a funcionar. ABIERTO");

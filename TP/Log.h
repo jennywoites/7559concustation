@@ -10,14 +10,19 @@ private:
 
 	LockFile lock;
 	std::string escritor;
-
-	//static const std::string archivo = string("log.jem");
+	int tipo;
 
 	static int modo;
 public:
 	static const int MODO_DEBUG = 0;
 	static const int MODO_DEBUG_FULL = 1;
 	static const int MODO_NO_DEBUG = 2;
+
+	static const int ENTRADA_PERSONAJE = 0;
+	static const int ENTRADA_SEMAFORO = 1;
+	static const int ENTRADA_MEMCOM = 2;
+	static const int ENTRADA_PIPE = 3;
+	static const int ENTRADA_SIGNAL = 4;
 
 	Log();
 
@@ -27,12 +32,14 @@ public:
 	void escribirEntrada(std::string, float);
 	void mensajeApertura();
 	void mensajeCierre();
+	void setTipo(int);
 
 	static void setModo(int);
 	virtual ~Log();
 
 private:
 	void mensajeInterno(std::string);
+	bool permiteEntrada();
 };
 
 #endif /* LOG_H_ */
