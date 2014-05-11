@@ -11,11 +11,11 @@
 #include <cmath>
 
 #include "ManejoTiempos.h"
-#include "Log.h"
 
 Administrador::Administrador(float m) {
 	plata_anterior = 0;
 	media = m;
+	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
 Administrador::~Administrador() {
@@ -23,6 +23,7 @@ Administrador::~Administrador() {
 
 void Administrador::comenzarDia(){
 	log.setEscritor("Administrador");
+
 	log.escribirEntrada("Abro el log");
 
 	caja.abrir();

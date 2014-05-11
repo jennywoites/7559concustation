@@ -9,12 +9,14 @@
 #include <sstream>
 #include <time.h>
 #define LONG_TIEMPO 50
+#define NO_TIPO -1
 
 //std::string Log::archivo;
 int Log::modo;
 
 Log::Log() {
 	lock.crear("log.jem");
+	tipo = NO_TIPO;
 }
 
 Log::~Log() {
@@ -27,6 +29,9 @@ void Log::setEscritor(std::string writer){
 }
 
 void Log::escribirEntrada(std::string mensaje){
+	if (!permiteEntrada())
+		return;
+
 	std::string mensajeFinal = this->escritor + string(": ") + mensaje + string("\n");
 	lock.tomarLock();
 	lock.escribir(mensajeFinal.c_str(), mensajeFinal.size());
@@ -46,7 +51,7 @@ void Log::escribirEntrada(std::string msj, float numero){
 }
 
 void Log::setModo(int mode){
-	modo = mode;
+	Log::modo = mode;
 }
 
 void Log::mensajeInterno(std::string msj){
@@ -73,4 +78,34 @@ void Log::mensajeApertura(){
 
 void Log::mensajeCierre(){
 	mensajeInterno( "********** FIN DE EJECUCION **********");
+}
+
+void Log::setTipo(int tipo){
+	this->tipo = tipo;
+}
+
+bool Log::permiteEntrada(){
+	if (tipo == NO_TIPO)
+		return false;
+	if (Log::modo == MODO_NO_DEBUG)
+		return false;
+	if (Log::modo == MODO_DEBUG_FULL)
+		return true;
+
+	//Modo no-completo
+	switch (this->tipo){
+	case ENTRADA_PERSONAJE:
+		return true;
+	case ENTRADA_MEMCOM:
+		return false;
+	case ENTRADA_PIPE:
+		return false;
+	case ENTRADA_SEMAFORO:
+		return false;
+	case ENTRADA_SIGNAL:
+		return false;
+	default:
+		return false;
+	}
+
 }

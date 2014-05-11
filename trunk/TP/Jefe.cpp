@@ -22,6 +22,7 @@ Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten) {
 
 	arribos = gen;
 	envios = aten;
+	log.setTipo(Log::ENTRADA_JEFE);
 }
 
 Jefe::~Jefe(){}
