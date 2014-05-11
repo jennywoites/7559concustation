@@ -87,7 +87,8 @@ template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const std::string& 
 
 template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const MemoriaCompartida& origen ):
 	shmId(origen.shmId),
-	ptrDatos(origen.ptrDatos)
+	ptrDatos(origen.ptrDatos),
+	control(origen.control)
 {
 }
 
@@ -97,6 +98,7 @@ template <class T> MemoriaCompartida<T>::~MemoriaCompartida () {
 template <class T> MemoriaCompartida<T>& MemoriaCompartida<T>::operator= ( const MemoriaCompartida& origen ) {
 	this->shmId = origen.shmId;
 	this->ptrDatos = origen.ptrDatos;
+	this->control = origen.control;
 
 	return *this;
 }
