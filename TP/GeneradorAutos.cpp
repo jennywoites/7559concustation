@@ -38,8 +38,18 @@ bool GeneradorAutos::comenzarDia(){
 		return false;
 	}
 
-	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
-	SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
+	try{
+		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+	}catch (std::string &e) {
+		cout << e << endl;
+		return false;
+	}
+	try{
+		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
+	}catch (std::string &e) {
+		cout << e << endl;
+		return false;
+	}
 
 	return true;
 }
@@ -54,11 +64,15 @@ void GeneradorAutos::cerrarPipe(){
 	}
 }
 
+void GeneradorAutos::destruir(){
+	cerrarPipe();
+	SignalHandler :: destruir ();
+}
+
 void GeneradorAutos::finalizarDia(){
 	log.escribirEntrada("Llego la crisis del 30, ya no hay mas trabajo por hacer");
 	log.escribirEntrada("Cierro el canal de autos");
-	cerrarPipe();
-	SignalHandler :: destruir ();
+	destruir();
 	cout << "Generador deja de generar y se cierra" << endl;
 
 	log.escribirEntrada("Fin de proceso Generador de Autos");
@@ -71,7 +85,7 @@ pid_t GeneradorAutos::generar(){
 
 	bool comienzo = comenzarDia();
 	if (!comienzo){
-		cerrarPipe();
+		destruir();
 		log.escribirEntrada("Finalizo Proceso por ERROR.");
 		return id;
 	}
@@ -93,6 +107,3 @@ pid_t GeneradorAutos::generar(){
 
 	return id;
 }
-
-
-

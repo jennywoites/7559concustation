@@ -34,6 +34,7 @@ private:
 	bool comenzarDia();
 	void finalizarDia();
 	void cerrarPipe();
+	void destruir();
 
 };
 

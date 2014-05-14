@@ -77,7 +77,12 @@ bool Jefe::comenzarDia(){
 		return false;
 	}
 
-	SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
+	try{
+		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
+	}catch (std::string &e) {
+		cout << e << endl;
+		return false;
+	}
 
 	return true;
 }
@@ -103,13 +108,12 @@ void Jefe::finalizarDia(){
 	try{
 		cantEmpleadosDisponibles.liberar();
 		log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
-		log.escribirEntrada("Finalizo el proceso correctamente.");
 	}catch(std::string &e){
 		cout << e << endl;
 		log.escribirEntrada("No fue posible liberar la memoria compartida: cantidad de empleados disponibles");
-		log.escribirEntrada("Finalizo el proceso con ERROR.");
 	}
 
+	SignalHandler::destruir();
 }
 
 pid_t Jefe::atenderAutos(){
@@ -119,7 +123,7 @@ pid_t Jefe::atenderAutos(){
 
 	bool comienzo = comenzarDia();
 	if(!comienzo){
-		cerrarCanales();
+		finalizarDia();
 		log.escribirEntrada("Finalizo Proceso por ERROR.");
 		return id;
 	}
@@ -133,6 +137,7 @@ pid_t Jefe::atenderAutos(){
 	}
 
 	finalizarDia();
+	log.escribirEntrada("Finalizo el proceso correctamente.");
 
 	return id;
 }
