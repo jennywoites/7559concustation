@@ -46,6 +46,7 @@ private:
 	void crearGenerador();
 	void enviarSenial(pid_t pid, std::string proceso);
 	void finalizarAdministrador();
+	void liberarMediosDeComunicacion();
 
 public:
 
