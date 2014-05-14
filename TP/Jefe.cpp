@@ -33,21 +33,25 @@ bool Jefe::leerAuto(Auto* autito){
 	return status;
 }
 
-void Jefe::atenderUnAuto(Auto& autito){
+bool Jefe::atenderUnAuto(Auto& autito){
 	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 
 	if (!hayEmpleados()){
 		cantidadDespachada++;
 		log.escribirEntrada("La cantidad de autos despachados es de: ", cantidadDespachada);
 		mensajeDespachante(autito.getPatente());
-		return;
+		return true;
+	}
+
+	tomarEmpleado();
+	if (! enviarAutoAEmpleado(autito) ){
+		log.escribirEntrada("El empleado no pudo recibir el auto");
+		return false;
 	}
 
 	cantidadAtendida++;
-	tomarEmpleado();
-	enviarAutoAEmpleado(autito);
 	log.escribirEntrada("La cantidad de autos que atendi es de: ", cantidadAtendida);
-
+	return true;
 }
 
 bool Jefe::comenzarDia(){
@@ -73,6 +77,8 @@ bool Jefe::comenzarDia(){
 	}
 
 	log.escribirEntrada("Se creo la memoria compartida: cantidad de empleados disponibles.");
+
+	SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
 
 	return true;
 }
@@ -121,8 +127,10 @@ pid_t Jefe::atenderAutos(){
 
 	Auto autito;
 
-	while (leerAuto(&autito)){
-		atenderUnAuto(autito);
+	while (leerAuto(&autito) and sigpipe_handler.getGracefulQuit() == 0){
+		bool atendido = atenderUnAuto(autito);
+		if (! atendido)
+			log.escribirEntrada("No se pudo atender el auto " + autito.getPatente());
 	}
 
 	finalizarDia();
