@@ -10,11 +10,18 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <cstring>
+#include <sstream>
 #include <iostream>
 
 #include "ManejoTiempos.h"
 
 using namespace std;
+
+#define SEPARADOR ";"
+#define TRUE 1
+#define FALSE 0
+
 
 Auto::Auto() {
 	patente = generarPatenteRandom();
@@ -67,17 +74,33 @@ std::string Auto::generarPatenteRandom() const{
 	return pat;
 }
 
-struct auto_serial Auto::serializar() const{
-	struct auto_serial s;
-	memset(static_cast<void*>(&s), 0, sizeof(struct auto_serial));
-	s.capacidad = capacidadTanque;
-	s.lleno = lleno;
-	strcpy(s.patente, patente.c_str());
-	return s;
+std::string Auto::serializar() const{
+	std::string serial = "";
+	serial += patente;
+	serial += SEPARADOR;
+	stringstream cap,llen;
+	cap << capacidadTanque;
+	serial += cap.str();
+	serial += SEPARADOR;
+	if(lleno)
+		llen << TRUE;
+	else
+		llen << FALSE;
+	serial += llen.str();
+	return serial;
 }
 
-void Auto::deserializar(struct auto_serial serie){
-	lleno = serie.lleno;
-	capacidadTanque = serie.capacidad;
-	patente = serie.patente;
+void Auto::deserializar(const std::string& serial){
+	char* serie = (char*) malloc(LONG_SERIE);
+	if(!serie){
+		patente = "ERR-DS";
+		capacidadTanque = 0;
+		lleno = true;
+		return;
+	}
+	strcpy(serie,serial.c_str());
+	patente = strtok(serie,SEPARADOR);
+	capacidadTanque = atoi(strtok(NULL,SEPARADOR));
+	lleno = atoi(strtok(NULL,SEPARADOR));
+	free(serie);
 }

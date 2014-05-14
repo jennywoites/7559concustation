@@ -54,7 +54,7 @@ pid_t GeneradorAutos::generar(){
 	comenzarDia();
 	
 	//while (sigint_handler.getGracefulQuit() == 0 ) {
-	while(numAuto < 0){
+	while(numAuto < 10){
 		Auto autito;
 		log.escribirEntrada("creado el auto:" + autito.getPatente() + ", numero " , numAuto);
 		envios.escribirAuto(autito);
