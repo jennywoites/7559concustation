@@ -20,26 +20,43 @@ GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal) {
 	this->media = media;
 	numAuto = 0;
 	envios = canal;
+	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
 GeneradorAutos::~GeneradorAutos(){}
 
-void GeneradorAutos::comenzarDia(){
+bool GeneradorAutos::comenzarDia(){
 	inicializarRandom();
+	log.setEscritor("FordMachine");
+	log.escribirEntrada("llamenme Ford. Roque Ford");
 
-	envios.setearModo(Pipe::ESCRITURA);
+	try{
+		envios.setearModo(Pipe::ESCRITURA);
+	}catch (std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No pude setear modo de comunicacion Escritura");
+		return false;
+	}
 
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 
-	log.setEscritor("Generador de Autos");
-	log.escribirEntrada("llamenme Ford. Roque Ford");
-	log.setEscritor("FordMachine");
+	return true;
+}
+
+void GeneradorAutos::cerrarPipe(){
+	try{
+		envios.cerrar();
+		log.escribirEntrada("Me desadoso del pipe de generacion");
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No se pudo desadosar de pipe de generacion");
+	}
 }
 
 void GeneradorAutos::finalizarDia(){
 	log.escribirEntrada("Llego la crisis del 30, ya no hay mas trabajo por hacer");
 	log.escribirEntrada("Cierro el canal de autos");
-	envios.cerrar();
+	cerrarPipe();
 	SignalHandler :: destruir ();
 	cout << "Generador deja de generar y se cierra" << endl;
 
@@ -51,12 +68,20 @@ pid_t GeneradorAutos::generar(){
 	if (id != 0)
 		return id;
 
-	comenzarDia();
+	bool comienzo = comenzarDia();
+	if (!comienzo){
+		cerrarPipe();
+		log.escribirEntrada("Finalizo Proceso por ERROR.");
+		return id;
+	}
 	
 	while (sigint_handler.getGracefulQuit() == 0 ) {
 		Auto autito;
 		log.escribirEntrada("creado el auto:" + autito.getPatente() + ", numero " , numAuto);
-		envios.escribirAuto(autito);
+		if(! envios.escribirAuto(autito)){
+			log.escribirEntrada("se cerror inesperadamente");
+			break; //no pude escribir, existe un error en lector
+		}
 		int tiempo = (int) tiempoAlAzarExponencial(media);
 		usleep(tiempo);
 		numAuto++;
