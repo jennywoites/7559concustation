@@ -66,7 +66,10 @@ pid_t Administrador::administrarCaja(){
 
 	comenzarDia();
 
-	while (sigint_handler.getGracefulQuit() == 0 ) {
+	//while (sigint_handler.getGracefulQuit() == 0 ) {
+	int i = 0;
+	while (i<10){
+		i++;
 		pensar();
 
 		mirarDinero();
