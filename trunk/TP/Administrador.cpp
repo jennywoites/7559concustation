@@ -9,11 +9,12 @@
 
 #include <stdlib.h>
 #include <cmath>
+#include <sstream>
 
 #include "ManejoTiempos.h"
 
 Administrador::Administrador(float m) {
-	plata_anterior = 0;
+	plataVista = 0;
 	media = m;
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
@@ -32,6 +33,7 @@ bool Administrador::comenzarDia(){
 		return false;
 	}
 	log.escribirEntrada("Abro la caja");
+	cout << "Administrador abre la caja." << endl;
 
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 	log.escribirEntrada("Registro el manejo de finalizacion");
@@ -48,6 +50,7 @@ void Administrador::finalizarDia(){
 		log.escribirEntrada("Cerre la caja");
 
 	SignalHandler::destruir ();
+	cout << "Administrador se va a su casa." << endl;
 	log.escribirEntrada("Dejo de revisar caja, cierro Proceso correctamente.");
 }
 void Administrador::pensar(){
@@ -57,16 +60,22 @@ void Administrador::pensar(){
 	usleep(tiempo_entero);
 }
 
+void Administrador::imprimirDinero(){
+	stringstream ss;
+	ss << plataVista;
+	cout << "El administrador fue a la caja, vio " + ss.str()  << endl;
+}
+
 void Administrador::mirarDinero(){
 	log.escribirEntrada("Voy a la caja");
 	float plata_actual = caja.verMonto();
-	if (plata_anterior != plata_actual){
-		plata_anterior = plata_actual;
+	if (plataVista != plata_actual){
+		plataVista = plata_actual;
 		log.escribirEntrada("Hay mas plata! ahora hay $", plata_actual);
 	}else{
 		log.escribirEntrada("Hay la misma cantidad de plata :( hay $", plata_actual);
 	}
-	cout << "El administrador fue a la caja." << endl;
+	imprimirDinero();
 }
 
 pid_t Administrador::administrarCaja(){
