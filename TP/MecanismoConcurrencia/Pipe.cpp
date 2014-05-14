@@ -1,6 +1,9 @@
 #include "Pipe.h"
 #include <iostream>
 #include <unistd.h>
+#include <errno.h>
+#include <iostream>
+#include <string.h>
 
 Pipe :: Pipe() : lectura(false), escritura(false) {
 }
@@ -8,7 +11,11 @@ Pipe :: Pipe() : lectura(false), escritura(false) {
 void Pipe :: crear() {
 	lectura = true;
 	escritura = true;
-	pipe ( this->descriptores );
+	int creacion = pipe ( this->descriptores );
+	if (creacion == -1){
+		std::string mensaje = std::string("Error en pipe(): ") + std::string(strerror(errno));
+		throw mensaje;
+	}
 	/*fcntl ( this->descriptors[0],F_SETFL,O_NONBLOCK );
 	fcntl ( this->descriptors[1],F_SETFL,O_NONBLOCK );*/
 }
@@ -16,33 +23,50 @@ void Pipe :: crear() {
 Pipe::~Pipe() {
 }
 
+void Pipe::cerrarFd(int indice){
+	if ( close ( this->descriptores[indice] ) == -1 ){
+		std::string mensaje = std::string("Error en close(): ") + std::string(strerror(errno));
+		throw mensaje;
+	}
+}
+
 void Pipe :: setearModo ( const int modo ) {
 	if ( modo == LECTURA ) {
-		close ( this->descriptores[ESCRITURA] );
+		cerrarFd(ESCRITURA);
 		this->escritura = false;
 
 	} else if ( modo == ESCRITURA ) {
-		close ( this->descriptores[LECTURA] );
+		cerrarFd(LECTURA);
 		this->lectura = false;
 	}
 }
 
 ssize_t Pipe :: escribir ( const void* dato,int datoSize ) {
 	if ( this->lectura == true ) {
-		close ( this->descriptores[LECTURA] );
+		cerrarFd(LECTURA);
 		this->lectura = false;
 	}
 
-	return write ( this->descriptores[ESCRITURA],dato,datoSize );
+	int escrito = write ( this->descriptores[ESCRITURA],dato,datoSize );
+	if (escrito != -1)
+		return escrito;
+
+	std::string mensaje = std::string("Error en write(): ") + std::string(strerror(errno));
+	throw mensaje;
 }
 
 ssize_t Pipe :: leer ( void* buffer,const int buffSize ) {
 	if ( this->escritura == true ) {
-		close ( this->descriptores[ESCRITURA] );
+		cerrarFd(ESCRITURA);
 		this->escritura = false;
 	}
 	
-	return  read ( this->descriptores[LECTURA],buffer,buffSize );
+	int leido = read ( this->descriptores[LECTURA],buffer,buffSize );
+	if (leido != -1)
+			return leido;
+
+	std::string mensaje = std::string("Error en read(): ") + std::string(strerror(errno));
+	throw mensaje;
 }
 
 int Pipe :: getFdLectura () const {
@@ -61,12 +85,12 @@ int Pipe :: getFdEscritura () const {
 
 void Pipe :: cerrar () {
 	if ( this->lectura == true ) {
-		close ( this->descriptores[LECTURA] );
+		cerrarFd(LECTURA);
 		this->lectura = false;
 	}
 
 	if ( this->escritura == true ) {
-		close ( this->descriptores[ESCRITURA] );
+		cerrarFd(ESCRITURA);
 		this->escritura = false;
 	}
 }

@@ -20,6 +20,7 @@ public:
 	virtual ~Pipe();
 
 	void setearModo ( const int modo );
+	void cerrarFd(int indice);
 
 	ssize_t escribir ( const void* dato,const int datoSize );
 	ssize_t leer ( void* buffer,const int buffSize );
