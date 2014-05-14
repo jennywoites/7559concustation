@@ -40,7 +40,7 @@ private:
 
 private:
 
-	bool crearEmpleados(const PipeAutos&, const Semaforo&);
+	bool crearEmpleados();
 	void esperarCierre();
 	void agregarNombres(vector<std::string>&);
 	std::string obtenerNombre(vector<std::string>&, int);
