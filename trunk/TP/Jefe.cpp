@@ -144,6 +144,7 @@ bool Jefe::hayEmpleados(){
 		log.escribirEntrada("La cantidad de empleados disponibles es ", cant_empleados);
 	}catch(std::string &e){
 		log.escribirEntrada("Error al leer de Memoria Compartidad Cantidad de Empleados. " + e);
+		return false;
 	}
 	return (cant_empleados > 0);
 }
