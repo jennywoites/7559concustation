@@ -84,8 +84,8 @@ bool EstacionDeServicio::crearEmpleados(){
 
 void EstacionDeServicio::crearAdmin(){
 	Administrador a (mediaVerAdmin);
-	pidAdmin = a.administrarCaja();
 	log.escribirEntrada("Creo mi administrador");
+	pidAdmin = a.administrarCaja();
 }
 
 pid_t EstacionDeServicio::crearJefe(){
@@ -183,10 +183,10 @@ void EstacionDeServicio::esperarCierre(){
 }
 
 void EstacionDeServicio::enviarSenial(pid_t pid, std::string proceso){
-	int resultado = kill(pidGen, SIGINT);
+	int resultado = kill(pid, SIGINT);
 	if (resultado == -1){
 		std::string mensaje = std::string("Error en kill(): ") + std::string(strerror(errno));
-		log.escribirEntrada("No pude enviar signal de finalizacion a " + proceso);
+		log.escribirEntrada("No pude enviar signal de finalizacion a " + proceso + " numero: ", pid);
 	}else
 		log.escribirEntrada("Envie signal de finalizacion al " + proceso);
 }
