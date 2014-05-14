@@ -21,24 +21,34 @@ Administrador::Administrador(float m) {
 Administrador::~Administrador() {
 }
 
-void Administrador::comenzarDia(){
+bool Administrador::comenzarDia(){
 	log.setEscritor("Administrador");
 
 	log.escribirEntrada("Abro el log");
 
-	caja.abrir();
+	bool abriCaja = caja.abrir();
+	if(!abriCaja){
+		log.escribirEntrada("No pude abrir la caja.");
+		return false;
+	}
 	log.escribirEntrada("Abro la caja");
 
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 	log.escribirEntrada("Registro el manejo de finalizacion");
+	return true;
 }
 
 void Administrador::finalizarDia(){
 	log.escribirEntrada("Recibe signal de finalizar funcionamiento.");
-	caja.cerrar();
-	log.escribirEntrada("Cerre la caja");
+
+	bool cerre = caja.cerrar();
+	if(!cerre)
+		log.escribirEntrada("No pude cerrar la caja.");
+	else
+		log.escribirEntrada("Cerre la caja");
+
 	SignalHandler::destruir ();
-	log.escribirEntrada("Administrador deja de revisar caja y se cierra");
+	log.escribirEntrada("Dejo de revisar caja, cierro Proceso correctamente.");
 }
 void Administrador::pensar(){
 	float espera = tiempoAlAzarExponencial(media);
@@ -64,7 +74,11 @@ pid_t Administrador::administrarCaja(){
 	if (id != 0)
 		return id;
 
-	comenzarDia();
+	bool comienzo = comenzarDia();
+	if(!comienzo){
+		log.escribirEntrada("Finalizo Proceso por ERROR.");
+		return id;
+	}
 
 	//while (sigint_handler.getGracefulQuit() == 0 ) {
 	int i = 0;

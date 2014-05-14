@@ -20,9 +20,9 @@ public:
 
 	float verMonto() const;
 
-	void cerrar();
+	bool cerrar();
 
-	void abrir();
+	bool abrir();
 
 };
 

@@ -22,7 +22,7 @@ private:
 	SIGINT_Handler sigint_handler;
 	Log log;
 
-	void comenzarDia();
+	bool comenzarDia();
 	void finalizarDia();
 	void pensar();
 	void mirarDinero();

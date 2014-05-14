@@ -8,11 +8,11 @@
 #include "Caja.h"
 #include "constantesArchivos.h"
 
-Caja::Caja() {
-}
+using namespace std;
 
-Caja::~Caja() {
-}
+Caja::Caja() {}
+
+Caja::~Caja() {}
 
 void Caja::depositar(float plata_a_agregar){
 	if (plata_a_agregar < 0 ){
@@ -26,11 +26,23 @@ float Caja::verMonto() const{
 	return plata.leer();
 }
 
-void Caja::cerrar(){
-	plata.liberar();
+bool Caja::cerrar(){
+	try{
+		plata.liberar();
+	}catch(std::string &e){
+		cout << e << endl;
+		return false;
+	}
+	return true;
 }
 
-void Caja::abrir(){
-	plata.crear(ARCHIVO_CAJA, CAJA);
+bool Caja::abrir(){
+	try{
+		plata.crear(ARCHIVO_CAJA, CAJA);
+	}catch(std::string &e){
+		cout << e << endl;
+		return false;
+	}
+	return true;
 }
 

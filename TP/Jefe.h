@@ -34,8 +34,12 @@ public:
 private:
 
 	bool hayEmpleados();
+	void atenderUnAuto(Auto&);
 	void mensajeDespachante(std::string );
 	void tomarEmpleado();
+	bool comenzarDia();
+	void finalizarDia();
+	void cerrarCanales();
 	bool enviarAutoAEmpleado(const Auto&);
 	void printDebug(std::string);
 	void printDebug(std::string,int);

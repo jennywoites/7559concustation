@@ -33,45 +33,85 @@ bool Jefe::leerAuto(Auto* autito){
 	return status;
 }
 
-pid_t Jefe::atenderAutos(){
-	pid_t id = fork();
-	if (id != 0)
-		return id;
+void Jefe::atenderUnAuto(Auto& autito){
+	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 
+	if (!hayEmpleados()){
+		cantidadDespachada++;
+		log.escribirEntrada("La cantidad de autos despachados es de: ", cantidadDespachada);
+		mensajeDespachante(autito.getPatente());
+		return;
+	}
+
+	cantidadAtendida++;
+	tomarEmpleado();
+	enviarAutoAEmpleado(autito);
+	log.escribirEntrada("La cantidad de autos que atendi es de: ", cantidadAtendida);
+
+}
+
+bool Jefe::comenzarDia(){
 	log.setEscritor("Jefe " + nombre);
-	Auto autito;
 
 	arribos.setearModo(Pipe::LECTURA);
 	envios.setearModo(Pipe::ESCRITURA);
 
 	log.escribirEntrada("Se ha iniciado el Proceso.");
 
-	cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
-	log.escribirEntrada("Se creo la memoria compartida: cantidad de empleados disponibles.");
-
-	while (leerAuto(&autito)){
-		log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
-		if (!hayEmpleados()){
-			cantidadDespachada++;
-			log.escribirEntrada("La cantidad de autos despachados es de: ", cantidadDespachada);
-			mensajeDespachante(autito.getPatente());
-		}else{
-			cantidadAtendida++;
-			tomarEmpleado();
-			enviarAutoAEmpleado(autito);
-			log.escribirEntrada("La cantidad de autos que atendi es de: ", cantidadAtendida);
-		}
+	try{
+		cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No pude crear la memoria compartida: cantidad de empleados disponibles");
+		return false;
 	}
 
+	log.escribirEntrada("Se creo la memoria compartida: cantidad de empleados disponibles.");
+
+	return true;
+}
+
+void Jefe::cerrarCanales(){
 	arribos.cerrar();
 	log.escribirEntrada("Cierro el pipe de lectura arribos");
 	envios.cerrar();
 	log.escribirEntrada("Cierro el pipe de escritura envios");
+}
 
-	cantEmpleadosDisponibles.liberar();
-	log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
+void Jefe::finalizarDia(){
+	cerrarCanales();
 
-	log.escribirEntrada("Fin del proceso.");
+	try{
+		cantEmpleadosDisponibles.liberar();
+		log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
+		log.escribirEntrada("Finalizo el proceso correctamente.");
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No fue posible liberar la memoria compartida: cantidad de empleados disponibles");
+		log.escribirEntrada("Finalizo el proceso con ERROR.");
+	}
+
+}
+
+pid_t Jefe::atenderAutos(){
+	pid_t id = fork();
+	if (id != 0)
+		return id;
+
+	bool comienzo = comenzarDia();
+	if(!comienzo){
+		cerrarCanales();
+		log.escribirEntrada("Finalizo Proceso por ERROR.");
+		return id;
+	}
+
+	Auto autito;
+
+	while (leerAuto(&autito)){
+		atenderUnAuto(autito);
+	}
+
+	finalizarDia();
 
 	return id;
 }
