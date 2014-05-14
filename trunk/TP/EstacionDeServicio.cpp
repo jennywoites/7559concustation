@@ -68,12 +68,12 @@ std::string EstacionDeServicio::obtenerNombre(vector<std::string>& nombres, int 
 	return nombre;
 }
 
-bool EstacionDeServicio::crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
+bool EstacionDeServicio::crearEmpleados(){
 	vector<std::string> nombres;
 	agregarNombres(nombres);
 	for(int i = 0; i<cantEmpleados; i++){
 		std::string nombre = obtenerNombre(nombres,i);
-		Empleado e (nombre, pipe, surtidores);
+		Empleado e (nombre, generacion, atencion, surtidores);
 		log.escribirEntrada("Cree el empleado " + nombre);
 		pid_t pidEmpleado = e.atenderAutos(cantSurtidores);
 		if (pidEmpleado == 0) //como soy hijo, lo indico con true
@@ -135,17 +135,6 @@ int EstacionDeServicio::abrir(){
 		return ERROR;
 	}
 
-
-	//Creo los empleados, el generador, el administrador y el jefe y los mando
-	// a que atiendan. Cada uno crea sus procesos correspondientes
-	surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M= cantidad de surtidores
-
-	bool soyHijo = crearEmpleados(atencion,surtidores);
-	if (soyHijo)
-		return SOY_HIJO;
-
-	log.escribirEntrada("Termine de crear todos los empleados.");
-
 	try{
 		generacion.crear(ARCHIVO_GENERACION);
 		log.escribirEntrada("Creo el pipe de generacion de autos.");
@@ -160,6 +149,13 @@ int EstacionDeServicio::abrir(){
 		log.mensajeCierre();
 		return ERROR;
 	}
+
+	surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M= cantidad de surtidores
+	bool soyHijo = crearEmpleados();
+	if (soyHijo)
+		return SOY_HIJO;
+
+	log.escribirEntrada("Termine de crear todos los empleados.");
 
 	pid_t pidJefe = crearJefe();
 	if(pidJefe == 0)
