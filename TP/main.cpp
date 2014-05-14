@@ -1,8 +1,8 @@
 /*
  * main.cpp
  *
- *  Created on: 26/04/2014
- *      Author: martin
+ *  Created on: 01/05/2014
+ *      Author: jennifer
  */
 
 #include <stdio.h>
@@ -10,221 +10,114 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#include <sstream>
-
-#include "Auto.h"
-#include "Jefe.h"
-#include "Empleado.h"
 #include "EstacionDeServicio.h"
-#include "ManejoTiempos.h"
-#include "GeneradorAutos.h"
-#include "Caja.h"
-#include "Administrador.h"
-#include "Log.h"
-#include "MecanismoConcurrencia/PipeAutos.h"
-#include "MecanismoConcurrencia/Semaforo.h"
 
-void prueba1(void){
-	Caja caja();
-	Administrador admin(10000);
-	admin.administrarCaja();
-	wait(NULL);
-	cout <<"Cierro la caja\n";
+#include <getopt.h>
+#define SURTIDORES 1
+#define EMPLEADOS 1
+#define MEDIA_AUTOS 100
+#define MEDIA_ADMIN 100
+#define OPC_ERROR -1
+#define OPC_IMPRIMIR_AYUDA 0
+#define OPC_IMPRIMIR_VERSION 1
+#define OPC_EXEC 2
+
+void imprimir_ayuda(){
+	cout << "OPCIONES:" << endl;
+	cout << "-h --help  Imprime en pantalla informacion de Ayuda." << endl;
+	cout << "-v --version  Imprime la versión del programa." << endl;
+	cout << "-s --surtidores  Define cantidad de surtidores." << endl;
+	cout << "-e --empleados  Define cantidad de empleados." << endl;
+	cout << "-g --genautos  Define media de generacion de autos." << endl;
+	cout << "-a --veradmin  Define media de visita de administrador a la caja." << endl;
 }
 
-void pruebaPipeAutos(void){
-	PipeAutos pipe;
-	if (fork()==0){
-		Auto a("ABC123", 10);
-		pipe.escribirAuto(a);
-	}else{
-		Auto b;
-		cout << pipe.leerAuto(&b) << endl;
-		cout << b.getPatente() << endl;
+//imprime la version del programa al stdout
+void imprimir_version(){
+	cout << "Primer Proyecto - 75.59 - TPCI" << endl;
+	cout << "ConcuStation" << endl;
+	cout << "Primer Cuatrimestre - 2014" << endl;
+	cout << "Grupo:" << endl;
+	cout << "BUCHWALD, Martin Ezequiel (93155)" << endl;
+	cout << "GENENDER PEÑA, Ezequiel David (93163)" << endl;
+	cout << "WOITES, Jennifer Andrea (93274)" << endl;
+}
+
+
+int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpleados, int* mediaAutos, int* mediaAdmin){
+	*cantSurtidores = SURTIDORES;
+	*cantEmpleados = EMPLEADOS;
+	*mediaAutos = MEDIA_AUTOS;
+	*mediaAdmin = MEDIA_ADMIN;
+
+	//struct de lineas de comando
+	struct option opciones[]={
+		{"help",no_argument,NULL,'h'},
+		{"version",no_argument,NULL,'v'},
+		{"surtidores",required_argument,NULL,'s'},
+		{"empleados",required_argument,NULL,'e'},
+		{"genautos",required_argument,NULL,'g'},
+		{"veradmin",required_argument,NULL,'a'},
+		{0,0,0,0}
+	};
+
+	char caracter;
+	//mientras haya opciones las lee y las procesa
+	while ((caracter = (getopt_long(argc,argv,"hvs:e:g:a:",opciones,NULL)))!=-1){
+		switch(caracter){
+			case 'h'://help
+				return OPC_IMPRIMIR_AYUDA;
+			case 'v'://Version
+				return OPC_IMPRIMIR_VERSION;
+			case 's':
+				if (strcmp(optarg,"-")!=0)
+					*cantSurtidores = atoi(optarg);
+				break;
+			case 'e':
+				if (strcmp(optarg,"-")!=0)
+					*cantEmpleados = atoi(optarg);
+				break;
+			case 'g':
+				if (strcmp(optarg,"-")!=0)
+					*mediaAutos = atoi(optarg);
+					break;
+			case 'a':
+				if (strcmp(optarg,"-")!=0)
+					*mediaAdmin = atoi(optarg);
+				break;
+			case '?'://error
+				return OPC_ERROR;
+		}
 	}
+	return OPC_EXEC;
 }
 
-void pruebaGenPipeAutos(void){
-	PipeAutos generacion;
-	Jefe j ("UltraAlterMaster", generacion, generacion);
-	j.atenderAutos();
-	GeneradorAutos g (1000000, generacion);
-	g.generar();
+void atender(int cantSurtidores, int cantEmpleados, int mediaAutos, int mediaAdmin){
+	EstacionDeServicio concuStation (cantEmpleados, cantSurtidores, mediaAutos, mediaAdmin);
+	concuStation.abrir();
+	sleep(5); //FIXME: tiempo de simu
+	concuStation.cerrar();
 }
 
-void pruebaAtPipeAutos(void){
-	Administrador admin(3000000);
-	pid_t adm = admin.administrarCaja();
+int main(int argc, char* argv[]){
+	int cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin;
 
-	PipeAutos atencion;
-	Semaforo surtidor;
-	surtidor.crear("main.cpp",'a',1);
+	int opcion = parsearParametros(argv, argc, &cantSurtidores, &cantEmpleados, &mediaAutos, &mediaAdmin);
 
-    Empleado e ("0", atencion,surtidor);
-    e.atenderAutos(0);
-
-    PipeAutos generacion;
-
-	Jefe j ("UltraAlterMaster", generacion, atencion);
-	j.atenderAutos();
-	atencion.cerrar();
-
-	GeneradorAutos g (1000000, generacion);
-
-	pid_t gen = g.generar();
-	generacion.cerrar();
-	surtidor.eliminar();
-
-	sleep(4);
-	kill(gen, SIGINT);
-	kill(adm, SIGINT);
-	wait(NULL);
-	wait(NULL);
-	wait(NULL);
-	wait(NULL);
-}
-/*
-void prueba_log(){
-	Log log("log.jem");
-	log.escribir();
-	Log::abrir_log();
-	Log::enviarMensaje("El proceso principal abre el log");
-
-	Caja caja;
-	Administrador admin(10000);
-
-	cout << "Voy a hacer que el admin empiece" <<endl;
-	admin.administrarCaja();
-
-	usleep(10000);
-	Log::enviarMensaje("Voy a depositar 5");
-	caja.abrir();
-	caja.depositar(5);
-	caja.cerrar();
-
-	Log::cerrar_log();
-	wait(NULL);//admin
-
-	wait(NULL);//log
-}
-*/
-void prueba_memoria(){
-	PipeAutos atencion;
-	PipeAutos generacion;
-
-	Administrador admin(300000);
-	admin.administrarCaja();
-
-	generacion.cerrar();
-	atencion.cerrar();
-
-	cout << "Prueba no finalizada" <<  endl;
-	wait(NULL);
-}
-
-void leer(const MemoriaCompartida<int>& sh){
-	int lect = sh.leer();
-	cout << lect << endl;
-}
-
-void pruebaMemComp(){
-	if (fork() == 0){
-		MemoriaCompartida<int> shmem("MecanismosConcurrencia/MemoriaCompartida.h", 'a');
-		shmem.escribir(10);
-		shmem.incrementar(-1);
-		shmem.modificarValor(20);
-		wait(NULL);
-		shmem.liberar();
-		exit(0);
-	}else{
-		MemoriaCompartida<int> shmem;
-		MemoriaCompartida<int> shmem2;
-		shmem.crear("MecanismosConcurrencia/MemoriaCompartida.h", 'a');
-		shmem2 = shmem;
-		usleep(2000);
-		leer(shmem);
-		shmem.liberar();
-		exit(0);
+	switch (opcion){
+		case OPC_EXEC:
+			atender(cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin);
+			break;
+		case OPC_IMPRIMIR_AYUDA:
+			imprimir_ayuda();
+			break;
+		case OPC_IMPRIMIR_VERSION:
+			imprimir_version();
+			break;
+		case OPC_ERROR:
+			cout << "Parametros no validos. Intente nuevamente" << endl;
+			break;
 	}
-}
-
-void prueba_signal_gen(){
-	PipeAutos generacion;
-	GeneradorAutos g (6000000, generacion);
-	pid_t gen = g.generar();
-
-	Administrador admin(300000);
-	pid_t adm = admin.administrarCaja();
-
-	sleep(7);
-	kill(gen, SIGINT);
-	kill(adm, SIGINT);
-	generacion.cerrar();
-	wait(NULL);
-}
-
-void crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
-	for(int i = 0; i<1; i++){
-		stringstream ss;
-		ss << i;
-		std::string nombre;
-		nombre = ss.str();
-		Empleado e (nombre, pipe, surtidores);
-		e.atenderAutos(0);
-	}
-}
-
-void pruebaSurtido(){
-	Administrador a (3000000000); //FIXME
-	pid_t administrador = a.administrarCaja();
-
-	PipeAutos atencion;
-	Semaforo surtidores;
-	surtidores.crear("main.cpp",'A',1);
-
-	//Creo los empleados, el generador, el administrador y el jefe y los mando
-	// a que atiendan. Cada uno crea sus procesos correspondientes
-	crearEmpleados(atencion,surtidores);
-
-	PipeAutos generacion;
-
-	Jefe j ("UltraAlterMaster", generacion, atencion);
-	j.atenderAutos();
-
-	//Cierro pipe de atencion
-	atencion.cerrar();
-
-	GeneradorAutos g (300000, generacion);
-	pid_t generador = g.generar();
-
-	//Cierro pipe de generacion
-	generacion.cerrar();
-	surtidores.eliminar();
-
-	sleep(2);
-	kill(generador, SIGINT);
-	kill(administrador, SIGINT);
-	wait(NULL);
-	wait(NULL);
-	wait(NULL);
-	wait(NULL);
-}
-
-int main(void){
-	//prueba1();
-	//pruebaPipeAutos();
-	//pruebaGenPipeAutos();
-	//prueba_log();
-	//pruebaAtPipeAutos();
-	//prueba_memoria();
-	//prueba_signal_gen();
-	//pruebaSurtido();
-	//pruebaMemComp();
-
-	EstacionDeServicio e (1, 1, 3000000, 3000000);
-	e.abrir();
-	sleep(5);
-	e.cerrar();
 
 	exit(0);
 }
