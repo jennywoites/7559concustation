@@ -29,11 +29,10 @@ Auto::Auto() {
 	lleno = false;
 }
 
-Auto::Auto(std::string patente, int capacidad){
-	this->capacidadTanque = capacidad;
-	this->patente = patente;
-	this->lleno = false;
-}
+Auto::Auto(std::string patente, int capacidad):
+	capacidadTanque(capacidad),
+	patente(patente),
+	lleno(false) {}
 
 void Auto::imprimir(){
 	cout << "Se atendio el auto, cuya patente es: " << patente << ". Se le cargaron " << capacidadTanque << " litros." << endl;

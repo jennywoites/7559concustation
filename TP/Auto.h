@@ -17,8 +17,8 @@ struct auto_serial{
 
 class Auto {
 	private:
-		std::string patente;
 		int capacidadTanque;
+		std::string patente;
 		bool lleno;
 
 		static const unsigned int CANTIDAD_LETRAS = 3;

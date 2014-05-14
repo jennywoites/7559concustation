@@ -18,7 +18,7 @@ class Administrador {
 private:
 	Caja caja;
 	float plataVista;
-	float media;
+	float media; //de visita a la caja
 	SIGINT_Handler sigint_handler;
 	Log log;
 
