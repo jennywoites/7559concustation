@@ -45,12 +45,18 @@ private:
 	pid_t crearJefe();
 	void crearGenerador();
 	void enviarSenial(pid_t pid, std::string proceso);
+	void finalizarAdministrador();
 
 public:
+
+	static const int OK = 1;
+	static const int SOY_HIJO = 0;
+	static const int ERROR = -1;
+
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin);
 	virtual ~EstacionDeServicio();
 
-	void abrir();
+	int abrir();
 	void cerrar();
 };
 
