@@ -27,6 +27,7 @@ private:
 	void pensar();
 	void mirarDinero();
 	void imprimirDinero();
+	void destruir();
 
 public:
 	Administrador(float);

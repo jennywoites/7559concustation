@@ -35,14 +35,18 @@ bool Administrador::comenzarDia(){
 	log.escribirEntrada("Abro la caja");
 	cout << "Administrador abre la caja." << endl;
 
-	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+	try{
+		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+	}catch (std::string &e) {
+		cout << e << endl;
+		return false;
+	}
+
 	log.escribirEntrada("Registro el manejo de finalizacion");
 	return true;
 }
 
-void Administrador::finalizarDia(){
-	log.escribirEntrada("Recibe signal de finalizar funcionamiento.");
-
+void Administrador::destruir(){
 	bool cerre = caja.cerrar();
 	if(!cerre)
 		log.escribirEntrada("No pude cerrar la caja.");
@@ -50,6 +54,11 @@ void Administrador::finalizarDia(){
 		log.escribirEntrada("Cerre la caja");
 
 	SignalHandler::destruir ();
+}
+
+void Administrador::finalizarDia(){
+	log.escribirEntrada("Recibe signal de finalizar funcionamiento.");
+	destruir();
 	cout << "Administrador se va a su casa." << endl;
 	log.escribirEntrada("Dejo de revisar caja, cierro Proceso correctamente.");
 }
@@ -85,6 +94,7 @@ pid_t Administrador::administrarCaja(){
 
 	bool comienzo = comenzarDia();
 	if(!comienzo){
+		destruir();
 		log.escribirEntrada("Finalizo Proceso por ERROR.");
 		return id;
 	}
