@@ -16,14 +16,24 @@ Caja::~Caja() {}
 
 void Caja::depositar(float plata_a_agregar){
 	if (plata_a_agregar < 0 ){
-		//deberia lanzar una excepcion
 		return;
 	}
-	plata.incrementar(plata_a_agregar);
+	try{
+		plata.incrementar(plata_a_agregar);
+	}catch(std::string &e){
+		cout << "No es posible depositar en caja. " << e << endl;
+	}
 }
 
 float Caja::verMonto() const{
-	return plata.leer();
+	float dinero = 0;
+	try{
+		dinero = plata.leer();
+	}catch(std::string &e){
+		cout << "No es posible ver monto de la caja. " << e << endl;
+	}
+
+	return dinero;
 }
 
 bool Caja::cerrar(){
