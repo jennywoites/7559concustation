@@ -11,6 +11,8 @@ private:
 	bool lectura;
 	bool escritura;
 
+	void cerrarFd(int indice);
+
 public:
 	static const int LECTURA = 0;
 	static const int ESCRITURA = 1;
@@ -20,7 +22,6 @@ public:
 	virtual ~Pipe();
 
 	void setearModo ( const int modo );
-	void cerrarFd(int indice);
 
 	ssize_t escribir ( const void* dato,const int datoSize );
 	ssize_t leer ( void* buffer,const int buffSize );
