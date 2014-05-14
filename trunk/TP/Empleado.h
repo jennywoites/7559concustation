@@ -50,7 +50,7 @@ private:
 	bool leerAuto(Auto*);
 	void atenderUnAuto(Auto&);
 	int tomarSurtidor();
-	void devolverSurtidor(int);
+	bool devolverSurtidor(int);
 	bool comenzarDia();
 	void finalizarDia();
 	void cierreDeCaja();
