@@ -25,8 +25,7 @@ Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAuto
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
-Empleado::~Empleado() {
-}
+Empleado::~Empleado() {}
 
 void Empleado::atenderUnAuto(Auto& autito){
 	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
