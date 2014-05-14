@@ -123,6 +123,8 @@ int EstacionDeServicio::abrir(){
 	if(pidAdmin == 0)
 		return SOY_HIJO;
 
+	surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M= cantidad de surtidores
+
 	try{
 		atencion.crear(ARCHIVO_ATENCION);
 		log.escribirEntrada("Creo el pipe de atencion de autos.");
@@ -150,7 +152,6 @@ int EstacionDeServicio::abrir(){
 		return ERROR;
 	}
 
-	surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M= cantidad de surtidores
 	bool soyHijo = crearEmpleados();
 	if (soyHijo)
 		return SOY_HIJO;
