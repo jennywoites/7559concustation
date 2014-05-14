@@ -53,8 +53,14 @@ void Jefe::atenderUnAuto(Auto& autito){
 bool Jefe::comenzarDia(){
 	log.setEscritor("Jefe " + nombre);
 
-	arribos.setearModo(Pipe::LECTURA);
-	envios.setearModo(Pipe::ESCRITURA);
+	try{
+		arribos.setearModo(Pipe::LECTURA);
+		envios.setearModo(Pipe::ESCRITURA);
+	}catch (std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No pude setear modos de comunicacion en Pipes");
+		return false;
+	}
 
 	log.escribirEntrada("Se ha iniciado el Proceso.");
 
@@ -71,11 +77,19 @@ bool Jefe::comenzarDia(){
 	return true;
 }
 
+void Jefe::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
+	try{
+		pipe.cerrar();
+		log.escribirEntrada("Me desadoso del pipe " + tipo);
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No se pudo desadosar de pipe " + tipo);
+	}
+}
+
 void Jefe::cerrarCanales(){
-	arribos.cerrar();
-	log.escribirEntrada("Cierro el pipe de lectura arribos");
-	envios.cerrar();
-	log.escribirEntrada("Cierro el pipe de escritura envios");
+	cerrarPipe(arribos, "generacion");
+	cerrarPipe(envios, "atencion");
 }
 
 void Jefe::finalizarDia(){
