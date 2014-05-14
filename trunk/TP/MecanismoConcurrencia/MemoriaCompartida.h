@@ -9,7 +9,7 @@
 #include <errno.h>
 #include "Semaforo.h"
 
-//using namespace std;
+using namespace std;
 
 template <class T> class MemoriaCompartida {
 
@@ -41,7 +41,12 @@ template <class T> MemoriaCompartida<T>::MemoriaCompartida ():shmId(0),ptrDatos(
 }
 
 template <class T> void MemoriaCompartida<T>::crear ( const std::string& archivo,const char letra ) {
-	control.crear(archivo.c_str(), letra, 1);
+	try{
+		control.crear(archivo.c_str(), letra, 1);
+	}catch(std::string &e){
+		std::string mensaje = std::string("Error en control.crear() de Memoria Compartida: ") + e);
+		throw mensaje;
+	}
 	key_t clave = ftok ( archivo.c_str(),letra );
 
 	if ( clave > 0 ) {
