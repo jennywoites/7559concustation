@@ -70,13 +70,12 @@ bool Jefe::comenzarDia(){
 
 	try{
 		cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
+		log.escribirEntrada("Se creo la memoria compartida: cantidad de empleados disponibles.");
 	}catch(std::string &e){
 		cout << e << endl;
 		log.escribirEntrada("No pude crear la memoria compartida: cantidad de empleados disponibles");
 		return false;
 	}
-
-	log.escribirEntrada("Se creo la memoria compartida: cantidad de empleados disponibles.");
 
 	SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
 
@@ -139,14 +138,23 @@ pid_t Jefe::atenderAutos(){
 }
 
 bool Jefe::hayEmpleados(){
-	int cant_empleados = cantEmpleadosDisponibles.leer();
-	log.escribirEntrada("La cantidad de empleados disponibles es ", cant_empleados);
+	int cant_empleados = 0;
+	try{
+		cant_empleados = cantEmpleadosDisponibles.leer();
+		log.escribirEntrada("La cantidad de empleados disponibles es ", cant_empleados);
+	}catch(std::string &e){
+		log.escribirEntrada("Error al leer de Memoria Compartidad Cantidad de Empleados. " + e);
+	}
 	return (cant_empleados > 0);
 }
 
 void Jefe::tomarEmpleado(){
-	log.escribirEntrada("Tomo un empleado disponible.");
-	cantEmpleadosDisponibles.incrementar(-1);
+	try{
+		log.escribirEntrada("Tomo un empleado disponible.");
+		cantEmpleadosDisponibles.incrementar(-1);
+	}catch(std::string &e){
+		log.escribirEntrada("Error al toma empleado. " + e);
+	}
 }
 
 void Jefe::mensajeDespachante(std::string patente){
