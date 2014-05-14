@@ -79,10 +79,10 @@ pid_t GeneradorAutos::generar(){
 		Auto autito;
 		log.escribirEntrada("creado el auto:" + autito.getPatente() + ", numero " , numAuto);
 		//FIXME
-		/*if(!*/ envios.escribirAuto(autito);/*){
+		if(! envios.escribirAuto(autito)){
 			log.escribirEntrada("se cerro inesperadamente");
 			break; //no pude escribir, existe un error en lector
-		}*/
+		}
 		int tiempo = (int) tiempoAlAzarExponencial(media);
 		usleep(tiempo);
 		numAuto++;
