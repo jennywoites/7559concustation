@@ -1,0 +1,66 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{latexsym}
+
+\usepackage[top=3cm, bottom=3cm, left=2cm, right=2cm]{geometry} 
+
+\usepackage[spanish]{babel}
+
+\usepackage[utf8]{inputenx}
+
+\usepackage{graphicx}
+
+\author{Martín Buchwald \\ Ezequiel Genender Peña \\ Jennifer Woites}
+
+\title{75.59 Técnicas de Programación Concurrente I\\
+	\textbf{Primer Proyecto}\\
+	Facultad de Ingeniería, Universidad de Buenos Aires
+	\date{Cuatrimestre I, 2014}
+}
+
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\newpage
+
+\section{Análisis del Problema}
+El problema consiste en simular una estación de servicio, teniendo que manejar los problemas de concurrencia que puedan aparecer, utilizando las técnicas analizadas en la materia (y que fueron especificadas en el enunciado). Es necesario analizar cómo sincronizar y comunicar a los distintos procesos, para que la ejecución sea \underline{correcta}.\\
+Problemas de concurrencia que pueden aparecer:
+\begin{itemize}
+\item Varios empleados pueden querer utilizar los surtidores al mismo tiempo (un recurso limitado).
+\item El jefe debe poder saber si los empleados están todos ocupados, y si ésto no sucede, asignarle a alguno el auto, mientras que al mismo tiempo puede haber un empleado que acaba de terminar su tarea (por lo que hay que analizar la forma o estructura con la cual el jefe conoce sobre los empleados).
+\item .... seguir agregando
+\end{itemize}
+
+\subsection{Especificación}
+Hay que poner lo de los casos de uso...... 
+
+\section{Resolución de Tareas}
+\subsection{División de proyecto en procesos}
+Luego de haber analizado el proyecto, decidimos dividirlo en los siguientes procesos:
+\begin{enumerate}
+\item Un proceso que realice las tareas del jefe. Este proceso será el padre de los demás. A partir de los datos pasados por parámetro creará el resto de los procesos:
+\item N procesos que manejen a los empleados.
+\item Un proceso que maneje al administrador.
+\end{enumerate}
+
+\subsection{Comunicación entre procesos}
+Destacamos las distintas comunicaciones entre procesos:
+\begin{itemize}
+\item El jefe debe comunicarse con los empleados, para ir asignándole autos para ser atendidos, teniendo en cuenta que sólo debe asignarle a los empleados libres. Por lo tanto, el jefe tiene que tener alguna forma de saber si los empleados están libres u ocupados; o bien una forma de conocer cuáles son los empleados libres (no necesita saber cuáles son los empleados ocupados).
+\item Los empleados deben comunicarse entre sí, para poder utilizar los surtidores (o que queden a la espera de tener un surtidor libre para su utilización). Además deben comunicarse para la utilización de la caja: sólo uno de ellos puede dejar dinero a la vez.
+\item El administrador debe comunicarse con los empleados, ya que también utiliza la caja y ninguno de ellos puede utilizar la caja al mismo tiempo.
+\end{itemize}
+
+\section{Diagramas de flujo de comunicación entre procesos}
+
+\section{Diagrama de Clases}
+
+\section{Diagramas de Transición de Estados}
+\subsection{Jefe}
+
+\end{document}
