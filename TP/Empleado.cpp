@@ -30,13 +30,19 @@ Empleado::~Empleado() {}
 void Empleado::atenderUnAuto(Auto& autito){
 	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 	int surtidor = tomarSurtidor();
+	if (surtidor == -1){
+		log.escribirEntrada("No pude tomar algun surtidor, entonces el auto  " + autito.getPatente());
+		return;
+	}
 	log.escribirEntrada("Logre tomar el surtidor ",surtidor);
 
 	int litros = autito.llenar();
 	log.escribirEntrada("Llene el tanque. Cantidad de litros: ",litros);
-	devolverSurtidor(surtidor);
-	log.escribirEntrada("He devuelto el surtidor numero ",surtidor);
-
+	if (devolverSurtidor(surtidor)){
+		log.escribirEntrada("He devuelto el surtidor numero ",surtidor);
+	}else{
+		log.escribirEntrada("No pude devolver el surtidor!! nos quedamos sin el surtidor numero ",surtidor);
+	}
 	float plata = litros * PRECIO_POR_LITRO;
 	caja.depositar(plata);
 	log.escribirEntrada("Deposito en caja $", plata);
@@ -187,18 +193,29 @@ int Empleado::tomarSurtidor(){
 	log.escribirEntrada("Estoy buscando un surtidor libre.");
 
 	//busco surtidor que NO este en uso
-	for (unsigned int i = 0; i < surtidores.size(); i++){
-		if (surtidores.at(i).modificarValor(USO))
-			return i;
-		else
-			log.escribirEntrada("No logre tomar el surtidor ", int(i));
+	try{
+		for (unsigned int i = 0; i < surtidores.size(); i++){
+			if (surtidores.at(i).modificarValor(USO))
+				return i;
+			else
+				log.escribirEntrada("No logre tomar el surtidor ", int(i));
+		}
+	}catch(std::string &e){
+		cout << e << endl;
+		return -1;
 	}
 
 	return -1;
 }
 
-void Empleado::devolverSurtidor(int surtidor){
+bool Empleado::devolverSurtidor(int surtidor){
 	log.escribirEntrada("Estoy por devolver el surtidor");
-	surtidores.at(surtidor).modificarValor(DESUSO);
-	accesoSurtidores.signal();
+	try{
+		surtidores.at(surtidor).modificarValor(DESUSO);
+		accesoSurtidores.signal();
+	}catch(std::string &e){
+		cout << e << endl;
+		return false;
+	}
+	return true;
 }
