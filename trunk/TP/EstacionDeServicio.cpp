@@ -19,6 +19,10 @@
 
 #define ARCH_NOMBRES "TP/nombres.jem"
 
+const std::string EstacionDeServicio::PIPE_ATENCION  = "atencion";
+const std::string EstacionDeServicio::PIPE_GENERACION  = "generacion";
+
+
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin){
 	cantEmpleados = empleados;
 	cantSurtidores = surtidores;
@@ -99,6 +103,16 @@ void EstacionDeServicio::crearGenerador(){
 	log.escribirEntrada("Envie al generador a generar autos.");
 }
 
+void EstacionDeServicio::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
+	try{
+		pipe.cerrar();
+		log.escribirEntrada("Me desadoso del pipe " + tipo);
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No se pudo desadosar de pipe " + tipo);
+	}
+}
+
 int EstacionDeServicio::abrir(){
 	Log::setModo(Log::MODO_DEBUG);
 	log.mensajeApertura();
@@ -138,7 +152,7 @@ int EstacionDeServicio::abrir(){
 	}catch(std::string &e){
 		cout << e << endl;
 		log.escribirEntrada("No pude crear el pipe de generacion de autos.");
-		atencion.cerrar();
+		cerrarPipe(atencion, PIPE_ATENCION);
 		esperarCierre();
 		surtidores.eliminar();
 		finalizarAdministrador();
@@ -147,23 +161,17 @@ int EstacionDeServicio::abrir(){
 		return ERROR;
 	}
 
-
-
 	pid_t pidJefe = crearJefe();
 	if(pidJefe == 0)
 		return SOY_HIJO;
 
-	//Cierro pipe de atencion
-	atencion.cerrar();
-	log.escribirEntrada("Me desadoso del pipe de atencion.");
+	cerrarPipe(atencion, PIPE_ATENCION);
 
 	crearGenerador();
 	if(pidGen == 0)
 		return SOY_HIJO;
 
-	//Cierro pipe de generacion
-	generacion.cerrar();
-	log.escribirEntrada("Me desadoso del pipe de generacion de autos.");
+	cerrarPipe(generacion, PIPE_GENERACION);
 
 	return OK;
 }
@@ -202,7 +210,7 @@ void EstacionDeServicio::cerrar(){
 
 	enviarSenial(pidGen, "generador");
 
-	esperarCierre();	// esperar cierre
+	esperarCierre(); //Espero a que la estacion termine de atender los autos que quedaron pendientes
 
 	liberarMediosDeComunicacion();
 
