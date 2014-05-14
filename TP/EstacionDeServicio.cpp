@@ -138,6 +138,9 @@ int EstacionDeServicio::abrir(){
 	}catch(std::string &e){
 		cout << e << endl;
 		log.escribirEntrada("No pude crear el pipe de generacion de autos.");
+		atencion.cerrar();
+		esperarCierre();
+		surtidores.eliminar();
 		finalizarAdministrador();
 		log.escribirEntrada("Se finaliza el proceso por ERROR");
 		log.mensajeCierre();
@@ -188,6 +191,12 @@ void EstacionDeServicio::finalizarAdministrador(){
 	wait(NULL); //admin
 }
 
+void EstacionDeServicio::liberarMediosDeComunicacion(){
+	atencion.liberar();
+	generacion.liberar();
+	surtidores.eliminar();
+}
+
 void EstacionDeServicio::cerrar(){
 	log.escribirEntrada("Comienzo CIERRE de estacion de servicio.");
 
@@ -195,9 +204,7 @@ void EstacionDeServicio::cerrar(){
 
 	esperarCierre();	// esperar cierre
 
-	atencion.liberar();
-	generacion.liberar();
-	surtidores.eliminar();
+	liberarMediosDeComunicacion();
 
 	log.escribirEntrada("Espere a todos mis hijos: empleados, jefe y generador de autos.");
 
