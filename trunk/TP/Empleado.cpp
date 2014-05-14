@@ -43,8 +43,12 @@ void Empleado::atenderUnAuto(Auto& autito){
 
 	log.escribirEntrada("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
 	autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
-	disponibilidad.incrementar(1);
-	log.escribirEntrada("Estoy disponible para el jefe");
+	try{
+		disponibilidad.incrementar(1);
+		log.escribirEntrada("Estoy disponible para el jefe");
+	}catch(std::string &e){
+		log.escribirEntrada("No pude ponerme como disponible" + e); //Igual voy al pipe a leer autos, no termino el proceso por este motivo.
+	}
 
 }
 
@@ -72,14 +76,14 @@ bool Empleado::comenzarDia(){
 
 	try{
 		disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
+		disponibilidad.incrementar(1);
+		log.escribirEntrada("Me pongo a disposicion del Jefe.");
 	}catch(std::string &e){
 		cout << e << endl;
-		log.escribirEntrada("No pude crear la memoria compartida: cantidad de empleados disponibles");
+		log.escribirEntrada("Error en memoria compartida disponibilidad. " + e);
 		cierreDeCaja();
 		return false;
 	}
-	disponibilidad.incrementar(1);
-	log.escribirEntrada("Me pongo a disposicion del Jefe.");
 
 	return true;
 }
