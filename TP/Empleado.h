@@ -44,7 +44,7 @@ public:
 	Empleado(std::string, const PipeAutos&, const Semaforo&);
 	virtual ~Empleado();
 
-	void atenderAutos(int);
+	pid_t atenderAutos(int);
 private:
 	bool leerAuto(Auto*);
 	int tomarSurtidor();

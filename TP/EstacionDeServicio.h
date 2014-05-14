@@ -27,8 +27,8 @@ private:
 	int cantSurtidores;
 	int mediaAutos;
 	int mediaVerAdmin;
-	pid_t generador;
-	pid_t administrador;
+	pid_t pidGen;
+	pid_t pidAdmin;
 	Caja caja;
 	PipeAutos atencion;
 	PipeAutos generacion;
@@ -37,11 +37,13 @@ private:
 
 private:
 
-	void crearEmpleados(const PipeAutos&, const Semaforo&);
+	bool crearEmpleados(const PipeAutos&, const Semaforo&);
 	void esperarCierre();
 	void agregarNombres(vector<std::string>&);
 	std::string obtenerNombre(vector<std::string>&, int);
-
+	void crearAdmin();
+	pid_t crearJefe();
+	void crearGenerador();
 
 public:
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin);

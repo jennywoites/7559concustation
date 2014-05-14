@@ -27,10 +27,10 @@ Empleado::Empleado(std::string name, const PipeAutos& pipe, const Semaforo& sema
 Empleado::~Empleado() {
 }
 
-void Empleado::atenderAutos(int cantidadSurtidores){
+pid_t Empleado::atenderAutos(int cantidadSurtidores){
 	pid_t id = fork();
 	if (id != 0)
-		return;
+		return id;
 
 	log.setEscritor("Empleado " + nombre);
 	log.escribirEntrada("Se ha iniciado el Proceso.");
@@ -83,7 +83,8 @@ void Empleado::atenderAutos(int cantidadSurtidores){
 	}
 
 	log.escribirEntrada("Finalice mi proceso correctamente.");
-	exit(0);
+
+	return id;
 }
 
 bool Empleado::leerAuto(Auto* autito){
