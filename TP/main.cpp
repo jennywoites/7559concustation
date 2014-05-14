@@ -18,6 +18,7 @@
 #define MEDIA_AUTOS 100
 #define MEDIA_ADMIN 100
 #define OPC_ERROR -1
+#define OPC_ERROR_SURTI -2
 #define OPC_IMPRIMIR_AYUDA 0
 #define OPC_IMPRIMIR_VERSION 1
 #define OPC_EXEC 2
@@ -72,6 +73,8 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 			case 's':
 				if (strcmp(optarg,"-")!=0)
 					*cantSurtidores = atoi(optarg);
+					if(*cantSurtidores <= 0)
+						return OPC_ERROR_SURTI;
 				break;
 			case 'e':
 				if (strcmp(optarg,"-")!=0)
@@ -116,6 +119,9 @@ int main(int argc, char* argv[]){
 			break;
 		case OPC_ERROR:
 			cout << "Parametros no validos. Intente nuevamente" << endl;
+			break;
+		case OPC_ERROR_SURTI:
+			cout << "Cantidad de Surtidores no valida, debe ser mayor a 0" << endl;
 			break;
 	}
 
