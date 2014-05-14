@@ -33,9 +33,7 @@ void Auto::imprimir(){
 	//TODO: deberia ir al Log
 }
 
-Auto::~Auto() {
-
-}
+Auto::~Auto() {}
 
 std::string Auto::getPatente() const{
 	return patente;
