@@ -39,6 +39,7 @@ bool GeneradorAutos::comenzarDia(){
 	}
 
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+	SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
 
 	return true;
 }
@@ -75,13 +76,13 @@ pid_t GeneradorAutos::generar(){
 		return id;
 	}
 	
-	while (sigint_handler.getGracefulQuit() == 0 ) {
+	while (sigint_handler.getGracefulQuit() == 0 and sigpipe_handler.getGracefulQuit() == 0 ) {
 		Auto autito;
-		log.escribirEntrada("creado el auto:" + autito.getPatente() + ", numero " , numAuto);
+		log.escribirEntrada("creado el auto: " + autito.getPatente() + ", numero " , numAuto);
 		//FIXME
 		if(! envios.escribirAuto(autito)){
-			log.escribirEntrada("se cerro inesperadamente");
-			break; //no pude escribir, existe un error en lector
+			log.escribirEntrada("se cerro mi lector inesperadamente");
+			break;
 		}
 		int tiempo = (int) tiempoAlAzarExponencial(media);
 		usleep(tiempo);
