@@ -35,6 +35,9 @@ private:
 	Semaforo surtidores;
 	Log log;
 
+	static const std::string PIPE_ATENCION;
+	static const std::string PIPE_GENERACION;
+
 private:
 
 	bool crearEmpleados(const PipeAutos&, const Semaforo&);
@@ -47,6 +50,7 @@ private:
 	void enviarSenial(pid_t pid, std::string proceso);
 	void finalizarAdministrador();
 	void liberarMediosDeComunicacion();
+	void cerrarPipe(PipeAutos&,const std::string&);
 
 public:
 
