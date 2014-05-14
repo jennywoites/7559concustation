@@ -30,12 +30,10 @@ bool PipeAutos :: leerAuto ( Auto* autito ) {
 	//Log::enviarMensaje("Debug: valor de Semaph ", controlLectura.getVal());
 	ssize_t leido;
 	try{
-		cout << Auto::LONG_SERIE << endl;
 		leido = Pipe::leer(static_cast<void*>(serie), Auto::LONG_SERIE);
 		//leido = Pipe::leer(static_cast<void*>(&serie), sizeof(struct auto_serial));
 	}catch(std::string &e){
 		controlLectura.signal();
-		cout << e << endl;
 		return 0;
 	}
 
@@ -53,7 +51,6 @@ bool PipeAutos :: leerAuto ( Auto* autito ) {
 bool PipeAutos :: escribirAuto ( const Auto& autito ) {
 	std::string serie = autito.serializar();
 	//struct auto_serial serie = autito.serializar();
-	//cout << serie << endl;
 	ssize_t escrito;
 	try{
 		escrito = Pipe::escribir(static_cast<const void*>(serie.c_str()), Auto::LONG_SERIE);
@@ -62,7 +59,8 @@ bool PipeAutos :: escribirAuto ( const Auto& autito ) {
 		cout << e << endl;
 		return 0;
 	}
-	return (escrito == sizeof(struct auto_serial));
+	//return (escrito == sizeof(struct auto_serial));
+	return (escrito == Auto::LONG_SERIE);
 }
 
 void PipeAutos::liberar(){
