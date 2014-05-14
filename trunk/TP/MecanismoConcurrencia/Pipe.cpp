@@ -25,7 +25,7 @@ Pipe::~Pipe() {
 
 void Pipe::cerrarFd(int indice){
 	if ( close ( this->descriptores[indice] ) == -1 ){
-		std::string mensaje = std::string("Error en close(): ") + std::string(strerror(errno));
+		std::string mensaje = std::string("Error en closePipe(): ") + std::string(strerror(errno));
 		throw mensaje;
 	}
 }
@@ -51,7 +51,7 @@ ssize_t Pipe :: escribir ( const void* dato,int datoSize ) {
 	if (escrito != -1)
 		return escrito;
 
-	std::string mensaje = std::string("Error en write(): ") + std::string(strerror(errno));
+	std::string mensaje = std::string("Error en writePipe(): ") + std::string(strerror(errno));
 	throw mensaje;
 }
 
@@ -65,7 +65,7 @@ ssize_t Pipe :: leer ( void* buffer,const int buffSize ) {
 	if (leido != -1)
 			return leido;
 
-	std::string mensaje = std::string("Error en read(): ") + std::string(strerror(errno));
+	std::string mensaje = std::string("Error en readPipe(): ") + std::string(strerror(errno));
 	throw mensaje;
 }
 
