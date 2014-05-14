@@ -31,10 +31,20 @@
 El problema consiste en simular una estación de servicio, teniendo que manejar los problemas de concurrencia que puedan aparecer, utilizando las técnicas analizadas en la materia (y que fueron especificadas en el enunciado). Es necesario analizar cómo sincronizar y comunicar a los distintos procesos, para que la ejecución sea \underline{correcta}.\\
 Problemas de concurrencia que pueden aparecer:
 \begin{itemize}
-\item Varios empleados pueden querer utilizar los surtidores al mismo tiempo (un recurso limitado).
-\item El jefe debe poder saber si los empleados están todos ocupados, y si ésto no sucede, asignarle a alguno el auto, mientras que al mismo tiempo puede haber un empleado que acaba de terminar su tarea (por lo que hay que analizar la forma o estructura con la cual el jefe conoce sobre los empleados).
-\item .... seguir agregando
+	\item Varios empleados pueden querer utilizar los surtidores al mismo tiempo (un recurso
+	 limitado).
+	\item El jefe debe poder saber si los empleados están todos ocupados, o hay al menos uno
+	 libre.
+	\item Siguiendo al punto anterior, si no hay empleados libres	 asignarle a alguno el auto,
+	 mientras que al mismo tiempo puede haber un empleado que acaba de terminar su tarea.
+	\item Varios empleados pueden estar libres al mismo tiempo a la espera de un auto a ser
+	 atendido. Es necesario que en tal caso los empleados actuen de manera sincronizada.
+	\item Varios empleados, y el administrador, querrán acceder a la caja, por lo que será
+	necesario sincronizar tal acceso.
+	\item Podrían llegar autos a la estación de servicio mientras el Jefe está asignándole
+	otro a un empleado. 
 \end{itemize}
+A su vez, es necesario determinar la condición de finalización de la simulación. Dado que no hay una especificación dentro del enunciado acerca de tal tema, hemos optado por finalizar la simulación luego de pasado un tiempo (en segundos), pasado por parámetro al programa. Será necesario que tal finalización sea también correcto; es decir, que todos los procesos finalicen sus funciones de la manera esperada, de una u otra forma dependiendo del proceso que se trate.
 
 \subsection{Especificación}
 Hay que poner lo de los casos de uso...... 
@@ -43,18 +53,71 @@ Hay que poner lo de los casos de uso......
 \subsection{División de proyecto en procesos}
 Luego de haber analizado el proyecto, decidimos dividirlo en los siguientes procesos:
 \begin{enumerate}
-\item Un proceso que realice las tareas del jefe. Este proceso será el padre de los demás. A partir de los datos pasados por parámetro creará el resto de los procesos:
-\item N procesos que manejen a los empleados.
-\item Un proceso que maneje al administrador.
+	\item Un proceso que simule la estación de servicio en sí. Dado ésto, tal proceso será el
+	principal, o dicho de otro modo, el \textit{padre} de los demás procesos del programa
+	(teniendo que crearlos una vez que se inicia la simulación).
+	\item Un proceso que se encargue de generar los autos, cada un cierto tiempo aleatorio.
+	Tales autos deberán ser enviados al Jefe para que éste los trate.
+	\item Un proceso que maneje al Jefe. Esto quiere decir: obtener los autos
+	generados por el proceso anterior, y analizar si hay empleados disponibles. En caso
+	afirmativo, debe enviarle a algún empleado el auto, y en caso negativo desestimar el
+	pedido y quedar a la espera de otro auto.
+	\item N procesos que se encarguen de manejar a los empleados. Estos deben quedar a la
+	espera de un auto a ser atendido, indicando su disponibilidad (que luego se analizará cómo
+	lograremos ésto). Luego de obtener un auto a atender, debe proceder como está especificado
+	en el enunciado.
+	\item Un proceso que maneje al administrador, el cual irá a la caja a ver su monto cada
+	cierto tiempo aleatorio.
 \end{enumerate}
 
+
 \subsection{Comunicación entre procesos}
-Destacamos las distintas comunicaciones entre procesos:
+Los procesos que se deben comunicar entre sí son:
 \begin{itemize}
-\item El jefe debe comunicarse con los empleados, para ir asignándole autos para ser atendidos, teniendo en cuenta que sólo debe asignarle a los empleados libres. Por lo tanto, el jefe tiene que tener alguna forma de saber si los empleados están libres u ocupados; o bien una forma de conocer cuáles son los empleados libres (no necesita saber cuáles son los empleados ocupados).
-\item Los empleados deben comunicarse entre sí, para poder utilizar los surtidores (o que queden a la espera de tener un surtidor libre para su utilización). Además deben comunicarse para la utilización de la caja: sólo uno de ellos puede dejar dinero a la vez.
-\item El administrador debe comunicarse con los empleados, ya que también utiliza la caja y ninguno de ellos puede utilizar la caja al mismo tiempo.
+	\item Estación de Servicio - Generador de autos: debe poder indicarle cuando debe terminar
+	de generar autos.
+	\item Generador de Autos - Jefe: debe enviarle el auto que ha generado.
+	\item Generador de Autos - Jefe: El generador debe comunicarle al jefe, de alguna manera,
+	que	la simulación no ha terminado y por consiguiente no se generarán más autos.
+	\item Jefe - Empleados: debe poder conocer la disponibilidad de los empleados, para saber
+	si enviarles el auto, o despacharlo. Por lo tanto, el dato de la cantidad de empleados
+	disponibles es algo que deben comunicarse entre Empleados y el Jefe.
+	\item Jefe - Empleados: Una vez determinado que un empleado puede hacerse cargo del auto, 
+	el jefe debe enviar el auto.
+	\item Jefe - Empleados: El jefe debe comunicarle a los empleados, de alguna manera, que
+	la simulación ha terminado y por consiguiente no es necesario que sigan esperando por
+	otros autos. 
+	\item Empleados entre sí: los empleados deben comunicarse entre sí para poder ver cuáles
+	surtidores están libres y cuales no. Mientras no hayan surtidores libres deberán quedarse
+	los restantes empleados esperando a que esta situación cambie. Además, otro dato que deben
+	compartir es cuáles son los surtidores libres y cuáles los ocupados.
+	\item Empleados entre sí, con el Administrador: Deben poder entre todos ellos acceder a
+	la caja de manera sincronizada. Además deben compartir entre ellos el dato del monto de
+	la caja en cada momento (puesto que los empleados lo aumentan, y el administrador lo
+	consulta).
+	\item Estación de Servicio - Administrador: La estación de servicio debe poder avisarle
+	al administrador que la simulación ha terminado, y por consiguiente debe terminar su
+	ejecución.
 \end{itemize}
+
+\subsection{Mapeo de problemas}
+
+\subsection{Mecanismos de concurrencia para la comunicación}
+A continuación se comentan la comunicación que debe haber entre procesos, así como los mecanismos de concurrencia adoptados para resolver tal comunicación. Es importante notar que cada vez que se hable de utilizar Memoria Compartida para comunicar datos entre procesos, habrá un Semáforo binario interviniendo para manejar el sincronismo de acceso a la memoria compartida. De ahora en más se deja implícito ésto, pero es de remarcada importancia no olvidar que siempre estará presente este hecho.
+
+\subsubsection{Generador de Autos - Jefe}
+Una vez iniciada la simulación, el generador de autos le irá mandando, cada cierto tiempo aleatorio \footnote{Se modela la llegada de autos como correspondiente a un proceso puntual de Poisson, por lo tanto, el tiempo de espera hasta que llegue un nuevo auto corresponde a una variable aleatoria de distribución exponencial, por lo que luego de enviar un auto se realiza una simulación de tal variable, para ver el tiempo de espera para craer el siguiente auto.}
+el cual debe poder obtenerlo. Por lo tanto, se realiza esta comunicación con un Pipe, en el cual el Generador escribe y el Jefe lee. De esta manera, el jefe puede realizar sus tareas de asignación mientras el generador le envía un nuevo auto, o incluso se logra que mientras no llegue un nuevo auto a ser atendido, el jefe quede en estado bloquedo, lo cual es lo deseado dado que el Jefe no tendrá nada que hacer en esos momentos.
+
+\subsubsection{Jefe - Empleados}
+Una vez que el Jefe tiene un auto para ser atendido, debe analizar si hay empleados disponibles. Es importante notar que al Jefe no le interesa saber qué empleados están disponibles, sino cuántos (o mejor dicho, saber si tal cantidad es igual o mayor que 0). Para poder comunicar esta información, crucial para la simulación, entre los empleados al jefe, se dispone del uso de una memoria compartida, para un simple valor entero. Cada vez que un empleado pasa a estar disponible (puesto que ya terminó con sus tareas), aumentará en 1 el valor de tal memoria (que iniciará en 0). Cuando el Jefe necesite ver si hay algún empleado disponible, verá el contenido de tal memoria compartida. Si es igual a 0, no hay ningún empleado libre actualmente, por lo que se despacha al auto, y el jefe espera a que llegue otro auto para ser atendido (como fue explicado anteriormente). Si es mayor a 0, se restará tal valor en una unidad (puesto que habrá un empleado menos disponible), y se le envía a los empleados el auto. 
+
+Es muy importante notar que no pueden ser los empleados los encargados de disminuir su disponibilidad, por más que a priori suene lo más intuitivo. Proponemos el siguiente ejemplo, siendo el empleado quien disminuye su disponibilidad: supongamos el caso de tener un único empleado, el cual se encuentra inicialmente disponible. El jefe verá que la disponibilidad será de 1 empleado, por lo que envía el auto. Supongamos también que \textit{el empleado es muy lento}, y no llega a disminuir su disponibilidad antes que el jefe vuelva a tener otro auto para atender, por lo que éste volvería a ver la disponibilidad de empleados en 1, cuando este no es cierto. Por esta razón es importante ver que debe ser el jefe quien disminuye la disponibilidad. Otra forma de verlo es viéndolo desde el lado del análisis de mapeo a problemas conocidos de concurrencia: el jefe es el que \textit{consume} la disponibilidad de los empleados, mientras que los empleados la \textit{crean}. Evidentemente, al ser el jefe quien la consume, debe ser éste quien disminuya su valor.
+
+
+\subsubsection{Empleados entre sí}
+\subsubsection{Empleados y Administrador}
+\subsubsection{Comunicación para finalizar la simulación}
 
 \section{Diagramas de flujo de comunicación entre procesos}
 
