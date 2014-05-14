@@ -17,7 +17,7 @@ using namespace std;
 class Administrador {
 private:
 	Caja caja;
-	float plata_anterior;
+	float plataVista;
 	float media;
 	SIGINT_Handler sigint_handler;
 	Log log;
@@ -26,6 +26,7 @@ private:
 	void finalizarDia();
 	void pensar();
 	void mirarDinero();
+	void imprimirDinero();
 
 public:
 	Administrador(float);
