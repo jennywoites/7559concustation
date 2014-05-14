@@ -20,6 +20,7 @@
 #define TIEMPO_SIMULACION 5
 #define OPC_ERROR -1
 #define OPC_ERROR_SURTI -2
+#define OPC_ERROR_TIEMPO -3
 #define OPC_IMPRIMIR_AYUDA 0
 #define OPC_IMPRIMIR_VERSION 1
 #define OPC_EXEC 2
@@ -96,6 +97,8 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 			case 't':
 				if (strcmp(optarg,"-")!=0)
 					*tiempo = atoi(optarg);
+					if(*tiempo <= 0)
+						return OPC_ERROR_TIEMPO;
 				break;
 			case '?'://error
 				return OPC_ERROR;
@@ -139,6 +142,9 @@ int main(int argc, char* argv[]){
 			break;
 		case OPC_ERROR_SURTI:
 			cout << "Cantidad de Surtidores no valida, debe ser mayor a 0" << endl;
+			break;
+		case OPC_ERROR_TIEMPO:
+			cout << "Tiempo no valido, debe ser mayor a 0" << endl;
 			break;
 	}
 
