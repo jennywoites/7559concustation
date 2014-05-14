@@ -153,7 +153,7 @@ void EstacionDeServicio::esperarCierre(){
 void EstacionDeServicio::cerrar(){
 	log.escribirEntrada("Comienzo CIERRE de estacion de servicio.");
 
-	kill(pidGen, SIGINT);	// envia senial a generador
+//	kill(pidGen, SIGINT);	// envia senial a generador
 	log.escribirEntrada("Envie signal de finalizar al generador");
 
 	esperarCierre();	// esperar cierre
@@ -164,7 +164,7 @@ void EstacionDeServicio::cerrar(){
 
 	log.escribirEntrada("Espere a todos mis hijos: empleados, jefe y generador de autos.");
 
-	kill(pidAdmin, SIGINT);	// envia senial a generador
+//	kill(pidAdmin, SIGINT);	// envia senial a generador
 	log.escribirEntrada("Envie signal de finalizar al administrador");
 	wait(NULL); //admin
 
