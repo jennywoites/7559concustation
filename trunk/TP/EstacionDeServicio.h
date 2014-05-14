@@ -44,6 +44,7 @@ private:
 	void crearAdmin();
 	pid_t crearJefe();
 	void crearGenerador();
+	void enviarSenial(pid_t pid, std::string proceso);
 
 public:
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin);
