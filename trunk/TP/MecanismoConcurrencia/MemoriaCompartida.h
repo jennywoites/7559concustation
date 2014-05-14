@@ -4,7 +4,6 @@
 //#include <sys/types.h>
 //#include <sys/ipc.h>
 #include <sys/shm.h>
-//#include <string>
 #include <string.h>
 #include <iostream>
 #include <errno.h>

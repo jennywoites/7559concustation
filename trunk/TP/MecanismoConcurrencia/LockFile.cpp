@@ -1,5 +1,9 @@
 #include "LockFile.h"
 
+#include <iostream>
+#include <errno.h>
+#include <string.h>
+
 LockFile::LockFile(){
 	this->fl.l_type = F_WRLCK;
 	this->fl.l_whence = SEEK_SET;
@@ -10,21 +14,41 @@ LockFile::LockFile(){
 
 void LockFile :: crear ( const std::string nombre ) {
 	this->nombre = nombre;
-	this->fd = open ( this->nombre.c_str(),O_CREAT|O_WRONLY,0777 );
+	int filedesc = open ( this->nombre.c_str(),O_CREAT|O_WRONLY,0777 );
+	if(!filedesc){
+		std::string mensaje = std::string("Error en open() en crear LockFile: ");
+		throw mensaje;
+		return;
+	}
+	this->fd = filedesc;
 }
 
 int LockFile :: tomarLock () {
 	this->fl.l_type = F_WRLCK;
-	return fcntl ( this->fd,F_SETLKW,&(this->fl) );
+	int estado = fcntl ( this->fd,F_SETLKW,&(this->fl) );
+	if(estado == -1){
+		std::string mensaje = std::string("Error en fcntl() en tomarLock: ") + std::string(strerror(errno));
+		throw mensaje;
+	}
+	return estado;
 }
 
 int LockFile :: liberarLock () {
 	this->fl.l_type = F_UNLCK;
-	return fcntl ( this->fd,F_SETLK,&(this->fl) );
+	int estado = fcntl( this->fd,F_SETLK,&(this->fl) );
+	if(estado == -1){
+		std::string mensaje = std::string("Error en fcntl() en liberarLock: ") + std::string(strerror(errno));
+		throw mensaje;
+	}
+	return estado;
 }
 
 ssize_t LockFile :: escribir ( const void* buffer,const ssize_t buffsize ) const {
-	lseek ( this->fd,0,SEEK_END );
+	int estado = lseek ( this->fd,0,SEEK_END );
+	if(estado == -1){
+		std::string mensaje = std::string("Error en lseek() en escribir ") + std::string(strerror(errno));
+		throw mensaje;
+	}
 	return write ( this->fd,buffer,buffsize );
 }
 
