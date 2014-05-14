@@ -106,7 +106,15 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 
 void atender(int cantSurtidores, int cantEmpleados, int mediaAutos, int mediaAdmin, int tiempo){
 	EstacionDeServicio concuStation (cantEmpleados, cantSurtidores, mediaAutos, mediaAdmin);
-	concuStation.abrir();
+	int estadoApertura = concuStation.abrir();
+
+	if(estadoApertura == EstacionDeServicio::SOY_HIJO) return;
+
+	if(estadoApertura == EstacionDeServicio::ERROR){
+		cout << "Error al abrir Estacion de Servicio. FIN DEL PROGRAMA" <<endl;
+		return;
+	}
+
 	sleep(tiempo); //FIXME: tiempo de simu
 	concuStation.cerrar();
 }

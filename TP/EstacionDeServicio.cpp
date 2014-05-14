@@ -99,18 +99,28 @@ void EstacionDeServicio::crearGenerador(){
 	log.escribirEntrada("Envie al generador a generar autos.");
 }
 
-void EstacionDeServicio::abrir(){
+int EstacionDeServicio::abrir(){
 	Log::setModo(Log::MODO_DEBUG);
 	log.mensajeApertura();
 	log.setEscritor("Estacion de Servicio");
 	log.escribirEntrada("Comienzo a funcionar. ABIERTO");
 
 	crearAdmin();
-	if(pidAdmin == 0) //Soy el proceso hijo que volvio
-		return ;
+	if(pidAdmin == 0)
+		return SOY_HIJO;
 
-	atencion.crear(ARCHIVO_ATENCION);
-	log.escribirEntrada("Creo el pipe de atencion de autos.");
+	try{
+		atencion.crear(ARCHIVO_ATENCION);
+		log.escribirEntrada("Creo el pipe de atencion de autos.");
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No pude crear el pipe de atencion de autos.");
+		finalizarAdministrador();
+		log.escribirEntrada("Se finaliza el proceso por ERROR");
+		log.mensajeCierre();
+		return ERROR;
+	}
+
 
 	//Creo los empleados, el generador, el administrador y el jefe y los mando
 	// a que atiendan. Cada uno crea sus procesos correspondientes
@@ -118,29 +128,41 @@ void EstacionDeServicio::abrir(){
 
 	bool soyHijo = crearEmpleados(atencion,surtidores);
 	if (soyHijo)
-		return ;
+		return SOY_HIJO;
 
 	log.escribirEntrada("Termine de crear todos los empleados.");
 
+	try{
+		generacion.crear(ARCHIVO_GENERACION);
+		log.escribirEntrada("Creo el pipe de generacion de autos.");
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No pude crear el pipe de generacion de autos.");
+		finalizarAdministrador();
+		log.escribirEntrada("Se finaliza el proceso por ERROR");
+		log.mensajeCierre();
+		return ERROR;
+	}
 
-	generacion.crear(ARCHIVO_GENERACION);
-	log.escribirEntrada("Creo el pipe de generacion de autos.");
+
 
 	pid_t pidJefe = crearJefe();
-	if(pidJefe == 0) //Soy el proceso hijo que volvio
-		return ;
+	if(pidJefe == 0)
+		return SOY_HIJO;
 
 	//Cierro pipe de atencion
 	atencion.cerrar();
 	log.escribirEntrada("Me desadoso del pipe de atencion.");
 
 	crearGenerador();
-	if(pidGen == 0) //Soy el proceso hijo que volvio
-		return ;
+	if(pidGen == 0)
+		return SOY_HIJO;
 
 	//Cierro pipe de generacion
 	generacion.cerrar();
 	log.escribirEntrada("Me desadoso del pipe de generacion de autos.");
+
+	return OK;
 }
 
 
@@ -161,6 +183,11 @@ void EstacionDeServicio::enviarSenial(pid_t pid, std::string proceso){
 		log.escribirEntrada("Envie signal de finalizacion al " + proceso);
 }
 
+void EstacionDeServicio::finalizarAdministrador(){
+	enviarSenial(pidAdmin, "administrador");
+	wait(NULL); //admin
+}
+
 void EstacionDeServicio::cerrar(){
 	log.escribirEntrada("Comienzo CIERRE de estacion de servicio.");
 
@@ -174,8 +201,7 @@ void EstacionDeServicio::cerrar(){
 
 	log.escribirEntrada("Espere a todos mis hijos: empleados, jefe y generador de autos.");
 
-	enviarSenial(pidAdmin, "administrador");
-	wait(NULL); //admin
+	finalizarAdministrador();
 
 	log.escribirEntrada("Ya se cerraron todos los empleados, el jefe, el generador y el administrador");
 	log.mensajeCierre();
