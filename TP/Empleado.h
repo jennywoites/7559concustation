@@ -29,6 +29,7 @@ private:
 	MemoriaCompartida<int> disponibilidad;
 	Caja caja;
 	PipeAutos arribos;
+	PipeAutos generacion;
 	Semaforo accesoSurtidores;
 	std::vector< MemoriaCompartida<bool> > surtidores;
 	Log log;
@@ -41,7 +42,7 @@ private:
 	void printDebug(std::string, float);
 
 public:
-	Empleado(std::string, const PipeAutos&, const Semaforo&);
+	Empleado(std::string, const PipeAutos&, const PipeAutos&, const Semaforo&);
 	virtual ~Empleado();
 
 	pid_t atenderAutos(int);
@@ -54,6 +55,7 @@ private:
 	void finalizarDia();
 	void cierreDeCaja();
 	bool crearSurtidores(int);
+	void cerrarPipe(PipeAutos& pipe, const std::string& tipo);
 };
 
 #endif /* EMPLEADO_H_ */
