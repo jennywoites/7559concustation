@@ -3,6 +3,7 @@
 #include <iostream>
 #include <errno.h>
 #include <string.h>
+#include <sys/types.h>
 
 
 Semaforo :: Semaforo ():id(0), valorInicial(0) {}
@@ -10,15 +11,20 @@ Semaforo :: Semaforo ():id(0), valorInicial(0) {}
 void Semaforo :: crear ( const std::string& nombre, char letra,const int valorInicial){
 	creador.crear(nombre);
 	creador.tomarLock();
+
 	this->valorInicial = valorInicial;
 	key_t clave = ftok (nombre.c_str(), letra);
 	if(clave == -1){
 		creador.liberarLock();
 		std::string mensaje = std::string("Error en ftok(): ") + std::string(strerror(errno));
 		throw mensaje;
-		return;
 	}
-	this->id = semget ( clave,1,0666 | IPC_CREAT );
+	this->id = semget ( clave, 1, 0666 | IPC_CREAT | IPC_EXCL );
+
+	bool existia = (errno == EEXIST and this->id == -1);
+	if(existia)
+		this->id = semget(clave, 1, 0666);
+
 	if(this->id == -1){
 		creador.liberarLock();
 		std::string mensaje = std::string("Error en semget(): ") + std::string(strerror(errno));
@@ -26,7 +32,8 @@ void Semaforo :: crear ( const std::string& nombre, char letra,const int valorIn
 		return;
 	}
 
-	this->inicializar ();
+	if (! existia)
+		this->inicializar ();
 	creador.liberarLock();
 }
 
