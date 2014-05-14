@@ -47,8 +47,13 @@ public:
 	pid_t atenderAutos(int);
 private:
 	bool leerAuto(Auto*);
+	void atenderUnAuto(Auto&);
 	int tomarSurtidor();
 	void devolverSurtidor(int);
+	bool comenzarDia();
+	void finalizarDia();
+	void cierreDeCaja();
+	bool crearSurtidores(int);
 };
 
 #endif /* EMPLEADO_H_ */
