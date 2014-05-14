@@ -63,7 +63,7 @@ ssize_t Pipe :: leer ( void* buffer,const int buffSize ) {
 	
 	int leido = read ( this->descriptores[LECTURA],buffer,buffSize );
 	if (leido != -1)
-			return leido;
+		return leido;
 
 	std::string mensaje = std::string("Error en readPipe(): ") + std::string(strerror(errno));
 	throw mensaje;
