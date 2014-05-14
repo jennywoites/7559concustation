@@ -37,8 +37,7 @@ public:
 	bool modificarValor(const T& valor);
 };
 
-template <class T> MemoriaCompartida<T>::MemoriaCompartida ():shmId(0),ptrDatos(NULL) {
-}
+template <class T> MemoriaCompartida<T>::MemoriaCompartida ():shmId(0),ptrDatos(NULL) {}
 
 template <class T> void MemoriaCompartida<T>::crear ( const std::string& archivo,const char letra ) {
 	try{
@@ -77,7 +76,12 @@ template <class T> void MemoriaCompartida<T>::liberar() {
 		int procAdosados = this->cantidadProcesosAdosados ();
 		if ( procAdosados == 0 ) {
 			shmctl ( this->shmId,IPC_RMID,NULL );
-			control.eliminar();
+			try{
+				control.eliminar();
+			}catch(std::string &e){
+				std::string mensaje = std::string("Error en control.eliminar(): ") + e;
+				throw mensaje;
+			}
 		}
 	} else {
 		std::string mensaje = std::string("Error en shmdt(): ") + std::string(strerror(errno));
@@ -94,8 +98,7 @@ template <class T> MemoriaCompartida<T>::MemoriaCompartida ( const MemoriaCompar
 	ptrDatos(origen.ptrDatos),
 	control(origen.control){}
 
-template <class T> MemoriaCompartida<T>::~MemoriaCompartida () {
-}
+template <class T> MemoriaCompartida<T>::~MemoriaCompartida () {}
 
 template <class T> MemoriaCompartida<T>& MemoriaCompartida<T>::operator= ( const MemoriaCompartida& origen ) {
 	this->shmId = origen.shmId;
@@ -106,22 +109,38 @@ template <class T> MemoriaCompartida<T>& MemoriaCompartida<T>::operator= ( const
 }
 
 template <class T> void MemoriaCompartida<T>::escribir ( const T& dato ) {
-	control.wait();
-	*(this->ptrDatos) = dato;
-	control.signal();
+	try{
+		control.wait();
+		*(this->ptrDatos) = dato;
+		control.signal();
+	}catch(std::string &e){
+		std::string mensaje = std::string("Error en escribir(): ") + e;
+		throw mensaje;
+	}
 }
 
 template <class T> T MemoriaCompartida<T>::leer() const {
-	control.wait();
-	T leido = *(this->ptrDatos);
-	control.signal();
+	T leido;
+	try{
+		control.wait();
+		leido = *(this->ptrDatos);
+		control.signal();
+	}catch(std::string &e){
+		std::string mensaje = std::string("Error en leer(): ") + e;
+		throw mensaje;
+	}
 	return leido;
 }
 
 template<class T> void MemoriaCompartida<T>::incrementar(const T& valor){
-	control.wait();
-	*(this->ptrDatos) += valor;
-	control.signal();
+	try{
+		control.wait();
+		*(this->ptrDatos) += valor;
+		control.signal();
+	}catch(std::string &e){
+		std::string mensaje = std::string("Error en incrementar(): ") + e;
+		throw mensaje;
+	}
 }
 
 template <class T> int MemoriaCompartida<T> :: cantidadProcesosAdosados () const {
@@ -131,15 +150,18 @@ template <class T> int MemoriaCompartida<T> :: cantidadProcesosAdosados () const
 }
 
 template <class T> bool MemoriaCompartida<T>::modificarValor(const T& valor){
-	bool respuesta;
-	control.wait();
-	if (  *(this->ptrDatos) == valor ){
-		respuesta = false;
-	}else{
-		respuesta = true;
-		*(this->ptrDatos) = valor;
+	bool respuesta =false;
+	try{
+		control.wait();
+		if (  *(this->ptrDatos) != valor ){
+			respuesta = true;
+			*(this->ptrDatos) = valor;
+		}
+		control.signal();
+	}catch(std::string &e){
+		std::string mensaje = std::string("Error en modificarValor(): ") + e;
+		throw mensaje;
 	}
-	control.signal();
 	return respuesta;
 }
 
