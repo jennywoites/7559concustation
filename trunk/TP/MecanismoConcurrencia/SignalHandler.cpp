@@ -1,4 +1,5 @@
 #include "SignalHandler.h"
+#include <memory.h>
 
 SignalHandler* SignalHandler :: instance = NULL;
 EventHandler* SignalHandler :: signal_handlers [ NSIG ];
@@ -27,6 +28,7 @@ EventHandler* SignalHandler :: registrarHandler ( int signum,EventHandler* eh ) 
 	SignalHandler :: signal_handlers [ signum ] = eh;
 
 	struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = SignalHandler :: dispatcher;
 	sigemptyset ( &sa.sa_mask );	// inicializa la mascara de seniales a bloquear durante la ejecucion del handler como vacio
 	sigaddset ( &sa.sa_mask,signum );
