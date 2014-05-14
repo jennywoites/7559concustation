@@ -15,7 +15,7 @@ LockFile::LockFile(){
 void LockFile :: crear ( const std::string nombre ) {
 	this->nombre = nombre;
 	int filedesc = open ( this->nombre.c_str(),O_CREAT|O_WRONLY,0777 );
-	if(!filedesc){
+	if(filedesc == -1){
 		std::string mensaje = std::string("Error en open() en crear LockFile: ");
 		throw mensaje;
 		return;
