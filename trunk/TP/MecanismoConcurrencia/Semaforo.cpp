@@ -1,7 +1,6 @@
 #include "Semaforo.h"
 
-Semaforo :: Semaforo ():id(0), valorInicial(0) {
-}
+Semaforo :: Semaforo ():id(0), valorInicial(0) {}
 
 void Semaforo :: crear ( const std::string& nombre, char letra,const int valorInicial){
 	creador.crear(nombre);
@@ -14,8 +13,7 @@ void Semaforo :: crear ( const std::string& nombre, char letra,const int valorIn
 	creador.liberarLock();
 }
 
-Semaforo::~Semaforo() {
-}
+Semaforo::~Semaforo() {}
 
 int Semaforo :: inicializar () const {
 

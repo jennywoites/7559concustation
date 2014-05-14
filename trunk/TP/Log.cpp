@@ -7,6 +7,7 @@
 
 #include "Log.h"
 #include <sstream>
+#include <iostream>
 #include <time.h>
 #define LONG_TIEMPO 50
 #define NO_TIPO -1
@@ -33,9 +34,14 @@ void Log::escribirEntrada(std::string mensaje){
 		return;
 
 	std::string mensajeFinal = this->escritor + string(": ") + mensaje + string("\n");
-	lock.tomarLock();
-	lock.escribir(mensajeFinal.c_str(), mensajeFinal.size());
-	lock.liberarLock();
+	try{
+		lock.tomarLock();
+		lock.escribir(mensajeFinal.c_str(), mensajeFinal.size());
+		lock.liberarLock();
+	}catch(std::string &e){
+		cout << e << endl;
+		cout << "No fue posible escribir la entrada en el log: " << mensaje << endl;
+	}
 }
 
 void Log::escribirEntrada(std::string msj, int numero){
@@ -66,10 +72,14 @@ void Log::mensajeInterno(std::string msj){
 
 	std::string tiempo_msj = string(buffer) + string("\n\n\n");
 
-	lock.tomarLock();
-	lock.escribir(msj.c_str(), msj.size());
-	lock.escribir(tiempo_msj.c_str(), tiempo_msj.size());
-	lock.liberarLock();
+	try{
+		lock.tomarLock();
+		lock.escribir(msj.c_str(), msj.size());
+		lock.escribir(tiempo_msj.c_str(), tiempo_msj.size());
+		lock.liberarLock();
+	}catch(std::string &e){
+		cout << e << endl;
+	}
 }
 
 void Log::mensajeApertura(){
