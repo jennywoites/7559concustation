@@ -73,6 +73,7 @@ pid_t Administrador::administrarCaja(){
 	}
 
 	finalizarDia();
-	exit(0);
+
+	return id;
 }
 

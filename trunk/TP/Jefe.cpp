@@ -33,10 +33,10 @@ bool Jefe::leerAuto(Auto* autito){
 	return status;
 }
 
-void Jefe::atenderAutos(){
+pid_t Jefe::atenderAutos(){
 	pid_t id = fork();
 	if (id != 0)
-		return;
+		return id;
 
 	log.setEscritor("Jefe " + nombre);
 	Auto autito;
@@ -72,7 +72,8 @@ void Jefe::atenderAutos(){
 	log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
 
 	log.escribirEntrada("Fin del proceso.");
-	exit(0);
+
+	return id;
 }
 
 bool Jefe::hayEmpleados(){

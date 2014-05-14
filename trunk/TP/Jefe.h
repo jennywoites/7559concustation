@@ -28,7 +28,7 @@ public:
 	Jefe(std::string, const PipeAutos&, const PipeAutos&);
 	virtual ~Jefe();
 
-	void atenderAutos();
+	pid_t atenderAutos();
 	bool leerAuto(Auto*);
 
 private:
