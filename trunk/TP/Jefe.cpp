@@ -79,6 +79,7 @@ bool Jefe::comenzarDia(){
 
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
+		log.escribirEntrada("Registro el manejo de finalizacion SIGPIPE");
 	}catch (std::string &e) {
 		cout << e << endl;
 		return false;
@@ -122,6 +123,7 @@ pid_t Jefe::atenderAutos(){
 		return id;
 
 	bool comienzo = comenzarDia();
+	//ha ocurrido un error que no permite continuar con la ejecucion
 	if(!comienzo){
 		finalizarDia();
 		log.escribirEntrada("Finalizo Proceso por ERROR.");

@@ -40,14 +40,18 @@ bool GeneradorAutos::comenzarDia(){
 
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+		log.escribirEntrada("Registro el manejo de finalizacion SIGINT");
 	}catch (std::string &e) {
 		cout << e << endl;
+		log.escribirEntrada("No se ha podido registrar el Signal Handler SIGINT");
 		return false;
 	}
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
+		log.escribirEntrada("Registro el manejo de finalizacion SIGPIPE");
 	}catch (std::string &e) {
 		cout << e << endl;
+		log.escribirEntrada("No se ha podido registrar el Signal Handler SIGPIPE");
 		return false;
 	}
 
@@ -56,6 +60,7 @@ bool GeneradorAutos::comenzarDia(){
 
 void GeneradorAutos::cerrarPipe(){
 	try{
+		//cierra su Pipe de generacion
 		envios.cerrar();
 		log.escribirEntrada("Me desadoso del pipe de generacion");
 	}catch(std::string &e){
@@ -84,6 +89,7 @@ pid_t GeneradorAutos::generar(){
 		return id;
 
 	bool comienzo = comenzarDia();
+	//ha ocurrido un error que no permite continuar con la ejecucion
 	if (!comienzo){
 		destruir();
 		log.escribirEntrada("Finalizo Proceso por ERROR.");

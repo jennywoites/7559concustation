@@ -13,9 +13,7 @@
 
 #include "ManejoTiempos.h"
 
-Administrador::Administrador(float m) {
-	plataVista = 0;
-	media = m;
+Administrador::Administrador(float m): plataVista(0), media(m) {
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
@@ -24,7 +22,6 @@ Administrador::~Administrador() {
 
 bool Administrador::comenzarDia(){
 	log.setEscritor("Administrador");
-
 	log.escribirEntrada("Abro el log");
 
 	bool abriCaja = caja.abrir();
@@ -37,12 +34,12 @@ bool Administrador::comenzarDia(){
 
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+		log.escribirEntrada("Registro el manejo de finalizacion SIGINT");
 	}catch (std::string &e) {
 		cout << e << endl;
+		log.escribirEntrada("No se ha podido registrar el Signal Handler");
 		return false;
 	}
-
-	log.escribirEntrada("Registro el manejo de finalizacion");
 	return true;
 }
 
@@ -93,6 +90,7 @@ pid_t Administrador::administrarCaja(){
 		return id;
 
 	bool comienzo = comenzarDia();
+	//ha ocurrido un error que no permite continuar con la ejecucion
 	if(!comienzo){
 		destruir();
 		log.escribirEntrada("Finalizo Proceso por ERROR.");

@@ -158,6 +158,7 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 		return id;
 
 	bool comienzo = comenzarDia();
+	//ha ocurrido un error que no permite continuar con la ejecucion
 	if(!comienzo){
 		cerrarPipe(arribos, "atencion");
 		log.escribirEntrada("Finalizo Proceso por ERROR.");
