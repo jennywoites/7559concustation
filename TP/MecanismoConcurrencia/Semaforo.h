@@ -5,12 +5,14 @@
 #include <sys/sem.h>
 #include <sys/types.h>
 #include <string>
+#include "LockFile.h"
 
 class Semaforo {
 
 private:
 	int id;
 	int valorInicial;
+	LockFile creador;
 
 	int inicializar () const;
 
