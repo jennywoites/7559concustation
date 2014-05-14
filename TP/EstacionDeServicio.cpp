@@ -12,6 +12,8 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <errno.h>
+#include <string.h>
 
 #include "constantesArchivos.h"
 
@@ -150,11 +152,19 @@ void EstacionDeServicio::esperarCierre(){
 	}
 }
 
+void EstacionDeServicio::enviarSenial(pid_t pid, std::string proceso){
+	int resultado = kill(pidGen, SIGINT);
+	if (resultado == -1){
+		std::string mensaje = std::string("Error en kill(): ") + std::string(strerror(errno));
+		log.escribirEntrada("No pude enviar signal de finalizacion a " + proceso);
+	}else
+		log.escribirEntrada("Envie signal de finalizacion al " + proceso);
+}
+
 void EstacionDeServicio::cerrar(){
 	log.escribirEntrada("Comienzo CIERRE de estacion de servicio.");
 
-//	kill(pidGen, SIGINT);	// envia senial a generador
-	log.escribirEntrada("Envie signal de finalizar al generador");
+	enviarSenial(pidGen, "generador");
 
 	esperarCierre();	// esperar cierre
 
@@ -164,8 +174,7 @@ void EstacionDeServicio::cerrar(){
 
 	log.escribirEntrada("Espere a todos mis hijos: empleados, jefe y generador de autos.");
 
-//	kill(pidAdmin, SIGINT);	// envia senial a generador
-	log.escribirEntrada("Envie signal de finalizar al administrador");
+	enviarSenial(pidAdmin, "administrador");
 	wait(NULL); //admin
 
 	log.escribirEntrada("Ya se cerraron todos los empleados, el jefe, el generador y el administrador");
