@@ -1,5 +1,8 @@
 #include "SignalHandler.h"
 #include <memory.h>
+#include <iostream>
+#include <string.h>
+#include <errno.h>
 
 SignalHandler* SignalHandler :: instance = NULL;
 EventHandler* SignalHandler :: signal_handlers [ NSIG ];
@@ -33,15 +36,25 @@ EventHandler* SignalHandler :: registrarHandler ( int signum,EventHandler* eh ) 
 	sigemptyset ( &sa.sa_mask );	// inicializa la mascara de seniales a bloquear durante la ejecucion del handler como vacio
 	sigaddset ( &sa.sa_mask,signum );
 	sa.sa_flags = 0;
-	sigaction ( signum,&sa,0 );	// cambiar accion de la senial
+	int resultado = sigaction ( signum,&sa,0 );	// cambiar accion de la senial
+	if (resultado == -1){
+		std::string mensaje = std::string("Error en sigaction(): ") + std::string(strerror(errno));
+		SignalHandler :: signal_handlers [ signum ] = old_eh;
+		throw mensaje;
+	}
 
 	return old_eh;
 }
 
 void SignalHandler :: dispatcher ( int signum ) {
 
-	if ( SignalHandler :: signal_handlers [ signum ] != 0 )
-		SignalHandler :: signal_handlers [ signum ]->handleSignal ( signum );
+	if ( SignalHandler :: signal_handlers [ signum ] != 0 ){
+		try{
+			SignalHandler :: signal_handlers [ signum ]->handleSignal ( signum );
+		}catch ( const std::exception & e ) {
+			std::cout << e.what() << std::endl;
+		}
+	}
 }
 
 int SignalHandler :: removerHandler ( int signum ) {
