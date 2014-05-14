@@ -175,7 +175,7 @@ void crearEmpleados(const PipeAutos& pipe, const Semaforo& surtidores){
 }
 
 void pruebaSurtido(){
-	Administrador a (3000000000); //FIXME
+	Administrador a (3000000000);
 	pid_t administrador = a.administrarCaja();
 
 	PipeAutos atencion;
