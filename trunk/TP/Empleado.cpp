@@ -16,10 +16,11 @@
 const bool Empleado::USO;
 const bool Empleado::DESUSO;
 
-Empleado::Empleado(std::string name, const PipeAutos& pipe, const Semaforo& semaforo) {
+Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAutos& atencion, const Semaforo& semaforo) {
 	nombre = name;
 	cantidadAtendidos = 0;
-	arribos = pipe;
+	arribos = atencion;
+	this->generacion = generacion;
 	accesoSurtidores = semaforo;
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
@@ -52,6 +53,8 @@ bool Empleado::comenzarDia(){
 	log.setEscritor("Empleado " + nombre);
 	log.escribirEntrada("Se ha iniciado el Proceso.");
 
+	cerrarPipe(generacion, "generacion");
+
 	bool abriCaja = caja.abrir();
 	if(!abriCaja){
 		log.escribirEntrada("No pude abrir la caja.");
@@ -59,7 +62,14 @@ bool Empleado::comenzarDia(){
 	}
 	log.escribirEntrada("Abri la caja.");
 
-	arribos.setearModo(Pipe::LECTURA);
+	try{
+		arribos.setearModo(Pipe::LECTURA);
+	}catch (std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No pude setear modo de comunicacion Lectura");
+		cierreDeCaja();
+		return false;
+	}
 
 	try{
 		disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
@@ -83,8 +93,19 @@ void Empleado::cierreDeCaja(){
 		log.escribirEntrada("Cerre la caja.");
 }
 
+void Empleado::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
+	try{
+		pipe.cerrar();
+		log.escribirEntrada("Me desadoso del pipe " + tipo);
+	}catch(std::string &e){
+		cout << e << endl;
+		log.escribirEntrada("No se pudo desadosar de pipe " + tipo);
+	}
+}
+
 void Empleado::finalizarDia(){
 	cierreDeCaja();
+	cerrarPipe(arribos, "atencion");
 
 	try{
 		disponibilidad.liberar();
@@ -129,6 +150,7 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 
 	bool comienzo = comenzarDia();
 	if(!comienzo){
+		cerrarPipe(arribos, "atencion");
 		log.escribirEntrada("Finalizo Proceso por ERROR.");
 		return id;
 	}
