@@ -44,7 +44,7 @@ template <class T> void MemoriaCompartida<T>::crear ( const std::string& archivo
 	try{
 		control.crear(archivo.c_str(), letra, 1);
 	}catch(std::string &e){
-		std::string mensaje = std::string("Error en control.crear() de Memoria Compartida: ") + e);
+		std::string mensaje = std::string("Error en control.crear() de Memoria Compartida: ") + e;
 		throw mensaje;
 	}
 	key_t clave = ftok ( archivo.c_str(),letra );
