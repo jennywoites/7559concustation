@@ -26,9 +26,12 @@ public:
 	GeneradorAutos(float media, const PipeAutos&);
 	virtual ~GeneradorAutos();
 
-	void comenzarDia();
-	void finalizarDia();
 	pid_t generar();
+
+private:
+	bool comenzarDia();
+	void finalizarDia();
+	void cerrarPipe();
 
 };
 
