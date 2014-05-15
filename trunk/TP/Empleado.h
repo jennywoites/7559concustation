@@ -57,6 +57,7 @@ private:
 	bool crearSurtidores(int);
 	void cerrarPipe(PipeAutos& pipe, const std::string& tipo);
 	void imprimirSurtidor(int, const Auto& autito) const;
+	bool indicarDisponible();
 };
 
 #endif /* EMPLEADO_H_ */

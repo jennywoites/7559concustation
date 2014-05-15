@@ -57,13 +57,6 @@ void Empleado::atenderUnAuto(Auto& autito){
 
 	log.escribirEntrada("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
 	autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
-	try{
-		disponibilidad.incrementar(1);
-		log.escribirEntrada("Estoy disponible para el jefe");
-	}catch(const std::string &e){
-		log.escribirEntrada("No pude ponerme como disponible: " + e); //Igual voy al pipe a leer autos, no termino el proceso por este motivo.
-	}
-
 }
 
 bool Empleado::comenzarDia(){
@@ -83,20 +76,25 @@ bool Empleado::comenzarDia(){
 		arribos.setearModo(Pipe::LECTURA);
 	}catch (const std::string &e){
 		log.escribirEntrada("No pude setear modo de comunicacion Lectura: " + e);
-		cierreDeCaja();
+		finalizarDia();
 		return false;
 	}
 
+	if (! indicarDisponible() )
+		return false;
+	return true;
+}
+
+bool Empleado::indicarDisponible(){
 	try{
 		disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 		disponibilidad.incrementar(1);
 		log.escribirEntrada("Me pongo a disposicion del Jefe.");
 	}catch(const std::string &e){
 		log.escribirEntrada("Error en memoria compartida disponibilidad: " + e);
-		cierreDeCaja();
+		finalizarDia();
 		return false;
 	}
-
 	return true;
 }
 
@@ -122,7 +120,6 @@ void Empleado::finalizarDia(){
 	cerrarPipe(arribos, "atencion");
 
 	try{
-		disponibilidad.incrementar(-1);
 		disponibilidad.liberar();
 		log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
 	}catch(const std::string &e){
@@ -178,6 +175,9 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 
 	while(leerAuto(autito)){
 		atenderUnAuto(autito);
+		//si no puedo indicar que estoy disponible, no sigo trabajando
+		if (! indicarDisponible() )
+			break;
 	}
 
 	finalizarDia();
