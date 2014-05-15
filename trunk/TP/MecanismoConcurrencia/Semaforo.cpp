@@ -12,17 +12,18 @@ void Semaforo :: crear ( const std::string& nombre, char letra,const int valorIn
 	creador.crear(nombre);
 	creador.tomarLock();
 
-	this->valorInicial = valorInicial;
+	this->valorInicial = valorInicial; //valor que se dara al semaforo
 	key_t clave = ftok (nombre.c_str(), letra);
 	if(clave == -1){
-		creador.liberarLock();
+		creador.liberarLock(); // lock para sincronizar unica inicializacion
 		std::string mensaje = std::string("Error en ftok(): ") + std::string(strerror(errno));
 		throw mensaje;
 	}
+	//supongo ser el primero que crea el semaforo
 	this->id = semget ( clave, 1, 0666 | IPC_CREAT | IPC_EXCL );
 
 	bool existia = (errno == EEXIST and this->id == -1);
-	if(existia)
+	if(existia)	//ya existia, se obtiene sin crearlo
 		this->id = semget(clave, 1, 0666);
 
 	if(this->id == -1){
@@ -32,9 +33,9 @@ void Semaforo :: crear ( const std::string& nombre, char letra,const int valorIn
 		return;
 	}
 
-	if (! existia)
+	if (! existia) // no existia, debe inicializarse
 		this->inicializar ();
-	creador.liberarLock();
+	creador.liberarLock(); //finaliza la exclusion mutua
 }
 
 Semaforo::~Semaforo() {}
@@ -48,7 +49,7 @@ int Semaforo :: inicializar () const {
 	};
 
 	semnum init;
-	init.val = this->valorInicial;
+	init.val = this->valorInicial; //asignar inicial
 	int resultado = semctl ( this->id,0,SETVAL,init );
 	if(resultado == -1){
 		std::string mensaje = std::string("Error en semctl(): ") + std::string(strerror(errno));
@@ -90,7 +91,7 @@ int Semaforo :: signal () const {
 }
 
 int Semaforo :: getVal () const {
-	int valor = semctl(this->id, 0, GETVAL, 0);
+	int valor = semctl(this->id, 0, GETVAL, 0); //obtener valor
 	if(valor == -1){
 		std::string mensaje = std::string("Error en semctl(): ") + std::string(strerror(errno));
 		throw mensaje;
@@ -99,7 +100,7 @@ int Semaforo :: getVal () const {
 }
 
 void Semaforo :: eliminar () const {
-	int estado = semctl( this->id,0,IPC_RMID );
+	int estado = semctl( this->id,0,IPC_RMID ); //remove
 	if(estado == -1){
 		std::string mensaje = std::string("Error en semctl(): ") + std::string(strerror(errno));
 		throw mensaje;
