@@ -13,10 +13,16 @@
 PipeAutos::PipeAutos() {
 }
 
-void PipeAutos::crear(const std::string& nombre) {
-	Pipe::crear();
-	//semaforo binario que controla el extremo de lectura del pipe
-	controlLectura.crear(nombre, PIPE, UN_SEMAFORO);
+bool PipeAutos::crear(const std::string& nombre) {
+	try{
+		Pipe::crear();
+		//semaforo binario que controla el extremo de lectura del pipe
+		controlLectura.crear(nombre, PIPE, UN_SEMAFORO);
+	}catch(std::string &e){
+		cerr << "No es posible crear el Pipe Autos: " + e << endl;
+		return false;
+	}
+	return true;
 }
 
 PipeAutos::~PipeAutos() {}
@@ -32,7 +38,7 @@ bool PipeAutos :: leerAuto ( Auto& autito ) {
 	}catch(const std::string &e){
 		cerr << "No pudo leerse auto desde el Pipe: " + e << endl;
 		controlLectura.signal();
-		return 0;
+		return false;
 	}
 
 	controlLectura.signal();
@@ -50,7 +56,7 @@ bool PipeAutos :: escribirAuto ( const Auto& autito ) {
 		escrito = Pipe::escribir(static_cast<const void*>(serie.c_str()), Auto::LONG_SERIE);
 	}catch(const std::string &e){
 		cerr << "No pudo escribirse auto hacia el Pipe: " + e << endl;
-		return 0;
+		return false;
 	}
 	return (escrito == Auto::LONG_SERIE);
 }
