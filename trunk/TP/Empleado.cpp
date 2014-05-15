@@ -122,6 +122,7 @@ void Empleado::finalizarDia(){
 	cerrarPipe(arribos, "atencion");
 
 	try{
+		disponibilidad.incrementar(-1);
 		disponibilidad.liberar();
 		log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
 	}catch(const std::string &e){
