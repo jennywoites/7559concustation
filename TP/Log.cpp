@@ -104,18 +104,18 @@ bool Log::permiteEntrada() const{
 
 	//Modo no-completo
 	switch (this->tipo){
-	case ENTRADA_PERSONAJE:
-		return true;
-	case ENTRADA_MEMCOM:
-		return false;
-	case ENTRADA_PIPE:
-		return false;
-	case ENTRADA_SEMAFORO:
-		return false;
-	case ENTRADA_SIGNAL:
-		return false;
-	default:
-		return false;
+		case ENTRADA_PERSONAJE:
+			return true;
+		case ENTRADA_MEMCOM:
+			return false;
+		case ENTRADA_PIPE:
+			return false;
+		case ENTRADA_SEMAFORO:
+			return false;
+		case ENTRADA_SIGNAL:
+			return false;
+		default:
+			return false;
 	}
 
 }
