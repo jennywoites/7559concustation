@@ -9,6 +9,7 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <sstream>
 
 
 #include "constantesArchivos.h"
@@ -27,6 +28,12 @@ Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAuto
 
 Empleado::~Empleado() {}
 
+void Empleado::imprimirSurtidor(int num) const{
+	stringstream ss;
+	ss << num;
+	cout << nombre + ": utilizo surtidor numero " + ss.str()  << endl;
+}
+
 void Empleado::atenderUnAuto(Auto& autito){
 	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 	int surtidor = tomarSurtidor();
@@ -35,6 +42,7 @@ void Empleado::atenderUnAuto(Auto& autito){
 		return;
 	}
 	log.escribirEntrada("Logre tomar el surtidor ",surtidor);
+	imprimirSurtidor(surtidor);
 
 	int litros = autito.llenar();
 	log.escribirEntrada("Llene el tanque. Cantidad de litros: ",litros);
