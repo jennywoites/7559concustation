@@ -28,10 +28,10 @@ Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAuto
 
 Empleado::~Empleado() {}
 
-void Empleado::imprimirSurtidor(int num) const{
+void Empleado::imprimirSurtidor(int num, const Auto& autito) const{
 	stringstream ss;
 	ss << num;
-	cout << nombre + ": utilizo surtidor numero " + ss.str()  << endl;
+	cout << nombre + ": utilizo surtidor numero " + ss.str() + ", para auto: " + autito.getPatente() << endl;
 }
 
 void Empleado::atenderUnAuto(Auto& autito){
@@ -42,7 +42,7 @@ void Empleado::atenderUnAuto(Auto& autito){
 		return;
 	}
 	log.escribirEntrada("Logre tomar el surtidor ",surtidor);
-	imprimirSurtidor(surtidor);
+	imprimirSurtidor(surtidor, autito);
 
 	int litros = autito.llenar();
 	log.escribirEntrada("Llene el tanque. Cantidad de litros: ",litros);
