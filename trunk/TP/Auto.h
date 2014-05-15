@@ -9,22 +9,17 @@
 #define AUTO_H_
 #include <string>
 
-struct auto_serial{
-	char patente[7];
-	int capacidad;
-	bool lleno;
-};
-
 class Auto {
 	private:
-		int capacidadTanque;
 		std::string patente;
+		int capacidadTanque;
 		bool lleno;
 
 		static const unsigned int CANTIDAD_LETRAS = 3;
 		static const unsigned int CANTIDAD_NUMEROS = 3;
 		static const unsigned int CAR_TANQUE = 2; //El tanque tiene dos caracteres para definir la capacidad
-		static const unsigned int LARGO_SERIE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + CAR_TANQUE + 3; //3: cantidad de separadores
+		static const unsigned int CANTIDAD_BOOL = 1;
+		static const unsigned int LARGO_SERIE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + CAR_TANQUE + 2; //2: cantidad de separadores
 
 		static const int CAPACIDAD_MIN = 10;
 		static const int CAPACIDAD_MAX = 90;
@@ -35,6 +30,7 @@ class Auto {
 
 	public:
 
+		//se serializa con chars
 		static const int LONG_SERIE = ((LARGO_SERIE + 1) * sizeof(char));
 
 		/*Crea auto con patente aleatoria, y tanque aleatorio*/
@@ -50,7 +46,7 @@ class Auto {
 
 		std::string serializar() const;
 		void deserializar(const std::string&);
-		void imprimir();
+		void imprimir() const;
 
 	private:
 		int generarTanqueRandom() const;

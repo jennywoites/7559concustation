@@ -10,7 +10,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include <cstring>
 #include <sstream>
 #include <iostream>
 
@@ -23,18 +22,17 @@ using namespace std;
 #define FALSE 0
 
 
-Auto::Auto() {
-	patente = generarPatenteRandom();
-	capacidadTanque = generarTanqueRandom();
-	lleno = false;
-}
+Auto::Auto():
+	patente ( generarPatenteRandom() ),
+	capacidadTanque ( generarTanqueRandom() ),
+	lleno (false) {}
 
 Auto::Auto(std::string patente, int capacidad):
-	capacidadTanque(capacidad),
 	patente(patente),
+	capacidadTanque(capacidad),
 	lleno(false) {}
 
-void Auto::imprimir(){
+void Auto::imprimir() const{
 	cout << "Se atendio el auto, cuya patente es: " << patente << ". Se le cargaron " << capacidadTanque << " litros." << endl;
 }
 
@@ -62,24 +60,22 @@ int Auto::generarTanqueRandom() const{
 }
 
 std::string Auto::generarPatenteRandom() const{
-	std::string pat = "";
+	std::string chapaPatente = "";
 	for (unsigned int i = 0; i < CANTIDAD_LETRAS; i++){
-		pat += 'A' + numeroAlAzar(0,25);
+		chapaPatente += 'A' + numeroAlAzar(0,25);
 	}
 	for (unsigned int i = 0; i < CANTIDAD_NUMEROS; i++){
-		pat += '0' + numeroAlAzar(0,9);
+		chapaPatente += '0' + numeroAlAzar(0,9);
 	}
-	return pat;
+	return chapaPatente;
 }
 
 std::string Auto::serializar() const{
 	std::string serial = "";
-	serial += patente;
-	serial += SEPARADOR;
-	stringstream cap,llen;
+	serial += patente + SEPARADOR;
+	stringstream cap, llen;
 	cap << capacidadTanque;
-	serial += cap.str();
-	serial += SEPARADOR;
+	serial += cap.str() + SEPARADOR;
 	if(lleno)
 		llen << TRUE;
 	else
@@ -97,6 +93,7 @@ void Auto::deserializar(const std::string& serial){
 		return;
 	}
 	strcpy(serie,serial.c_str());
+	//se toman los campos de acuerdo al separador
 	patente = strtok(serie,SEPARADOR);
 	capacidadTanque = atoi(strtok(NULL,SEPARADOR));
 	lleno = atoi(strtok(NULL,SEPARADOR));
