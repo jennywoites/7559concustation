@@ -29,6 +29,7 @@ private:
 	int mediaVerAdmin;
 	pid_t pidGen;
 	pid_t pidAdmin;
+	int cantHijos;
 	Caja caja;
 	PipeAutos atencion;
 	PipeAutos generacion;
@@ -41,7 +42,7 @@ private:
 private:
 
 	bool crearEmpleados();
-	void esperarCierre() const;
+	void esperarCierre();
 	void agregarNombres(vector<std::string>&);
 	std::string obtenerNombre(const vector<std::string>&, int) const;
 	void crearAdmin();

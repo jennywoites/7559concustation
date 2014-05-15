@@ -22,7 +22,7 @@ const std::string EstacionDeServicio::PIPE_GENERACION  = "generacion";
 
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin): cantEmpleados (empleados),
-		cantSurtidores (surtidores),	mediaAutos (mediaGenAutos),	mediaVerAdmin (mediaAdmin),	pidGen (0),	pidAdmin (0){
+		cantSurtidores (surtidores),	mediaAutos (mediaGenAutos),	mediaVerAdmin (mediaAdmin),	pidGen (0),	pidAdmin (0), cantHijos(0){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
@@ -71,6 +71,7 @@ bool EstacionDeServicio::crearEmpleados(){
 		Empleado e (nombre, generacion, atencion, surtidores);
 		log.escribirEntrada("Cree el empleado " + nombre);
 		pid_t pidEmpleado = e.atenderAutos(cantSurtidores);
+		cantHijos++;
 		if (pidEmpleado == 0) //como soy hijo, lo indico con true
 			return true;
 	}
@@ -79,12 +80,14 @@ bool EstacionDeServicio::crearEmpleados(){
 
 void EstacionDeServicio::crearAdmin(){
 	Administrador a (mediaVerAdmin);
+	cantHijos++;
 	log.escribirEntrada("Creo mi administrador");
 	pidAdmin = a.administrarCaja();
 }
 
 pid_t EstacionDeServicio::crearJefe(){
 	Jefe j ("UltraAlterMaster", generacion, atencion);
+	cantHijos++;
 	log.escribirEntrada("Cree el jefe.");
 	pid_t pidJefe = j.atenderAutos();
 	log.escribirEntrada("Envie al jefe a atender autos.");
@@ -93,9 +96,9 @@ pid_t EstacionDeServicio::crearJefe(){
 
 void EstacionDeServicio::crearGenerador(){
 	GeneradorAutos g (mediaAutos, generacion);
+	cantHijos++;
 	log.escribirEntrada("Creo el generador de autos");
 	pidGen = g.generar();
-	log.escribirEntrada("Envie al generador a generar autos.");
 }
 
 void EstacionDeServicio::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
@@ -117,32 +120,29 @@ int EstacionDeServicio::abrir(){
 	if(pidAdmin == 0)
 		return SOY_HIJO;
 
-	surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M= cantidad de surtidores
+	try{
+		surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M = cantidad de surtidores
+	}catch(const std::string &e){
+		cout << "No se pudo crear el semaforo de surtidores: " + e << endl;
+		cerrar();
+		return ERROR;
+	}
 
 	try{
 		atencion.crear(ARCHIVO_ATENCION);
 		log.escribirEntrada("Creo el pipe de atencion de autos.");
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No pude crear el pipe de atencion de autos.");
-		finalizarAdministrador();
-		log.escribirEntrada("Se finaliza el proceso por ERROR");
-		log.mensajeCierre();
+	}catch(const std::string &e){
+		cout << "No se pudo crear el pipe de atencion de autos: " + e << endl;
+		cerrar();
 		return ERROR;
 	}
 
 	try{
 		generacion.crear(ARCHIVO_GENERACION);
 		log.escribirEntrada("Creo el pipe de generacion de autos.");
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No pude crear el pipe de generacion de autos.");
-		cerrarPipe(atencion, PIPE_ATENCION);
-		esperarCierre();
-		surtidores.eliminar();
-		finalizarAdministrador();
-		log.escribirEntrada("Se finaliza el proceso por ERROR");
-		log.mensajeCierre();
+	}catch(const std::string &e){
+		cout << "No se pudo crear el pipe de generacion de autos: " + e << endl;
+		cerrar();
 		return ERROR;
 	}
 
@@ -168,15 +168,17 @@ int EstacionDeServicio::abrir(){
 }
 
 
-void EstacionDeServicio::esperarCierre() const{
-	int i = cantEmpleados + 1 + 1; //Jefe + Generador de Autos
-	while (i > 0) {
+void EstacionDeServicio::esperarCierre(){
+	//Empleados + Jefe + Generador de Autos
+	while (cantHijos > 1) { //no incluye Admin
 		wait(NULL);
-		i--;
+		cantHijos--;
 	}
 }
 
 void EstacionDeServicio::enviarSenial(pid_t pid, std::string proceso){
+	if (pid <=0)
+		return ;
 	int resultado = kill(pid, SIGINT);
 	if (resultado == -1){
 		std::string mensaje = std::string("Error en kill(): ") + std::string(strerror(errno));
@@ -203,9 +205,14 @@ void EstacionDeServicio::cerrar(){
 
 	esperarCierre(); //Espero a que la estacion termine de atender los autos que quedaron pendientes
 
-	liberarMediosDeComunicacion();
+	try{
+		liberarMediosDeComunicacion();
+	}catch(const std::string &e){
+		cout << "No se pudieron liberar todos los medios de comunicacion: " + e << endl;
+	}
 
-	log.escribirEntrada("Espere a todos mis hijos: empleados, jefe y generador de autos.");
+
+	log.escribirEntrada("Espere a mis hijos: empleados, jefe y generador de autos.");
 
 	finalizarAdministrador();
 
