@@ -39,6 +39,7 @@ EventHandler* SignalHandler :: registrarHandler ( int signum,EventHandler* eh ) 
 	int resultado = sigaction ( signum,&sa,0 );	// cambiar accion de la senial
 	if (resultado == -1){
 		std::string mensaje = std::string("Error en sigaction(): ") + std::string(strerror(errno));
+		// no pudo reemplazar, reestablece el anterior
 		SignalHandler :: signal_handlers [ signum ] = old_eh;
 		throw mensaje;
 	}
