@@ -31,6 +31,7 @@ float Caja::verMonto() const{
 		dinero = plata.leer();
 	}catch(const std::string &e){
 		cerr << "No es posible ver monto de la caja. " << e << endl;
+		return -1;
 	}
 
 	return dinero;
