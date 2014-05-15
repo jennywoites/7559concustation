@@ -52,8 +52,8 @@ void Empleado::atenderUnAuto(Auto& autito){
 	try{
 		disponibilidad.incrementar(1);
 		log.escribirEntrada("Estoy disponible para el jefe");
-	}catch(std::string &e){
-		log.escribirEntrada("No pude ponerme como disponible" + e); //Igual voy al pipe a leer autos, no termino el proceso por este motivo.
+	}catch(const std::string &e){
+		log.escribirEntrada("No pude ponerme como disponible: " + e); //Igual voy al pipe a leer autos, no termino el proceso por este motivo.
 	}
 
 }
@@ -73,9 +73,8 @@ bool Empleado::comenzarDia(){
 
 	try{
 		arribos.setearModo(Pipe::LECTURA);
-	}catch (std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No pude setear modo de comunicacion Lectura");
+	}catch (const std::string &e){
+		log.escribirEntrada("No pude setear modo de comunicacion Lectura: " + e);
 		cierreDeCaja();
 		return false;
 	}
@@ -84,9 +83,8 @@ bool Empleado::comenzarDia(){
 		disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 		disponibilidad.incrementar(1);
 		log.escribirEntrada("Me pongo a disposicion del Jefe.");
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("Error en memoria compartida disponibilidad. " + e);
+	}catch(const std::string &e){
+		log.escribirEntrada("Error en memoria compartida disponibilidad: " + e);
 		cierreDeCaja();
 		return false;
 	}
@@ -106,9 +104,8 @@ void Empleado::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
 	try{
 		pipe.cerrar();
 		log.escribirEntrada("Me desadoso del pipe " + tipo);
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No se pudo desadosar de pipe " + tipo);
+	}catch(const std::string &e){
+		log.escribirEntrada("No se pudo desadosar de pipe " + tipo + ": " + e);
 	}
 }
 
@@ -119,18 +116,17 @@ void Empleado::finalizarDia(){
 	try{
 		disponibilidad.liberar();
 		log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
-	}catch(std::string &e){
+	}catch(const std::string &e){
 		cout << e << endl;
-		log.escribirEntrada("No fue posible liberar la memoria compartida: cantidad de empleados disponibles");
+		log.escribirEntrada("No fue posible liberar la memoria compartida: cantidad de empleados disponibles: " + e);
 	}
 
 	for (int i = 0; i < int(surtidores.size()); i++){
 		try{
 			this->surtidores.at(i).liberar();
 			log.escribirEntrada("Libere el surtido numero ", i);
-		}catch(std::string &e){
-			cout << e << endl;
-			log.escribirEntrada("No pude liberar el surtidor numero ", i);
+		}catch(const std::string &e){
+			log.escribirEntrada("No pude liberar: " + e + "; el surtidor numero ", i);
 		}
 	}
 
@@ -143,9 +139,8 @@ bool Empleado::crearSurtidores(int cantidadSurtidores){
 			MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
 			this->surtidores.push_back(surtidor);
 			//log.escribirEntrada("Asocio surtidor numero: ",i);
-		}catch(std::string &e){
-			cout << e << endl;
-			log.escribirEntrada("No se pudo crear la memoria compartida: Surtidor numero ",i);
+		}catch(const std::string &e){
+			log.escribirEntrada("No pudo crear la memoria compartida: " + e + "; del surtidor numero ", i);
 			return false;
 		}
 	}
@@ -201,8 +196,8 @@ int Empleado::tomarSurtidor(){
 			else
 				log.escribirEntrada("No logre tomar el surtidor ", int(i));
 		}
-	}catch(std::string &e){
-		cout << e << endl;
+	}catch(const std::string &e){
+		log.escribirEntrada("No logre tomar surtidor alguno: " + e);
 		return -1;
 	}
 
@@ -214,8 +209,8 @@ bool Empleado::devolverSurtidor(int surtidor){
 	try{
 		surtidores.at(surtidor).modificarValor(DESUSO);
 		accesoSurtidores.signal();
-	}catch(std::string &e){
-		cout << e << endl;
+	}catch(const std::string &e){
+		log.escribirEntrada("No logre devolver: " + e + "; el surtidor numero ", int(surtidor));
 		return false;
 	}
 	return true;

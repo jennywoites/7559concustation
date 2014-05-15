@@ -60,9 +60,8 @@ bool Jefe::comenzarDia(){
 	try{
 		arribos.setearModo(Pipe::LECTURA);
 		envios.setearModo(Pipe::ESCRITURA);
-	}catch (std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No pude setear modos de comunicacion en Pipes");
+	}catch (const std::string &e){
+		log.escribirEntrada("No pude setear modos de comunicacion en Pipes: " + e);
 		return false;
 	}
 
@@ -71,17 +70,16 @@ bool Jefe::comenzarDia(){
 	try{
 		cantEmpleadosDisponibles.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 		log.escribirEntrada("Se creo la memoria compartida: cantidad de empleados disponibles.");
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No pude crear la memoria compartida: cantidad de empleados disponibles");
+	}catch(const std::string &e){
+		log.escribirEntrada("No pude crear la memoria compartida: cantidad de empleados disponibles: " + e);
 		return false;
 	}
 
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
 		log.escribirEntrada("Registro el manejo de finalizacion SIGPIPE");
-	}catch (std::string &e) {
-		cout << e << endl;
+	}catch (const std::string &e) {
+		log.escribirEntrada("No pude el manejo de finalizacion SIGPIPE: " + e);
 		return false;
 	}
 
@@ -92,9 +90,8 @@ void Jefe::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
 	try{
 		pipe.cerrar();
 		log.escribirEntrada("Me desadoso del pipe " + tipo);
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No se pudo desadosar de pipe " + tipo);
+	}catch(const std::string &e){
+		log.escribirEntrada("No se pudo desadosar de pipe " + tipo + ": " + e);
 	}
 }
 
@@ -109,9 +106,8 @@ void Jefe::finalizarDia(){
 	try{
 		cantEmpleadosDisponibles.liberar();
 		log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No fue posible liberar la memoria compartida: cantidad de empleados disponibles");
+	}catch(const  std::string &e){
+		log.escribirEntrada("No fue posible liberar la memoria compartida: cantidad de empleados disponibles: " + e);
 	}
 
 	SignalHandler::destruir();
@@ -149,7 +145,7 @@ bool Jefe::hayEmpleados(){
 	try{
 		cant_empleados = cantEmpleadosDisponibles.leer();
 		log.escribirEntrada("La cantidad de empleados disponibles es ", cant_empleados);
-	}catch(std::string &e){
+	}catch(const std::string &e){
 		log.escribirEntrada("Error al leer de Memoria Compartidad Cantidad de Empleados. " + e);
 		return false;
 	}
@@ -160,8 +156,8 @@ void Jefe::tomarEmpleado(){
 	try{
 		log.escribirEntrada("Tomo un empleado disponible.");
 		cantEmpleadosDisponibles.incrementar(-1);
-	}catch(std::string &e){
-		log.escribirEntrada("Error al toma empleado. " + e);
+	}catch(const std::string &e){
+		log.escribirEntrada("Error al tomar empleado. " + e);
 	}
 }
 
