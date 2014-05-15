@@ -20,10 +20,12 @@
 #define OPC_ERROR -1
 #define OPC_ERROR_SURTI -2
 #define OPC_ERROR_TIEMPO -3
+#define OPC_ERROR_NUM -4
 #define OPC_IMPRIMIR_AYUDA 0
 #define OPC_IMPRIMIR_VERSION 1
 #define OPC_EXEC 2
 
+//imprime la ayuda del programa al stdout
 void imprimir_ayuda(){
 	cout << "OPCIONES:" << endl;
 	cout << "-h --help  Imprime en pantalla informacion de Ayuda." << endl;
@@ -75,29 +77,40 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 			case 'v'://Version
 				return OPC_IMPRIMIR_VERSION;
 			case 's':
-				if (strcmp(optarg,"-")!=0)
+				if (strcmp(optarg,"-")!=0){
 					*cantSurtidores = atoi(optarg);
 					if(*cantSurtidores <= 0)
 						return OPC_ERROR_SURTI;
+				}
 				break;
 			case 'e':
-				if (strcmp(optarg,"-")!=0)
+				if (strcmp(optarg,"-")!=0){
 					*cantEmpleados = atoi(optarg);
+					if(*cantEmpleados < 0)
+						return OPC_ERROR_NUM;
+				}
 				break;
 			case 'g':
-				if (strcmp(optarg,"-")!=0)
+				if (strcmp(optarg,"-")!=0){
 					*mediaAutos = atoi(optarg);
-					break;
+					if(*mediaAutos <= 0)
+						return OPC_ERROR_NUM;
+				}
+				break;
 			case 'a':
-				if (strcmp(optarg,"-")!=0)
+				if (strcmp(optarg,"-")!=0){
 					*mediaAdmin = atoi(optarg);
+					if(*mediaAdmin <= 0)
+						return OPC_ERROR_NUM;
+				}
 				break;
 
 			case 't':
-				if (strcmp(optarg,"-")!=0)
+				if (strcmp(optarg,"-")!=0){
 					*tiempo = atoi(optarg);
 					if(*tiempo <= 0)
 						return OPC_ERROR_TIEMPO;
+				}
 				break;
 			case '?'://error
 				return OPC_ERROR;
@@ -127,13 +140,13 @@ int main(int argc, char* argv[]){
 	int opcion = parsearParametros(argv, argc, &cantSurtidores, &cantEmpleados, &mediaAutos, &mediaAdmin, &tiempo);
 
 	switch (opcion){
-		case OPC_EXEC:
+		case OPC_EXEC:	//caso ejecucion del proyecto
 			atender(cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin,tiempo);
 			break;
-		case OPC_IMPRIMIR_AYUDA:
+		case OPC_IMPRIMIR_AYUDA:	//caso ayuda
 			imprimir_ayuda();
 			break;
-		case OPC_IMPRIMIR_VERSION:
+		case OPC_IMPRIMIR_VERSION:	//caso version
 			imprimir_version();
 			break;
 		case OPC_ERROR:
@@ -144,6 +157,9 @@ int main(int argc, char* argv[]){
 			break;
 		case OPC_ERROR_TIEMPO:
 			cout << "Tiempo no valido, debe ser mayor a 0" << endl;
+			break;
+		case OPC_ERROR_NUM:
+			cout << "Los parametros deben ser numericos" << endl;
 			break;
 	}
 
