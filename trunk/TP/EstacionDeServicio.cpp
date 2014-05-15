@@ -64,12 +64,21 @@ std::string EstacionDeServicio::obtenerNombre(const vector<std::string>& nombres
 bool EstacionDeServicio::crearEmpleados(){
 	vector<std::string> nombres;
 	agregarNombres(nombres); //obtiene los nombres desde el archivo
+	pid_t pidEmpleado;
+
 	for(int i = 0; i<cantEmpleados; i++){
 		std::string nombre = obtenerNombre(nombres,i);
+
 		//crea al empleado con su nombre, pipes y semaforo de surtidores
-		Empleado e (nombre, generacion, atencion, surtidores);
-		log.escribirEntrada("Cree el empleado " + nombre);
-		pid_t pidEmpleado = e.atenderAutos(cantSurtidores);
+		try{
+			Empleado e (nombre, generacion, atencion, surtidores);
+			log.escribirEntrada("Cree el empleado " + nombre);
+			pidEmpleado = e.atenderAutos(cantSurtidores);
+		}catch(const std::string &e){
+			log.escribirEntrada("A razon del Log, no se pudo crear empleado: " + e);
+			cerrar();
+		}
+
 		cantHijos++;
 		if (pidEmpleado == 0) //como soy hijo, lo indico con true
 			return true;
@@ -78,26 +87,41 @@ bool EstacionDeServicio::crearEmpleados(){
 }
 
 void EstacionDeServicio::crearAdmin(){
-	Administrador a (mediaVerAdmin);
-	cantHijos++;
-	log.escribirEntrada("Creo mi administrador");
-	pidAdmin = a.administrarCaja();
+	try{
+		Administrador a (mediaVerAdmin);
+		cantHijos++;
+		log.escribirEntrada("Creo mi administrador");
+		pidAdmin = a.administrarCaja();
+	}catch(const std::string &e){
+		log.escribirEntrada("A razon del Log, no se pudo crear administrador: " + e);
+	}
 }
 
 pid_t EstacionDeServicio::crearJefe(){
-	Jefe j ("UltraAlterMaster", generacion, atencion);
-	cantHijos++;
-	log.escribirEntrada("Cree el jefe.");
-	pid_t pidJefe = j.atenderAutos();
-	log.escribirEntrada("Envie al jefe a atender autos.");
+	pid_t pidJefe;
+	try{
+		Jefe j ("UltraAlterMaster", generacion, atencion);
+		cantHijos++;
+		log.escribirEntrada("Cree el jefe.");
+		pidJefe = j.atenderAutos();
+	}catch(const std::string &e){
+		log.escribirEntrada("A razon del Log, no se pudo crear Jefe: " + e);
+		cerrar();
+	}
+
 	return pidJefe;
 }
 
 void EstacionDeServicio::crearGenerador(){
-	GeneradorAutos g (mediaAutos, generacion);
-	cantHijos++;
-	log.escribirEntrada("Creo el generador de autos");
-	pidGen = g.generar();
+	try{
+		GeneradorAutos g (mediaAutos, generacion);
+		cantHijos++;
+		log.escribirEntrada("Creo el generador de autos");
+		pidGen = g.generar();
+	}catch(const std::string &e){
+		log.escribirEntrada("A razon del Log, no se pudo crear Generador: " + e);
+		cerrar();
+	}
 }
 
 void EstacionDeServicio::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
