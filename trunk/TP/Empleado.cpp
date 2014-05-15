@@ -24,12 +24,6 @@ Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAuto
 
 Empleado::~Empleado() {}
 
-void Empleado::imprimirSurtidor(int num, const Auto& autito) const{
-	stringstream ss;
-	ss << num;
-	cout << nombre + ": utilizo surtidor numero " + ss.str() + ", para auto: " + autito.getPatente() << endl;
-}
-
 void Empleado::atenderUnAuto(Auto& autito){
 	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 	int surtidor = tomarSurtidor();
@@ -38,7 +32,7 @@ void Empleado::atenderUnAuto(Auto& autito){
 		return;
 	}
 	log.escribirEntrada("Logre tomar el surtidor ",surtidor);
-	imprimirSurtidor(surtidor, autito);
+	cout << nombre + ": utilizo surtidor numero " << surtidor << ", para auto: " + autito.getPatente() << endl;
 
 	int litros = autito.llenar();
 	log.escribirEntrada("Llene el tanque. Cantidad de litros: ",litros);
@@ -143,7 +137,7 @@ bool Empleado::crearSurtidores(int cantidadSurtidores){
 			//log.escribirEntrada("Asocio surtidor numero: ",i);
 		}catch(const std::string &e){
 			log.escribirEntrada("No pudo crear la memoria compartida: " + e + "; del surtidor numero ", i);
-			return false;
+			//return false;
 		}
 	}
 	return true;

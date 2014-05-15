@@ -27,15 +27,15 @@ private:
 	std::string nombre;
 	int cantidadAtendidos;
 	MemoriaCompartida<int> disponibilidad;
-	Caja caja;
-	PipeAutos arribos;
+	Caja caja;	//donde deposito el dinero obtenido
+	PipeAutos arribos;	//llegan los autos a atender
 	PipeAutos generacion;
 	Semaforo accesoSurtidores;
 	std::vector< MemoriaCompartida<bool> > surtidores;
 	Log log;
 
-	static const bool USO = true;
-	static const bool DESUSO = false;
+	static const bool USO = true;	//de surtidor
+	static const bool DESUSO = false;	//al devolver un surtidor
 
 public:
 	Empleado(std::string, const PipeAutos&, const PipeAutos&, const Semaforo&);
@@ -43,8 +43,8 @@ public:
 
 	pid_t atenderAutos(int);
 private:
-	bool leerAuto(Auto&);
-	void atenderUnAuto(Auto&);
+	bool leerAuto(Auto&); //desde el pipe de arribos
+	void atenderUnAuto(Auto&);	//llenarle el tanque con el uso del surtidor
 	int tomarSurtidor();
 	bool devolverSurtidor(int);
 	bool comenzarDia();
@@ -52,7 +52,6 @@ private:
 	void cierreDeCaja();
 	bool crearSurtidores(int);
 	void cerrarPipe(PipeAutos& pipe, const std::string& tipo);
-	void imprimirSurtidor(int, const Auto& autito) const;
 	bool indicarDisponible(bool crear);
 };
 
