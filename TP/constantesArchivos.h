@@ -19,4 +19,6 @@
 #define ARCHIVO_ACCESO_SURTIDORES "TP/MecanismoConcurrencia/Semaforo.h"
 #define ACCESO_SURTIDORES 'A'
 
+#define ARCH_NOMBRES "TP/nombres.jem"
+
 #endif /* CONSTANTESARCHIVOS_H_ */
