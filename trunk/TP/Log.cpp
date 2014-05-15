@@ -40,7 +40,7 @@ void Log::escribirEntrada(std::string mensaje){
 		lock.liberarLock();
 	}catch(const std::string &e){
 		cerr << e << endl;
-		cerr << "No fue posible escribir la entrada en el log: " + mensaje + " " + e << endl;
+		cerr << "No fue posible escribir la entrada en el log: " + mensaje + ". Causa: " + e << endl;
 	}
 }
 
