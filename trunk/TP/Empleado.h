@@ -13,9 +13,9 @@
 
 #include "MecanismoConcurrencia/MemoriaCompartida.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
+#include "MecanismoConcurrencia/Semaforo.h"
 #include "Caja.h"
 #include "Auto.h"
-#include "MecanismoConcurrencia/Semaforo.h"
 #include "Log.h"
 
 using namespace std;
