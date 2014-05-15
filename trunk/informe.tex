@@ -10,6 +10,10 @@
 
 \usepackage{graphicx}
 
+% Para los diagramas de flujo:
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
 \author{Martín Buchwald \\ Ezequiel Genender Peña \\ Jennifer Woites}
 
 \title{75.59 Técnicas de Programación Concurrente I\\
@@ -138,11 +142,14 @@ Quien se encarga de terminar la simulación (y hacerle llegar tal finalización 
 Dado que el Administrador se ejecuta de una manera casi completamente unilateral al resto de la simulación (más allá del sincronismo con los empleados), se decide optar por enviarle una señal al proceso del administrador, el cual tendrá el \textit{signal handler} correspondiente. El cual se comporta como en los casos de ejemplo de las clases prácticas de la materia (seteando una variable interna del objeto signal handler para luego poder hacer el \textit{gracefull quit}). De esta manera, la próxima vez que vea la caja, verá que le habían mandado la señal de finalización, terminando exitosamente su tarea.
 
 A su vez, optamos por informale al generador que debe terminar de generar autos por el mismo método. El generador luego de enviar su último auto verá que le enviaron una señal (puesto que tiene su respectivo \textit{signal handler}), por lo que terminará su ejecución, cerrando previamente el Pipe de envíos hacia el Jefe. A partir de aquí se generará una reacción en cadena: cuando el jefe haya leido todos los autos que hayan quedado en el pipe, leerá un \textbf{EOF}, lo cual justamente implica que el generador no generará más autos. Entonces el jefe sabrá que su tarea también ha terminado, cerrando el Pipe de comunicación con los empleados (y también hacia el Pipe hacia el Generador), y terminando su ejecución. A su vez, los empleados seguirán atendiendo los autos, pero tarde o temprano cada uno de ellos leerá el \textbf{EOF} de su propio Pipe de comunicación con el Jefe, por lo que sabrán que su tarea también ha terminado, cerrando el Pipe mencionado, y terminando su ejecución. Notar que de ésta manera todos los procesos terminan su ejecución, habiendo atendido (o despachado) todos los autos que se hubieran creado por el generador hasta haber recibido la señal de finalización.
-
+\newpage
 \section{Diagramas de flujo de comunicación entre procesos}
 
-\section{Diagrama de Clases}
+\newpage
 
+
+\section{Diagrama de Clases}
+\newpage
 \section{Diagramas de Transición de Estados}
 \subsection{Jefe}
 
