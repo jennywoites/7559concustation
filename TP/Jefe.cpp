@@ -151,6 +151,7 @@ bool Jefe::hayEmpleados(){
 bool Jefe::tomarEmpleado(){
 	try{
 		log.escribirEntrada("Tomo un empleado disponible.");
+		//jefe se encarga de indicar que el empleado ya no esta disponible
 		cantEmpleadosDisponibles.incrementar(-1);
 	}catch(const std::string &e){
 		log.escribirEntrada("Error al tomar empleado. " + e);
