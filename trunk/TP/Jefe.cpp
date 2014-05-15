@@ -162,7 +162,7 @@ bool Jefe::tomarEmpleado(){
 
 void Jefe::mensajeDespachante(std::string patente){
 	log.escribirEntrada("Se ha despachado al auto de patente " + patente + " por no haber empleados libres");
-	cout << "Jefe ha despachado al auto de patente " + patente + " por no haber empleados libres" << endl;
+	cout << "\033[1;32m" << "Jefe ha despachado al auto de patente " + patente + " por no haber empleados libres" + "\033[0m" << endl;
 }
 
 bool Jefe::enviarAutoAEmpleado(const Auto& autito){
