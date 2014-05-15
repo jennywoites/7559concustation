@@ -39,7 +39,6 @@ void EstacionDeServicio::agregarNombres(vector<std::string>& nombres){
     while (getline(archNombres, linea)) {
     	name = new char [linea.size() + 1];
     	strcpy(name, linea.c_str());
-    	cout << linea << endl;
     	nombres.push_back(name);
     	delete name;
     }
