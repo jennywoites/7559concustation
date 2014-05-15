@@ -56,7 +56,7 @@ private:
 	void cierreDeCaja();
 	bool crearSurtidores(int);
 	void cerrarPipe(PipeAutos& pipe, const std::string& tipo);
-	void imprimirSurtidor(int) const;
+	void imprimirSurtidor(int, const Auto& autito) const;
 };
 
 #endif /* EMPLEADO_H_ */
