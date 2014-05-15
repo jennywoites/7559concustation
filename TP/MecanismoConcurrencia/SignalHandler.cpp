@@ -52,7 +52,7 @@ void SignalHandler :: dispatcher ( int signum ) {
 		try{
 			SignalHandler :: signal_handlers [ signum ]->handleSignal ( signum );
 		}catch ( const std::exception & e ) {
-			std::cout << e.what() << std::endl;
+			std::cerr << e.what() << std::endl;
 		}
 	}
 }
