@@ -38,9 +38,9 @@ void Log::escribirEntrada(std::string mensaje){
 		lock.tomarLock();
 		lock.escribir(mensajeFinal.c_str(), mensajeFinal.size());
 		lock.liberarLock();
-	}catch(std::string &e){
-		cout << e << endl;
-		cout << "No fue posible escribir la entrada en el log: " << mensaje << endl;
+	}catch(const std::string &e){
+		cerr << e << endl;
+		cerr << "No fue posible escribir la entrada en el log: " + mensaje + " " + e << endl;
 	}
 }
 
@@ -73,12 +73,15 @@ void Log::mensajeInterno(std::string msj){
 	std::string tiempo_msj = string(buffer) + string("\n\n\n");
 
 	try{
+		//tomo lock, para ser el unico log que escribe
 		lock.tomarLock();
 		lock.escribir(msj.c_str(), msj.size());
 		lock.escribir(tiempo_msj.c_str(), tiempo_msj.size());
 		lock.liberarLock();
-	}catch(std::string &e){
-		cout << e << endl;
+		//libera lock, lo escrito queda unido
+	}catch(const std::string &e){
+		cerr << e << endl;
+		cerr << "No fue posible escribir la entrada de tiempo en el log: " + e << endl;
 	}
 }
 
