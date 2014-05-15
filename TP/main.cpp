@@ -14,9 +14,9 @@
 #include <getopt.h>
 #define SURTIDORES 1
 #define EMPLEADOS 1
-#define MEDIA_AUTOS 100
-#define MEDIA_ADMIN 100
-#define TIEMPO_SIMULACION 5
+#define MEDIA_AUTOS 100000
+#define MEDIA_ADMIN 250000
+#define TIEMPO_SIMULACION 3
 #define OPC_ERROR -1
 #define OPC_ERROR_SURTI -2
 #define OPC_ERROR_TIEMPO -3
