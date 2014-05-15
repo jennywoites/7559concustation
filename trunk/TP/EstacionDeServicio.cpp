@@ -128,20 +128,18 @@ int EstacionDeServicio::abrir(){
 		return ERROR;
 	}
 
-	try{
-		atencion.crear(ARCHIVO_ATENCION);
+	if(atencion.crear(ARCHIVO_ATENCION) )
 		log.escribirEntrada("Creo el pipe de atencion de autos.");
-	}catch(const std::string &e){
-		cout << "No se pudo crear el pipe de atencion de autos: " + e << endl;
+	else{
+		cout << "No se pudo crear el pipe de atencion de autos"<< endl;
 		cerrar();
 		return ERROR;
 	}
 
-	try{
-		generacion.crear(ARCHIVO_GENERACION);
+	if(generacion.crear(ARCHIVO_GENERACION))
 		log.escribirEntrada("Creo el pipe de generacion de autos.");
-	}catch(const std::string &e){
-		cout << "No se pudo crear el pipe de generacion de autos: " + e << endl;
+	else{
+		cout << "No se pudo crear el pipe de atencion de autos"<< endl;
 		cerrar();
 		return ERROR;
 	}
