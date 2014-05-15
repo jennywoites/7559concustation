@@ -59,6 +59,7 @@ void Administrador::finalizarDia(){
 	log.escribirEntrada("Dejo de revisar caja, cierro Proceso correctamente.");
 }
 void Administrador::pensar(){
+	//espera intervalos de tiempo para revisar la caja
 	float espera = tiempoAlAzarExponencial(media);
 	int tiempo_entero = floor(espera);
 	log.escribirEntrada("Pienso antes de ir a la caja durante: ", tiempo_entero);
