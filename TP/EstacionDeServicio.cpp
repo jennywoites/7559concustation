@@ -123,7 +123,7 @@ int EstacionDeServicio::abrir(){
 	try{
 		surtidores.crear(ARCHIVO_ACCESO_SURTIDORES,ACCESO_SURTIDORES,cantSurtidores); //Semaforo de valor M = cantidad de surtidores
 	}catch(const std::string &e){
-		cout << "No se pudo crear el semaforo de surtidores: " + e << endl;
+		log.escribirEntrada("No se pudo crear el semaforo de surtidores: " + e);
 		cerrar();
 		return ERROR;
 	}
@@ -131,7 +131,7 @@ int EstacionDeServicio::abrir(){
 	if(atencion.crear(ARCHIVO_ATENCION) )
 		log.escribirEntrada("Creo el pipe de atencion de autos.");
 	else{
-		cout << "No se pudo crear el pipe de atencion de autos"<< endl;
+		log.escribirEntrada("No se pudo crear el pipe de atencion");
 		cerrar();
 		return ERROR;
 	}
@@ -139,7 +139,7 @@ int EstacionDeServicio::abrir(){
 	if(generacion.crear(ARCHIVO_GENERACION))
 		log.escribirEntrada("Creo el pipe de generacion de autos.");
 	else{
-		cout << "No se pudo crear el pipe de atencion de autos"<< endl;
+		log.escribirEntrada("No se pudo crear el pipe de generacion");
 		cerrar();
 		return ERROR;
 	}
@@ -206,9 +206,8 @@ void EstacionDeServicio::cerrar(){
 	try{
 		liberarMediosDeComunicacion();
 	}catch(const std::string &e){
-		cout << "No se pudieron liberar todos los medios de comunicacion: " + e << endl;
+		log.escribirEntrada("No se pudieron liberar todos los medios de comunicacion");
 	}
-
 
 	log.escribirEntrada("Espere a mis hijos: empleados, jefe y generador de autos.");
 
