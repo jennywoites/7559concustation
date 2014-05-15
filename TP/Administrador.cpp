@@ -36,8 +36,7 @@ bool Administrador::comenzarDia(){
 		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 		log.escribirEntrada("Registro el manejo de finalizacion SIGINT");
 	}catch (std::string &e) {
-		cout << e << endl;
-		log.escribirEntrada("No se ha podido registrar el Signal Handler");
+		log.escribirEntrada("No se ha podido registrar el Signal Handler." + e);
 		return false;
 	}
 	return true;

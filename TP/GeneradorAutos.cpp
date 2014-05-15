@@ -32,26 +32,23 @@ bool GeneradorAutos::comenzarDia(){
 
 	try{
 		envios.setearModo(Pipe::ESCRITURA);
-	}catch (std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No pude setear modo de comunicacion Escritura");
+	}catch(const std::string &e){
+		log.escribirEntrada("No pude setear modo de comunicacion Escritura." + e);
 		return false;
 	}
 
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 		log.escribirEntrada("Registro el manejo de finalizacion SIGINT");
-	}catch (std::string &e) {
-		cout << e << endl;
-		log.escribirEntrada("No se ha podido registrar el Signal Handler SIGINT");
+	}catch(const std::string &e) {
+		log.escribirEntrada("No se ha podido registrar el Signal Handler SIGINT." + e);
 		return false;
 	}
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
 		log.escribirEntrada("Registro el manejo de finalizacion SIGPIPE");
-	}catch (std::string &e) {
-		cout << e << endl;
-		log.escribirEntrada("No se ha podido registrar el Signal Handler SIGPIPE");
+	}catch(const std::string &e) {
+		log.escribirEntrada("No se ha podido registrar el Signal Handler SIGPIPE." + e);
 		return false;
 	}
 
@@ -63,9 +60,8 @@ void GeneradorAutos::cerrarPipe(){
 		//cierra su Pipe de generacion
 		envios.cerrar();
 		log.escribirEntrada("Me desadoso del pipe de generacion");
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No se pudo desadosar de pipe de generacion");
+	}catch(const std::string &e){
+		log.escribirEntrada("No se pudo desadosar de pipe de generacion." + e);
 	}
 }
 
