@@ -16,10 +16,8 @@
 
 using namespace std;
 
-GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal) {
-	this->media = media;
-	numAuto = 0;
-	envios = canal;
+GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal):
+	media(media),	numAuto(0),	envios(canal){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 

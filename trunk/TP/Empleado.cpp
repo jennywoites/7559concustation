@@ -17,12 +17,8 @@
 const bool Empleado::USO;
 const bool Empleado::DESUSO;
 
-Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAutos& atencion, const Semaforo& semaforo) {
-	nombre = name;
-	cantidadAtendidos = 0;
-	arribos = atencion;
-	this->generacion = generacion;
-	accesoSurtidores = semaforo;
+Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAutos& atencion, const Semaforo& semaforo) :
+	nombre (name),	cantidadAtendidos (0),	arribos (atencion),	generacion (generacion),	accesoSurtidores(semaforo) {
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
