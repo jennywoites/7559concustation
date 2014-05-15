@@ -142,7 +142,11 @@ int main(int argc, char* argv[]){
 
 	switch (opcion){
 		case OPC_EXEC:	//caso ejecucion del proyecto
-			atender(cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin,tiempo);
+			try{
+				atender(cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin,tiempo);
+			}catch(const std::string &e){
+				cerr << "No pudo abrirse el Log: " + e << endl;
+			}
 			break;
 		case OPC_IMPRIMIR_AYUDA:	//caso ayuda
 			imprimir_ayuda();
