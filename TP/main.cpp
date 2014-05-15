@@ -130,7 +130,8 @@ void atender(int cantSurtidores, int cantEmpleados, int mediaAutos, int mediaAdm
 		return;
 	}
 
-	sleep(tiempo); //FIXME: tiempo de simu
+	//simula la duracion del dia
+	sleep(tiempo);
 	concuStation.cerrar();
 }
 
