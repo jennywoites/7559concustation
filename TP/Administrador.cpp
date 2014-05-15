@@ -30,7 +30,7 @@ bool Administrador::comenzarDia(){
 		return false;
 	}
 	log.escribirEntrada("Abro la caja");
-	cout << "Administrador abre la caja." << endl;
+	cout << "\033[1;33m" << "Administrador abre a la caja" << "\033[0m" << endl;
 
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
@@ -55,7 +55,7 @@ void Administrador::destruir(){
 void Administrador::finalizarDia(){
 	log.escribirEntrada("Recibe signal de finalizar funcionamiento.");
 	destruir();
-	cout << "Administrador se va a su casa." << endl;
+	cout << "\033[1;33m" << "Administrador se va a su casa." << "\033[0m" << endl;
 	log.escribirEntrada("Dejo de revisar caja, cierro Proceso correctamente.");
 }
 void Administrador::pensar(){
@@ -68,7 +68,7 @@ void Administrador::pensar(){
 void Administrador::imprimirDinero(){
 	stringstream ss;
 	ss << plataVista;
-	cout << "El administrador fue a la caja, vio $" + ss.str()  << endl;
+	cout << "\033[1;33m" << "El administrador fue a la caja, vio $" << ss.str() << "\033[0m" << endl;
 }
 
 void Administrador::mirarDinero(){

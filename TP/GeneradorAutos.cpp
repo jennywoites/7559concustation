@@ -74,7 +74,7 @@ void GeneradorAutos::finalizarDia(){
 	log.escribirEntrada("Llego la crisis del 30, ya no hay mas trabajo por hacer");
 	log.escribirEntrada("Cierro el canal de autos");
 	destruir();
-	cout << "Generador deja de generar y se cierra" << endl;
+	cout << "\033[1;31m" << "Generador deja de generar y se cierra" << "\033[0m" << endl;
 
 	log.escribirEntrada("Fin de proceso Generador de Autos");
 }
@@ -95,7 +95,7 @@ pid_t GeneradorAutos::generar(){
 	while (sigint_handler.getGracefulQuit() == 0 and sigpipe_handler.getGracefulQuit() == 0 ) {
 		Auto autito;
 		log.escribirEntrada("creado el auto: " + autito.getPatente() + ", numero " , numAuto);
-		cout << "Se ha generado el auto de patente " + autito.getPatente() << endl;
+		cout << "\033[1;31m" << "Se ha generado el auto de patente " + autito.getPatente() + "\033[0m" << endl;
 
 		if(! envios.escribirAuto(autito)){
 			log.escribirEntrada("se cerro mi lector inesperadamente");

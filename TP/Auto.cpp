@@ -33,7 +33,7 @@ Auto::Auto(std::string patente, int capacidad):
 	lleno(false) {}
 
 void Auto::imprimir() const{
-	cout << "Se atendio el auto, cuya patente es: " << patente << ". Se le cargaron " << capacidadTanque << " litros." << endl;
+	cout << "\033[1;34m" << "Se atendio el auto, cuya patente es: " + patente +  ". Se le cargaron " << capacidadTanque << " litros." << "\033[0m" << endl;
 }
 
 Auto::~Auto() {}
