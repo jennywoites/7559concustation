@@ -17,15 +17,15 @@ using namespace std;
 class PipeAutos: public Pipe {
 private:
 	Semaforo controlLectura;
-	static const char PIPE = 'p';
-	static const int UN_SEMAFORO = 1;
+	static const char PIPE = 'p'; //caracter para creacion de estructuras
+	static const int UN_SEMAFORO = 1; //cantidad de semaforos
 
 public:
 	PipeAutos();
 	void crear(const std::string& nombre);
 	virtual ~PipeAutos();
 
-	bool leerAuto ( Auto* autito );
+	bool leerAuto ( Auto& autito );
 	bool escribirAuto ( const Auto& autito );
 	void liberar();
 };
