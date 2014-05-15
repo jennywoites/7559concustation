@@ -45,6 +45,7 @@ bool GeneradorAutos::comenzarDia(){
 		return false;
 	}
 	try{
+		//la signal SIGPIPE se genera por escribir sobre el Pipe cuando el Jefe tuvo inconvenientes
 		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
 		log.escribirEntrada("Registro el manejo de finalizacion SIGPIPE");
 	}catch(const std::string &e) {
@@ -84,6 +85,8 @@ pid_t GeneradorAutos::generar(){
 	if (id != 0)
 		return id;
 
+	//Hijo: Generador de Autos
+
 	bool comienzo = comenzarDia();
 	//ha ocurrido un error que no permite continuar con la ejecucion
 	if (!comienzo){
@@ -92,7 +95,9 @@ pid_t GeneradorAutos::generar(){
 		return id;
 	}
 	
+	//manejo de finalizacion: signals SIGINT y SIGPIPE
 	while (sigint_handler.getGracefulQuit() == 0 and sigpipe_handler.getGracefulQuit() == 0 ) {
+		//crea un auto aleatorio
 		Auto autito;
 		log.escribirEntrada("creado el auto: " + autito.getPatente() + ", numero " , numAuto);
 		cout << "\033[1;31m" << "Se ha generado el auto de patente " + autito.getPatente() + "\033[0m" << endl;
