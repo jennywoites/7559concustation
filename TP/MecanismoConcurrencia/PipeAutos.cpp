@@ -15,7 +15,7 @@ PipeAutos::PipeAutos() {
 
 void PipeAutos::crear(const std::string& nombre) {
 	Pipe::crear();
-	//semaforo binario que controla eel extremo de lectura del pipe
+	//semaforo binario que controla el extremo de lectura del pipe
 	controlLectura.crear(nombre, PIPE, UN_SEMAFORO);
 }
 
