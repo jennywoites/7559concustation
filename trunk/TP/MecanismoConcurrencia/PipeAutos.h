@@ -22,7 +22,7 @@ private:
 
 public:
 	PipeAutos();
-	void crear(const std::string& nombre);
+	bool crear(const std::string& nombre);
 	virtual ~PipeAutos();
 
 	bool leerAuto ( Auto& autito );
