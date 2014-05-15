@@ -31,17 +31,11 @@ EstacionDeServicio::~EstacionDeServicio() {}
 
 void EstacionDeServicio::agregarNombres(vector<std::string>& nombres){
 	ifstream archNombres(ARCH_NOMBRES);	//abre archivo con nombres de empleados
-
-    char* name;
     string linea;
 
     //por cada linea, se obtiene un nombre
-    while (getline(archNombres, linea)) {
-    	name = new char [linea.size() + 1];
-    	strcpy(name, linea.c_str());
-    	nombres.push_back(name);
-    	delete name;
-    }
+    while (getline(archNombres, linea))
+    	nombres.push_back(linea);
 
     archNombres.close(); //cierra archivo
 }
