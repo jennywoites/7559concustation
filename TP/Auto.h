@@ -44,8 +44,8 @@ class Auto {
 		/*Llena el tanque del auto, informando cuanto se lleno. Esto demora un cierto tiempo.*/
 		int llenar();
 
-		std::string serializar() const;
-		void deserializar(const std::string&);
+		std::string serializar() const;	//obtener en forma de bytes
+		void deserializar(const std::string&);	//reconstruir a partir de bytes
 		void imprimir() const;
 
 	private:

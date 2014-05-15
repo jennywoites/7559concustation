@@ -71,11 +71,15 @@ std::string Auto::generarPatenteRandom() const{
 }
 
 std::string Auto::serializar() const{
+	//une, con separadores, los campos de
 	std::string serial = "";
+	//patente
 	serial += patente + SEPARADOR;
 	stringstream cap, llen;
+	//capacidad del tanque
 	cap << capacidadTanque;
 	serial += cap.str() + SEPARADOR;
+	//lleno
 	if(lleno)
 		llen << TRUE;
 	else
