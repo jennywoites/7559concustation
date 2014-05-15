@@ -87,6 +87,7 @@ pid_t Administrador::administrarCaja(){
 	pid_t id = fork();
 	if (id != 0)
 		return id;
+	//Hijo: Administrador
 
 	bool comienzo = comenzarDia();
 	//ha ocurrido un error que no permite continuar con la ejecucion

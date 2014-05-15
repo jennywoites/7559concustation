@@ -31,6 +31,7 @@ bool Jefe::leerAuto(Auto& autito){
 bool Jefe::atenderUnAuto(const Auto& autito){
 	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 
+	//si no hay empleados, el auto se va
 	if (!hayEmpleados()){
 		cantidadDespachada++;
 		log.escribirEntrada("La cantidad de autos despachados es de: ", cantidadDespachada);
@@ -72,6 +73,7 @@ bool Jefe::comenzarDia(){
 	}
 
 	try{
+		//la signal SIGPIPE se genera por escribir sobre el Pipe cuando los empleados tuvieron inconvenientes
 		SignalHandler::getInstance()->registrarHandler(SIGPIPE, &sigpipe_handler);
 		log.escribirEntrada("Registro el manejo de finalizacion SIGPIPE");
 	}catch (const std::string &e) {
@@ -113,6 +115,7 @@ pid_t Jefe::atenderAutos(){
 	pid_t id = fork();
 	if (id != 0)
 		return id;
+	//Hijo: Jefe
 
 	bool comienzo = comenzarDia();
 	//ha ocurrido un error que no permite continuar con la ejecucion
@@ -124,6 +127,7 @@ pid_t Jefe::atenderAutos(){
 
 	Auto autito;
 
+	//mientras lleguen autos desde generacion, y mis empleados sigan atentos
 	while (leerAuto(autito) and sigpipe_handler.getGracefulQuit() == 0){
 		bool atendido = atenderUnAuto(autito);
 		if (! atendido)

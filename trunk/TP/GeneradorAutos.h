@@ -17,7 +17,7 @@
 
 class GeneradorAutos {
 private:
-	float media;
+	float media; //en tiempo, de generacion
 	int numAuto;
 	PipeAutos envios;
 	SIGINT_Handler sigint_handler;

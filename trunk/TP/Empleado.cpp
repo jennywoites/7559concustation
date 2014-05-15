@@ -156,6 +156,7 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 	pid_t id = fork();
 	if (id != 0)
 		return id;
+	//Hijo: Empleado
 
 	bool comienzo = comenzarDia();
 	//ha ocurrido un error que no permite continuar con la ejecucion
