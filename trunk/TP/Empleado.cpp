@@ -33,7 +33,7 @@ void Empleado::atenderUnAuto(Auto& autito){
 	log.escribirEntrada("Logre tomar el surtidor ",surtidor);
 	cout << nombre + ": utilizo surtidor numero " << surtidor << ", para auto: " + autito.getPatente() << endl;
 
-	int litros = autito.llenar();
+	int litros = autito.llenar(); //consume un tiempo de llenado
 	log.escribirEntrada("Llene el tanque. Cantidad de litros: ",litros);
 	if (devolverSurtidor(surtidor)){
 		log.escribirEntrada("He devuelto el surtidor numero ",surtidor);
@@ -46,6 +46,21 @@ void Empleado::atenderUnAuto(Auto& autito){
 
 	log.escribirEntrada("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
 	autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
+}
+
+/* incrementa en 1 el numero de empleados disponibles. Si esta activo el flag, se crea la memoria compartida */
+bool Empleado::indicarDisponible(bool crear){
+	try{
+		if (crear)
+			disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
+		disponibilidad.incrementar(1);
+		log.escribirEntrada("Me pongo a disposicion del Jefe.");
+	}catch(const std::string &e){
+		log.escribirEntrada("Error en memoria compartida disponibilidad: " + e);
+		finalizarDia();
+		return false;
+	}
+	return true;
 }
 
 bool Empleado::comenzarDia(){
@@ -69,22 +84,9 @@ bool Empleado::comenzarDia(){
 		return false;
 	}
 
+	//indico mi disponibilidad, creando la memoria compartida
 	if (! indicarDisponible(true) )
 		return false;
-	return true;
-}
-
-bool Empleado::indicarDisponible(bool crear){
-	try{
-		if (crear)
-			disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
-		disponibilidad.incrementar(1);
-		log.escribirEntrada("Me pongo a disposicion del Jefe.");
-	}catch(const std::string &e){
-		log.escribirEntrada("Error en memoria compartida disponibilidad: " + e);
-		finalizarDia();
-		return false;
-	}
 	return true;
 }
 
@@ -118,7 +120,7 @@ void Empleado::finalizarDia(){
 
 	for (int i = 0; i < int(surtidores.size()); i++){
 		try{
-			this->surtidores.at(i).liberar();
+			this->surtidores.at(i).liberar(); //se libera cada surtidor
 			log.escribirEntrada("Libere el surtido numero ", i);
 		}catch(const std::string &e){
 			log.escribirEntrada("No pude liberar: " + e + "; el surtidor numero ", i);
@@ -131,12 +133,12 @@ void Empleado::finalizarDia(){
 bool Empleado::crearSurtidores(int cantidadSurtidores){
 	for (int i = 0; i < cantidadSurtidores; i++){
 		try{
-			MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i);
-			this->surtidores.push_back(surtidor);
-			//log.escribirEntrada("Asocio surtidor numero: ",i);
+			MemoriaCompartida<bool> surtidor (ARCHIVO_SURTIDORES, SURTIDOR+i); //crea cada surtidor
+			this->surtidores.push_back(surtidor); //se almacena en un vector de surtidores
+			log.escribirEntrada("Asocio surtidor numero: ",i);
 		}catch(const std::string &e){
 			log.escribirEntrada("No pudo crear la memoria compartida: " + e + "; del surtidor numero ", i);
-			//return false;
+			return false;
 		}
 	}
 	return true;
@@ -156,18 +158,19 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 		return id;
 	}
 
-	Auto autito;
-
 	bool creacion = crearSurtidores(cantidadSurtidores);
+	//si la creacion no fue correcta, se cierra el proceso
 	if (! creacion){
 		finalizarDia();
 		return id;
 	}
 
+	Auto autito;
+
 	while(leerAuto(autito)){
 		atenderUnAuto(autito);
 		//si no puedo indicar que estoy disponible, no sigo trabajando
-		if (! indicarDisponible(false) )
+		if (! indicarDisponible(false) ) //no creando la memoria compartida, sino incrementando
 			break;
 	}
 
@@ -178,8 +181,7 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 
 bool Empleado::leerAuto(Auto& autito){
 	log.escribirEntrada("Voy a leer un auto. Si no hay, me duermo.");
-	bool status = arribos.leerAuto(autito);
-	return status;
+	return arribos.leerAuto(autito);
 }
 
 int Empleado::tomarSurtidor(){
@@ -190,7 +192,8 @@ int Empleado::tomarSurtidor(){
 	//busco surtidor que NO este en uso
 	try{
 		for (unsigned int i = 0; i < surtidores.size(); i++){
-			if (surtidores.at(i).modificarValor(USO))
+			//que no este en uso y se modifique su valor a uso
+			if (surtidores.at(i).modificarValor(USO)) //atomica por semaforo en MemComp
 				return i;
 			else
 				log.escribirEntrada("No logre tomar el surtidor ", int(i));
@@ -206,7 +209,7 @@ int Empleado::tomarSurtidor(){
 bool Empleado::devolverSurtidor(int surtidor){
 	log.escribirEntrada("Estoy por devolver el surtidor");
 	try{
-		surtidores.at(surtidor).modificarValor(DESUSO);
+		surtidores.at(surtidor).modificarValor(DESUSO); //atomica por semaforo en MemComp
 		accesoSurtidores.signal();
 	}catch(const std::string &e){
 		log.escribirEntrada("No logre devolver: " + e + "; el surtidor numero ", int(surtidor));
