@@ -17,11 +17,8 @@ public:
 	virtual ~Caja();
 
 	void depositar(float plata_a_agregar);
-
 	float verMonto() const;
-
 	bool cerrar();
-
 	bool abrir();
 
 };
