@@ -94,7 +94,7 @@ void Log::setTipo(int tipo){
 	this->tipo = tipo;
 }
 
-bool Log::permiteEntrada(){
+bool Log::permiteEntrada() const{
 	if (tipo == NO_TIPO)
 		return false;
 	if (Log::modo == MODO_NO_DEBUG)
