@@ -21,7 +21,7 @@ void PipeAutos::crear(const std::string& nombre) {
 
 PipeAutos::~PipeAutos() {}
 
-bool PipeAutos :: leerAuto ( Auto* autito ) {
+bool PipeAutos :: leerAuto ( Auto& autito ) {
 	char serie[Auto::LONG_SERIE];
 	//se hace wait para ser el unico que realiza la lectura del pipe
 	controlLectura.wait();
@@ -39,7 +39,7 @@ bool PipeAutos :: leerAuto ( Auto* autito ) {
 	if (leido != Auto::LONG_SERIE)
 		return false;
 
-	autito->deserializar(serie);
+	autito.deserializar(serie);
 	return true;
 }
 
