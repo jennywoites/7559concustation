@@ -126,7 +126,6 @@ void Empleado::finalizarDia(){
 		disponibilidad.liberar();
 		log.escribirEntrada("Libero la memoria compartida: cantidad de Empleados disponibles.");
 	}catch(const std::string &e){
-		cout << e << endl;
 		log.escribirEntrada("No fue posible liberar la memoria compartida: cantidad de empleados disponibles: " + e);
 	}
 
