@@ -1,0 +1,17 @@
+\select@language {spanish}
+\contentsline {section}{\numberline {1}An\IeC {\'a}lisis del Problema}{3}
+\contentsline {subsection}{\numberline {1.1}Especificaci\IeC {\'o}n}{3}
+\contentsline {section}{\numberline {2}Resoluci\IeC {\'o}n de Tareas}{3}
+\contentsline {subsection}{\numberline {2.1}Divisi\IeC {\'o}n de proyecto en procesos}{3}
+\contentsline {subsection}{\numberline {2.2}Comunicaci\IeC {\'o}n entre procesos}{4}
+\contentsline {subsection}{\numberline {2.3}Mapeo de problemas}{5}
+\contentsline {subsection}{\numberline {2.4}Mecanismos de concurrencia para la comunicaci\IeC {\'o}n}{5}
+\contentsline {subsubsection}{\numberline {2.4.1}Generador de Autos - Jefe}{5}
+\contentsline {subsubsection}{\numberline {2.4.2}Jefe - Empleados}{6}
+\contentsline {subsubsection}{\numberline {2.4.3}Empleados entre s\IeC {\'\i }}{6}
+\contentsline {subsubsection}{\numberline {2.4.4}Empleados y Administrador}{7}
+\contentsline {subsubsection}{\numberline {2.4.5}Comunicaci\IeC {\'o}n para finalizar la simulaci\IeC {\'o}n}{7}
+\contentsline {section}{\numberline {3}Diagramas de flujo de comunicaci\IeC {\'o}n entre procesos}{8}
+\contentsline {section}{\numberline {4}Diagrama de Clases}{9}
+\contentsline {section}{\numberline {5}Diagramas de Transici\IeC {\'o}n de Estados}{10}
+\contentsline {subsection}{\numberline {5.1}Jefe}{10}

@@ -1,0 +1,39 @@
+\deactivatequoting
+\begin{tikzpicture}[%
+ rectangular/.style = {draw, rectangle, minimum height=6mm, minimum width=20mm,fill,top color=blue!10,bottom color=blue!40}
+ ]
+ \node [rectangular,rounded corners=3.0mm,top color=red!20,bottom color=red!50] (BEGIN) {\small{Inicio}};  
+ 
+ \node [rectangular,below of = BEGIN,draw=black] (PEDIR) {\small{Pedir Configuracion del Tablero}};
+ \node [rectangular,below of = PEDIR] (VALIDAR) {\small{Validar Entrada}};
+ \node  [diamond,draw,minimum height=1mm,minimum width=10mm,below=0.5cm of  VALIDAR,top color=green!20,bottom color=green!50] (UNODOS) {\small{¿1 o 2 jugadores?}};
+ \node [rectangular,below=0.5cm of UNODOS] (NOMBRE1) {\small{Pedir Nombre Jugador 1}};
+ \node[below of = NOMBRE1](NOMBRE2){};
+  \node [rectangular,left=1cm of  NOMBRE2] (PEDIRNOM2) {\small{Pedir Nombre Jugador 2}};
+ \node [rectangular, right=1cm of NOMBRE2] (DRMEMORY) {\small{Nombre Jugador 2 = ''Dr.Memory''}};
+ \node [rectangular,below=1cm of NOMBRE2] (INICIARJUEGO) {\small{Iniciar juego (turno = jugador 1)}};
+ \node [rectangular,below of = INICIARJUEGO] (TURNO) {\small{Juega a quien le toca}};
+  \node  [diamond,draw,minimum height=7mm,minimum width=15mm,below=0.5cm of TURNO ,top color=green!20,bottom color=green!50] (PREGUNTAGANADO) {\small{¿Quedan fichas?}};
+ \node [rectangular,right=1cm of PREGUNTAGANADO] (CAMBIOTURNO){\small{Cambio de Turno}};
+ \node [rectangular,below=0.8cm of PREGUNTAGANADO] (GANADOR){\small{El jugador que acaba de jugar es el ganador}};
+ \node [rectangular,rounded corners=3.0mm,below of = GANADOR,top color=red!20,bottom color=red!50] (FIN) {\small{Fin}};  
+
+%FLECHAS%
+
+ \draw[->] (BEGIN) -- (PEDIR);
+ \draw[->] (PEDIR) -- (VALIDAR);
+ \draw[->] (VALIDAR.east) -| +(1.8,0.6) node [right=0.5mm] {Error} |- (PEDIR);
+ \draw[->] (VALIDAR) -- (UNODOS);
+ \draw[->] (UNODOS) -- (NOMBRE1);
+ \draw[->] (NOMBRE1.west) -- ++(-.5,0) -- ++(0,0) -|  (PEDIRNOM2.north);
+ \draw[->] (NOMBRE1.east) -- ++(0.5,0) -- ++(0,0) -|  (DRMEMORY.north);
+ \draw[->] (PEDIRNOM2.south) -- ++(0,-0.5) -- ++(0,0) -| (INICIARJUEGO.north);
+ \draw[->] (DRMEMORY.south) -- ++(0,-0.5) -- ++(0,0) -| (INICIARJUEGO.north);
+ \draw[->] (INICIARJUEGO) -- (TURNO);
+ \draw[->] (TURNO) -- (PREGUNTAGANADO);
+ \draw[->] (PREGUNTAGANADO.east) -- node[right=-1mm, below=1mm] {Si}  (CAMBIOTURNO.west);
+ \draw[->] (CAMBIOTURNO.north) -- ++(0,2) -- ++(0,0) |- (TURNO.east);  
+ \draw[->] (PREGUNTAGANADO.south) -- node[right=1mm] {No} (GANADOR);
+ \draw[->] (GANADOR) -- (FIN); 
+\end{tikzpicture}
+\activatequoting
