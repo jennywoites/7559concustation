@@ -76,14 +76,15 @@ bool Empleado::comenzarDia(){
 		return false;
 	}
 
-	if (! indicarDisponible() )
+	if (! indicarDisponible(true) )
 		return false;
 	return true;
 }
 
-bool Empleado::indicarDisponible(){
+bool Empleado::indicarDisponible(bool crear){
 	try{
-		disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
+		if (crear)
+			disponibilidad.crear(ARCHIVO_CANTIDAD_EMPLEADOS, DISPONIBILIDAD_EMPLEADOS);
 		disponibilidad.incrementar(1);
 		log.escribirEntrada("Me pongo a disposicion del Jefe.");
 	}catch(const std::string &e){
@@ -173,7 +174,7 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 	while(leerAuto(autito)){
 		atenderUnAuto(autito);
 		//si no puedo indicar que estoy disponible, no sigo trabajando
-		if (! indicarDisponible() )
+		if (! indicarDisponible(false) )
 			break;
 	}
 
