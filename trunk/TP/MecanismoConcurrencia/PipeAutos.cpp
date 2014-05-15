@@ -30,7 +30,7 @@ bool PipeAutos :: leerAuto ( Auto& autito ) {
 	try{
 		leido = Pipe::leer(static_cast<void*>(serie), Auto::LONG_SERIE);
 	}catch(const std::string &e){
-		cerr << e << endl;
+		cerr << "No pudo leerse auto desde el Pipe: " + e << endl;
 		controlLectura.signal();
 		return 0;
 	}
@@ -49,7 +49,7 @@ bool PipeAutos :: escribirAuto ( const Auto& autito ) {
 	try{
 		escrito = Pipe::escribir(static_cast<const void*>(serie.c_str()), Auto::LONG_SERIE);
 	}catch(const std::string &e){
-		cerr << e << endl;
+		cerr << "No pudo escribirse auto hacia el Pipe: " + e << endl;
 		return 0;
 	}
 	return (escrito == Auto::LONG_SERIE);
