@@ -41,9 +41,9 @@ private:
 private:
 
 	bool crearEmpleados();
-	void esperarCierre();
+	void esperarCierre() const;
 	void agregarNombres(vector<std::string>&);
-	std::string obtenerNombre(vector<std::string>&, int);
+	std::string obtenerNombre(const vector<std::string>&, int) const;
 	void crearAdmin();
 	pid_t crearJefe();
 	void crearGenerador();

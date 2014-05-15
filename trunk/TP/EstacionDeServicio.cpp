@@ -17,32 +17,25 @@
 
 #include "constantesArchivos.h"
 
-#define ARCH_NOMBRES "TP/nombres.jem"
-
 const std::string EstacionDeServicio::PIPE_ATENCION  = "atencion";
 const std::string EstacionDeServicio::PIPE_GENERACION  = "generacion";
 
 
-EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin){
-	cantEmpleados = empleados;
-	cantSurtidores = surtidores;
-	mediaAutos = mediaGenAutos;
-	mediaVerAdmin = mediaAdmin;
-	pidGen = 0;
-	pidAdmin = 0;
+EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin): cantEmpleados (empleados),
+		cantSurtidores (surtidores),	mediaAutos (mediaGenAutos),	mediaVerAdmin (mediaAdmin),	pidGen (0),	pidAdmin (0){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
+
 
 EstacionDeServicio::~EstacionDeServicio() {}
 
 void EstacionDeServicio::agregarNombres(vector<std::string>& nombres){
-	//FIXME: Usar bien el archivo para obtener los nombres, verificar si existe
-
-    ifstream archNombres(ARCH_NOMBRES);
+	ifstream archNombres(ARCH_NOMBRES);	//abre archivo con nombres de empleados
 
     char* name;
     string linea;
 
+    //por cada linea, se obtiene un nombre
     while (getline(archNombres, linea)) {
     	name = new char [linea.size() + 1];
     	strcpy(name, linea.c_str());
@@ -51,18 +44,19 @@ void EstacionDeServicio::agregarNombres(vector<std::string>& nombres){
     	delete name;
     }
 
-    archNombres.close();
-
+    archNombres.close(); //cierra archivo
 }
 
-std::string EstacionDeServicio::obtenerNombre(vector<std::string>& nombres, int i){
+std::string EstacionDeServicio::obtenerNombre(const vector<std::string>& nombres, int i) const{
 	std::string nombre;
 	int largo = nombres.size();
 	if(largo == 0){
 		stringstream ss;
+		//obtengo nombre numerico, la lista esta vacia
 		ss << i;
 		nombre = ss.str();
 	}else{
+		//obtengo un nombre de la lista
 		nombre = nombres.at(i%largo);
 	}
 	return nombre;
@@ -70,9 +64,10 @@ std::string EstacionDeServicio::obtenerNombre(vector<std::string>& nombres, int 
 
 bool EstacionDeServicio::crearEmpleados(){
 	vector<std::string> nombres;
-	agregarNombres(nombres);
+	agregarNombres(nombres); //obtiene los nombres desde el archivo
 	for(int i = 0; i<cantEmpleados; i++){
 		std::string nombre = obtenerNombre(nombres,i);
+		//crea al empleado con su nombre, pipes y semaforo de surtidores
 		Empleado e (nombre, generacion, atencion, surtidores);
 		log.escribirEntrada("Cree el empleado " + nombre);
 		pid_t pidEmpleado = e.atenderAutos(cantSurtidores);
@@ -107,9 +102,8 @@ void EstacionDeServicio::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
 	try{
 		pipe.cerrar();
 		log.escribirEntrada("Me desadoso del pipe " + tipo);
-	}catch(std::string &e){
-		cout << e << endl;
-		log.escribirEntrada("No se pudo desadosar de pipe " + tipo);
+	}catch(const std::string &e){
+		log.escribirEntrada("No se pudo desadosar de pipe " + tipo + ": " + e);
 	}
 }
 
@@ -174,7 +168,7 @@ int EstacionDeServicio::abrir(){
 }
 
 
-void EstacionDeServicio::esperarCierre(){
+void EstacionDeServicio::esperarCierre() const{
 	int i = cantEmpleados + 1 + 1; //Jefe + Generador de Autos
 	while (i > 0) {
 		wait(NULL);
