@@ -97,11 +97,7 @@ void Jefe::cerrarCanales(){
 }
 
 void Jefe::finalizarDia(){
-	try{
-		cerrarCanales();
-	}catch(const  std::string &e){
-		log.escribirEntrada("No fue posible cerrar correctamente todo canal de comunicacion : " + e);
-	}
+	cerrarCanales();
 
 	try{
 		cantEmpleadosDisponibles.liberar();
