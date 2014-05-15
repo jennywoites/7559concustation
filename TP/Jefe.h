@@ -20,8 +20,8 @@ class Jefe {
 private:
 	MemoriaCompartida<int> cantEmpleadosDisponibles;
 	std::string nombre;
-	int cantidadDespachada;
 	int cantidadAtendida;
+	int cantidadDespachada;
 	PipeAutos arribos;
 	PipeAutos envios;
 	Log log;
@@ -39,7 +39,7 @@ private:
 	bool hayEmpleados();
 	bool atenderUnAuto(const Auto&);
 	void mensajeDespachante(std::string );
-	void tomarEmpleado();
+	bool tomarEmpleado();
 	bool comenzarDia();
 	void finalizarDia();
 	void cerrarCanales();
