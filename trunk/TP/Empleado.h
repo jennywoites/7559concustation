@@ -47,7 +47,7 @@ public:
 
 	pid_t atenderAutos(int);
 private:
-	bool leerAuto(Auto*);
+	bool leerAuto(Auto&);
 	void atenderUnAuto(Auto&);
 	int tomarSurtidor();
 	bool devolverSurtidor(int);

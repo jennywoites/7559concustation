@@ -32,12 +32,12 @@ public:
 	virtual ~Jefe();
 
 	pid_t atenderAutos();
-	bool leerAuto(Auto*);
+	bool leerAuto(Auto&);
 
 private:
 
 	bool hayEmpleados();
-	bool atenderUnAuto(Auto&);
+	bool atenderUnAuto(const Auto&);
 	void mensajeDespachante(std::string );
 	void tomarEmpleado();
 	bool comenzarDia();
