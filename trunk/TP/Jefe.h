@@ -44,8 +44,6 @@ private:
 	void finalizarDia();
 	void cerrarCanales();
 	bool enviarAutoAEmpleado(const Auto&);
-	void printDebug(std::string);
-	void printDebug(std::string,int);
 	void cerrarPipe(PipeAutos& pipe, const std::string& tipo);
 };
 
