@@ -168,7 +168,7 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 		return id;
 	}
 
-	while(leerAuto(&autito)){
+	while(leerAuto(autito)){
 		atenderUnAuto(autito);
 	}
 
@@ -177,7 +177,7 @@ pid_t Empleado::atenderAutos(int cantidadSurtidores){
 	return id;
 }
 
-bool Empleado::leerAuto(Auto* autito){
+bool Empleado::leerAuto(Auto& autito){
 	log.escribirEntrada("Voy a leer un auto. Si no hay, me duermo.");
 	bool status = arribos.leerAuto(autito);
 	return status;

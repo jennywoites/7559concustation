@@ -27,13 +27,13 @@ Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten) {
 
 Jefe::~Jefe(){}
 
-bool Jefe::leerAuto(Auto* autito){
+bool Jefe::leerAuto(Auto& autito){
 	log.escribirEntrada("Voy a leer un auto. Si no hay, me duermo.");
 	bool status = arribos.leerAuto(autito);
 	return status;
 }
 
-bool Jefe::atenderUnAuto(Auto& autito){
+bool Jefe::atenderUnAuto(const Auto& autito){
 	log.escribirEntrada("Hay auto para ser atendido, patente " + string(autito.getPatente()));
 
 	if (!hayEmpleados()){
@@ -128,7 +128,7 @@ pid_t Jefe::atenderAutos(){
 
 	Auto autito;
 
-	while (leerAuto(&autito) and sigpipe_handler.getGracefulQuit() == 0){
+	while (leerAuto(autito) and sigpipe_handler.getGracefulQuit() == 0){
 		bool atendido = atenderUnAuto(autito);
 		if (! atendido)
 			log.escribirEntrada("No se pudo atender el auto " + autito.getPatente());
