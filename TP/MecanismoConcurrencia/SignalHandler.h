@@ -2,7 +2,6 @@
 #define SIGNALHANDLER_H_
 
 #include <signal.h>
-#include <stdio.h>
 
 #include "EventHandler.h"
 
