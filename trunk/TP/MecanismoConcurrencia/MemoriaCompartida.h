@@ -1,8 +1,6 @@
 #ifndef MemoriaCompartida_H_
 #define MemoriaCompartida_H_
 
-//#include <sys/types.h>
-//#include <sys/ipc.h>
 #include <sys/shm.h>
 #include <string.h>
 #include <iostream>
