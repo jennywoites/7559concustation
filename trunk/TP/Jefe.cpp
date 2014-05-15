@@ -15,13 +15,8 @@
 
 #include "constantesArchivos.h"
 
-Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten) {
-	nombre = n;
-	cantidadAtendida = 0;
-	cantidadDespachada = 0;
-
-	arribos = gen;
-	envios = aten;
+Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten):
+		nombre(n),	cantidadAtendida(0),	cantidadDespachada(0),	arribos(gen),	envios(aten){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
@@ -43,7 +38,8 @@ bool Jefe::atenderUnAuto(const Auto& autito){
 		return true;
 	}
 
-	tomarEmpleado();
+	if (! tomarEmpleado() )
+		return false;
 	if (! enviarAutoAEmpleado(autito) ){
 		log.escribirEntrada("El empleado no pudo recibir el auto");
 		return false;
@@ -101,7 +97,11 @@ void Jefe::cerrarCanales(){
 }
 
 void Jefe::finalizarDia(){
-	cerrarCanales();
+	try{
+		cerrarCanales();
+	}catch(const  std::string &e){
+		log.escribirEntrada("No fue posible cerrar correctamente todo canal de comunicacion : " + e);
+	}
 
 	try{
 		cantEmpleadosDisponibles.liberar();
@@ -152,13 +152,15 @@ bool Jefe::hayEmpleados(){
 	return (cant_empleados > 0);
 }
 
-void Jefe::tomarEmpleado(){
+bool Jefe::tomarEmpleado(){
 	try{
 		log.escribirEntrada("Tomo un empleado disponible.");
 		cantEmpleadosDisponibles.incrementar(-1);
 	}catch(const std::string &e){
 		log.escribirEntrada("Error al tomar empleado. " + e);
+		return false;
 	}
+	return true;
 }
 
 void Jefe::mensajeDespachante(std::string patente){
