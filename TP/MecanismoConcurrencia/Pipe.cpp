@@ -16,8 +16,6 @@ void Pipe :: crear() {
 		std::string mensaje = std::string("Error en pipe(): ") + std::string(strerror(errno));
 		throw mensaje;
 	}
-	/*fcntl ( this->descriptors[0],F_SETFL,O_NONBLOCK );
-	fcntl ( this->descriptors[1],F_SETFL,O_NONBLOCK );*/
 }
 
 Pipe::~Pipe() {
@@ -43,6 +41,7 @@ void Pipe :: setearModo ( const int modo ) {
 
 ssize_t Pipe :: escribir ( const void* dato,int datoSize ) {
 	if ( this->lectura == true ) {
+		//si escribi, se cierra la lectura
 		cerrarFd(LECTURA);
 		this->lectura = false;
 	}
@@ -57,6 +56,7 @@ ssize_t Pipe :: escribir ( const void* dato,int datoSize ) {
 
 ssize_t Pipe :: leer ( void* buffer,const int buffSize ) {
 	if ( this->escritura == true ) {
+		//si lei, se cierra la escritura
 		cerrarFd(ESCRITURA);
 		this->escritura = false;
 	}
