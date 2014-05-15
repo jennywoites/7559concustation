@@ -39,7 +39,7 @@ public:
 
 private:
 	void mensajeInterno(std::string);
-	bool permiteEntrada();
+	bool permiteEntrada() const;
 };
 
 #endif /* LOG_H_ */
