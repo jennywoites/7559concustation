@@ -79,7 +79,7 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 			case 's':
 				if (strcmp(optarg,"-")!=0){
 					*cantSurtidores = atoi(optarg);
-					if(*cantSurtidores <= 0)
+					if(*cantSurtidores <= 0 or *cantSurtidores>256)
 						return OPC_ERROR_SURTI;
 				}
 				break;
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]){
 			cout << "Parametros no validos. Intente nuevamente" << endl;
 			break;
 		case OPC_ERROR_SURTI:
-			cout << "Cantidad de Surtidores no valida, debe ser mayor a 0" << endl;
+			cout << "Cantidad de Surtidores no valida, debe estar entre 1 y 256" << endl;
 			break;
 		case OPC_ERROR_TIEMPO:
 			cout << "Tiempo no valido, debe ser mayor a 0" << endl;
