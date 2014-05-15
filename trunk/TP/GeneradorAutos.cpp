@@ -95,6 +95,7 @@ pid_t GeneradorAutos::generar(){
 	while (sigint_handler.getGracefulQuit() == 0 and sigpipe_handler.getGracefulQuit() == 0 ) {
 		Auto autito;
 		log.escribirEntrada("creado el auto: " + autito.getPatente() + ", numero " , numAuto);
+		cout << "Se ha generado el auto de patente " + autito.getPatente() << endl;
 
 		if(! envios.escribirAuto(autito)){
 			log.escribirEntrada("se cerro mi lector inesperadamente");

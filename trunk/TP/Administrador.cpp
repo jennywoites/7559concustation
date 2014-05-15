@@ -68,7 +68,7 @@ void Administrador::pensar(){
 void Administrador::imprimirDinero(){
 	stringstream ss;
 	ss << plataVista;
-	cout << "El administrador fue a la caja, vio " + ss.str()  << endl;
+	cout << "El administrador fue a la caja, vio $" + ss.str()  << endl;
 }
 
 void Administrador::mirarDinero(){

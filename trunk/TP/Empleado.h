@@ -22,7 +22,7 @@ using namespace std;
 
 class Empleado {
 private:
-	static const float PRECIO_POR_LITRO = 10.07; //Precio YPF.... lloremos cada vez que aumentemos
+	static const float PRECIO_POR_LITRO = 10.07; //Precio YPF
 
 	std::string nombre;
 	int cantidadAtendidos;
