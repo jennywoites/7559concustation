@@ -74,7 +74,9 @@ void Administrador::imprimirDinero(){
 
 void Administrador::mirarDinero(){
 	log.escribirEntrada("Voy a la caja");
+	caja.lectorQuiereUsar();
 	float plata_actual = caja.verMonto();
+	caja.lectorDeja();
 	if (plataVista != plata_actual){
 		plataVista = plata_actual;
 		log.escribirEntrada("Hay mas plata! ahora hay $", plata_actual);

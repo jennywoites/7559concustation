@@ -42,7 +42,9 @@ void Empleado::atenderUnAuto(Auto& autito){
 	}
 	float plata = litros * PRECIO_POR_LITRO;
 	log.escribirEntrada("Deposito en caja $", plata);
+	caja.escritorQuiereUsar();
 	caja.depositar(plata);
+	caja.escritorDeja();
 	log.escribirEntrada("Ya deposite!");
 
 	log.escribirEntrada("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
