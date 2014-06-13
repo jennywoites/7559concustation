@@ -41,8 +41,9 @@ void Empleado::atenderUnAuto(Auto& autito){
 		log.escribirEntrada("No pude devolver el surtidor!! nos quedamos sin el surtidor numero ",surtidor);
 	}
 	float plata = litros * PRECIO_POR_LITRO;
-	caja.depositar(plata);
 	log.escribirEntrada("Deposito en caja $", plata);
+	caja.depositar(plata);
+	log.escribirEntrada("Ya deposite!");
 
 	log.escribirEntrada("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
 	autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
