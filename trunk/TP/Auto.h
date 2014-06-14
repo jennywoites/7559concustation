@@ -30,6 +30,13 @@ class Auto {
 
 	public:
 
+		struct auto_t{
+			long mtype;
+			std::string patente_auto;
+			int capacidad;
+			bool estaLleno;
+		};
+
 		//se serializa con chars
 		static const int LONG_SERIE = ((LARGO_SERIE + 1) * sizeof(char));
 
@@ -47,6 +54,8 @@ class Auto {
 		std::string serializar() const;	//obtener en forma de bytes
 		void deserializar(const std::string&);	//reconstruir a partir de bytes
 		void imprimir() const;
+		void reconstruir(struct auto_t);
+		//struct auto_t obtenerEstructura(long);
 
 	private:
 		int generarTanqueRandom() const;
