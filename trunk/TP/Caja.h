@@ -28,6 +28,7 @@ public:
 	void lectorDeja();
 	void escritorQuiereUsar();
 	void escritorDeja();
+	void eliminar();
 };
 
 #endif /* CAJA_H_ */

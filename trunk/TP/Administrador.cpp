@@ -57,6 +57,7 @@ void Administrador::finalizarDia(){
 	destruir();
 	cout << "\033[1;33m" << "Administrador se va a su casa." << "\033[0m" << endl;
 	log.escribirEntrada("Dejo de revisar caja, cierro Proceso correctamente.");
+	caja.eliminar();
 }
 void Administrador::pensar(){
 	//espera intervalos de tiempo para revisar la caja
