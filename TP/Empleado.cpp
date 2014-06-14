@@ -43,6 +43,7 @@ void Empleado::atenderUnAuto(Auto& autito){
 	float plata = litros * PRECIO_POR_LITRO;
 	log.escribirEntrada("Deposito en caja $", plata);
 	caja.escritorQuiereUsar();
+	//sleep(1); <-- para ver la sincronizacion
 	caja.depositar(plata);
 	caja.escritorDeja();
 	log.escribirEntrada("Ya deposite!");
