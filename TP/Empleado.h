@@ -33,12 +33,13 @@ private:
 	Semaforo accesoSurtidores;
 	std::vector< MemoriaCompartida<bool> > surtidores;
 	Log log;
+	int tiempoDeposito;
 
 	static const bool USO = true;	//de surtidor
 	static const bool DESUSO = false;	//al devolver un surtidor
 
 public:
-	Empleado(std::string, const PipeAutos&, const PipeAutos&, const Semaforo&);
+	Empleado(std::string, const PipeAutos&, const PipeAutos&, const Semaforo&, int tiempoCaja);
 	virtual ~Empleado();
 
 	pid_t atenderAutos(int);
@@ -48,6 +49,7 @@ private:
 	int tomarSurtidor();
 	bool devolverSurtidor(int);
 	bool comenzarDia();
+	void depositarDinero(float);
 	void finalizarDia();
 	void cierreDeCaja();
 	bool crearSurtidores(int);

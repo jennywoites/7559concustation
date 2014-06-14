@@ -22,7 +22,10 @@ const std::string EstacionDeServicio::PIPE_GENERACION  = "generacion";
 
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin): cantEmpleados (empleados),
-		cantSurtidores (surtidores),	mediaAutos (mediaGenAutos),	mediaVerAdmin (mediaAdmin),	pidGen (0),	pidAdmin (0), cantHijos(0){
+	cantSurtidores (surtidores),
+	mediaAutos (mediaGenAutos),
+	mediaVerAdmin (mediaAdmin),
+	pidGen (0),	pidAdmin (0), cantHijos(0){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
@@ -55,7 +58,7 @@ std::string EstacionDeServicio::obtenerNombre(const vector<std::string>& nombres
 	return nombre;
 }
 
-bool EstacionDeServicio::crearEmpleados(){
+bool EstacionDeServicio::crearEmpleados(int tiempo){
 	vector<std::string> nombres;
 	agregarNombres(nombres); //obtiene los nombres desde el archivo
 	pid_t pidEmpleado;
@@ -65,7 +68,7 @@ bool EstacionDeServicio::crearEmpleados(){
 
 		//crea al empleado con su nombre, pipes y semaforo de surtidores
 		try{
-			Empleado e (nombre, generacion, atencion, surtidores);
+			Empleado e (nombre, generacion, atencion, surtidores, tiempo);
 			log.escribirEntrada("Cree el empleado " + nombre);
 			pidEmpleado = e.atenderAutos(cantSurtidores);
 		}catch(const std::string &e){
@@ -127,7 +130,7 @@ void EstacionDeServicio::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
 	}
 }
 
-int EstacionDeServicio::abrir(){
+int EstacionDeServicio::abrir(int tiempoCaja){
 	Log::setModo(Log::MODO_DEBUG);
 	log.mensajeApertura();
 	log.setEscritor("Estacion de Servicio");
@@ -161,7 +164,7 @@ int EstacionDeServicio::abrir(){
 		return ERROR;
 	}
 
-	bool soyHijo = crearEmpleados();
+	bool soyHijo = crearEmpleados(tiempoCaja);
 	if (soyHijo)
 		return SOY_HIJO;
 

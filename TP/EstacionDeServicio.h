@@ -41,7 +41,7 @@ private:
 
 private:
 
-	bool crearEmpleados();
+	bool crearEmpleados(int);
 	void esperarCierre();
 	void agregarNombres(vector<std::string>&);
 	std::string obtenerNombre(const vector<std::string>&, int) const;
@@ -62,7 +62,7 @@ public:
 	EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin);
 	virtual ~EstacionDeServicio();
 
-	int abrir();
+	int abrir(int tiempoCaja);
 	void cerrar();
 };
 

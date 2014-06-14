@@ -17,6 +17,7 @@
 #define MEDIA_AUTOS 100000
 #define MEDIA_ADMIN 250000
 #define TIEMPO_SIMULACION 3
+#define TIEMPO_ESPERA_EN_CAJA 1
 #define OPC_ERROR -1
 #define OPC_ERROR_SURTI -2
 #define OPC_ERROR_TIEMPO -3
@@ -35,6 +36,7 @@ void imprimir_ayuda(){
 	cout << "-g --genautos  Define media de generacion de autos." << endl;
 	cout << "-a --veradmin  Define media de visita de administrador a la caja." << endl;
 	cout << "-t --tiempo Define el tiempo que la estacion se econtrara abierta." << endl;
+	cout << "-c --tiempoCaja Define el tiempo que demoran en depositar el dinero en la caja." << endl;
 }
 
 //imprime la version del programa al stdout
@@ -49,12 +51,13 @@ void imprimir_version(){
 }
 
 
-int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpleados, int* mediaAutos, int* mediaAdmin, int* tiempo){
+int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpleados, int* mediaAutos, int* mediaAdmin, int* tiempo, int * tiempoCaja){
 	*cantSurtidores = SURTIDORES;
 	*cantEmpleados = EMPLEADOS;
 	*mediaAutos = MEDIA_AUTOS;
 	*mediaAdmin = MEDIA_ADMIN;
 	*tiempo = TIEMPO_SIMULACION;
+	*tiempoCaja = TIEMPO_ESPERA_EN_CAJA;
 
 	//struct de lineas de comando
 	struct option opciones[]={
@@ -65,12 +68,13 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 		{"genautos",required_argument,NULL,'g'},
 		{"veradmin",required_argument,NULL,'a'},
 		{"tiempo",required_argument,NULL,'t'},
+		{"tiempoCaja",required_argument,NULL,'c'},
 		{0,0,0,0}
 	};
 
 	char caracter;
 	//mientras haya opciones las lee y las procesa
-	while ((caracter = (getopt_long(argc,argv,"hvs:e:g:a:t:",opciones,NULL)))!=-1){
+	while ((caracter = (getopt_long(argc,argv,"hvs:e:g:a:t:c:",opciones,NULL)))!=-1){
 		switch(caracter){
 			case 'h'://help
 				return OPC_IMPRIMIR_AYUDA;
@@ -104,11 +108,17 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 						return OPC_ERROR_NUM;
 				}
 				break;
-
 			case 't':
 				if (strcmp(optarg,"-")!=0){
 					*tiempo = atoi(optarg);
 					if(*tiempo <= 0)
+						return OPC_ERROR_TIEMPO;
+				}
+				break;
+			case 'c':
+				if (strcmp(optarg,"-")!=0){
+					*tiempoCaja = atoi(optarg);
+					if(*tiempoCaja < 0)
 						return OPC_ERROR_TIEMPO;
 				}
 				break;
@@ -119,9 +129,9 @@ int parsearParametros(char* argv[], int argc, int* cantSurtidores, int* cantEmpl
 	return OPC_EXEC;
 }
 
-void atender(int cantSurtidores, int cantEmpleados, int mediaAutos, int mediaAdmin, int tiempo){
+void atender(int cantSurtidores, int cantEmpleados, int mediaAutos, int mediaAdmin, int tiempo, int tiempoCaja){
 	EstacionDeServicio concuStation (cantEmpleados, cantSurtidores, mediaAutos, mediaAdmin);
-	int estadoApertura = concuStation.abrir();
+	int estadoApertura = concuStation.abrir(tiempoCaja);
 
 	if(estadoApertura == EstacionDeServicio::SOY_HIJO) return;
 
@@ -136,14 +146,14 @@ void atender(int cantSurtidores, int cantEmpleados, int mediaAutos, int mediaAdm
 }
 
 int main(int argc, char* argv[]){
-	int cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin,tiempo;
+	int cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin,tiempo, tiempoCaja;
 
-	int opcion = parsearParametros(argv, argc, &cantSurtidores, &cantEmpleados, &mediaAutos, &mediaAdmin, &tiempo);
+	int opcion = parsearParametros(argv, argc, &cantSurtidores, &cantEmpleados, &mediaAutos, &mediaAdmin, &tiempo, &tiempoCaja);
 
 	switch (opcion){
 		case OPC_EXEC:	//caso ejecucion del proyecto
 			try{
-				atender(cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin,tiempo);
+				atender(cantSurtidores, cantEmpleados, mediaAutos, mediaAdmin,tiempo,tiempoCaja);
 			}catch(const std::string &e){
 				cerr << "No pudo abrirse el Log: " + e << endl;
 			}
