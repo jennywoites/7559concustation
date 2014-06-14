@@ -64,7 +64,6 @@ bool Caja::abrir(){
 
 void Caja::lectorQuiereUsar(){
 	hay_lector.escribir(true);
-
 	escritores.wait();
 }
 
@@ -75,10 +74,10 @@ void Caja::lectorDeja(){
 
 void Caja::escritorQuiereUsar(){
 	escritores.wait();
-
+	//sleep(1); --> sleep para ver que la prioridad existe...
 	//si cuando me dan a mi la caja veo que el administrador esta en la caja, y vuelvo a la cola
 	while (hay_lector.leer()){
-		cout << "Empleado: viene el administrador, asi que me vuelvo para la fila!";
+		cout << "Empleado: viene el administrador, asi que me vuelvo para la fila!" << endl;
 		escritores.signal();
 		escritores.wait();
 	}
@@ -86,4 +85,8 @@ void Caja::escritorQuiereUsar(){
 
 void Caja::escritorDeja(){
 	escritores.signal();
+}
+
+void Caja::eliminar(){
+	escritores.eliminar();
 }
