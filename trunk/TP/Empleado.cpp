@@ -16,8 +16,11 @@
 const bool Empleado::USO;
 const bool Empleado::DESUSO;
 
-Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAutos& atencion, const Semaforo& semaforo) :
-	nombre (name),	cantidadAtendidos (0),	arribos (atencion),	generacion (generacion),	accesoSurtidores(semaforo) {
+Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAutos& atencion, const Semaforo& semaforo, int tiempoCaja) :
+	nombre (name), cantidadAtendidos (0),
+	arribos (atencion),	generacion (generacion),
+	accesoSurtidores(semaforo),
+	tiempoDeposito(tiempoCaja){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
 
@@ -40,16 +43,22 @@ void Empleado::atenderUnAuto(Auto& autito){
 	}else{
 		log.escribirEntrada("No pude devolver el surtidor!! nos quedamos sin el surtidor numero ",surtidor);
 	}
-	float plata = litros * PRECIO_POR_LITRO;
+
+	float monto = litros * PRECIO_POR_LITRO;
+	depositarDinero(monto);
+
+	log.escribirEntrada("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
+	autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
+}
+
+void Empleado::depositarDinero(float plata){
 	log.escribirEntrada("Deposito en caja $", plata);
 	caja.escritorQuiereUsar();
-	//sleep(1); <-- para ver la sincronizacion
+	sleep(tiempoDeposito); // <-- para ver la sincronizacion
 	caja.depositar(plata);
 	caja.escritorDeja();
 	log.escribirEntrada("Ya deposite!");
 
-	log.escribirEntrada("Termine de atender el auto, cuya patente es " + string(autito.getPatente()));
-	autito.imprimir(); //Imprimo los datos del auto que fue atendido satisfactoriamente
 }
 
 /* incrementa en 1 el numero de empleados disponibles. Si esta activo el flag, se crea la memoria compartida */
