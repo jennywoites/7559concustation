@@ -40,8 +40,6 @@ float Caja::verMonto() const{
 bool Caja::cerrar(){
 	try{
 		plata.liberar();
-		hay_lector.liberar();
-
 	}catch(const std::string &e){
 		cerr << "No fue posible liberar la caja. " << e << endl;
 		return false;
@@ -52,7 +50,7 @@ bool Caja::cerrar(){
 bool Caja::abrir(){
 	try{
 		plata.crear(ARCHIVO_CAJA, CAJA);
-		hay_lector.crear(ARCHIVO_CAJA, CAJA+1); //se inicializa en 0?
+		vip.crear(ARCHIVO_CAJA, CAJA+1, 1);
 		escritores.crear(ARCHIVO_CAJA, CAJA+2, 1);
 	}catch(std::string &e){
 		cerr << "No es posible abrir la caja. " << e << endl;
@@ -63,30 +61,24 @@ bool Caja::abrir(){
 
 
 void Caja::lectorQuiereUsar(){
-	hay_lector.escribir(true);
-	escritores.wait();
+	vip.wait();
 }
 
 void Caja::lectorDeja(){
-	hay_lector.escribir(false);
-	escritores.signal();
+	vip.signal();
 }
 
 void Caja::escritorQuiereUsar(){
 	escritores.wait();
-	//sleep(1); --> sleep para ver que la prioridad existe...
-	//si cuando me dan a mi la caja veo que el administrador esta en la caja, y vuelvo a la cola
-	while (hay_lector.leer()){
-		cout << "Empleado: viene el administrador, asi que me vuelvo para la fila!" << endl;
-		escritores.signal();
-		escritores.wait();
-	}
+	vip.wait();
 }
 
 void Caja::escritorDeja(){
+	vip.signal();
 	escritores.signal();
 }
 
 void Caja::eliminar(){
 	escritores.eliminar();
+	vip.eliminar();
 }

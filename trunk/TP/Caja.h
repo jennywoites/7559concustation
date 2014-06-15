@@ -13,8 +13,8 @@
 class Caja {
 private:
 	MemoriaCompartida<float> plata;
-	MemoriaCompartida<bool> hay_lector; // lo implementamos como bool porque solo hay un lector
 	Semaforo escritores;  //nota: con este semaforo queda al pedo el semaforo de la memoria compartida
+	Semaforo vip;
 
 public:
 	Caja();
