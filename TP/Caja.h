@@ -14,7 +14,6 @@ class Caja {
 private:
 	MemoriaCompartida<float> plata;
 	Semaforo escritores;  //nota: con este semaforo queda al pedo el semaforo de la memoria compartida
-	Semaforo vip;
 
 public:
 	Caja();

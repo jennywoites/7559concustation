@@ -50,7 +50,6 @@ bool Caja::cerrar(){
 bool Caja::abrir(){
 	try{
 		plata.crear(ARCHIVO_CAJA, CAJA);
-		vip.crear(ARCHIVO_CAJA, CAJA+1, 1);
 		escritores.crear(ARCHIVO_CAJA, CAJA+2, 1);
 	}catch(std::string &e){
 		cerr << "No es posible abrir la caja. " << e << endl;
@@ -61,24 +60,19 @@ bool Caja::abrir(){
 
 
 void Caja::lectorQuiereUsar(){
-	vip.wait();
 }
 
 void Caja::lectorDeja(){
-	vip.signal();
 }
 
 void Caja::escritorQuiereUsar(){
 	escritores.wait();
-	vip.wait();
 }
 
 void Caja::escritorDeja(){
-	vip.signal();
 	escritores.signal();
 }
 
 void Caja::eliminar(){
 	escritores.eliminar();
-	vip.eliminar();
 }
