@@ -45,7 +45,7 @@ bool ColaAutos :: leerAuto ( Auto& autito ) {
 }
 
 bool ColaAutos :: escribirAuto ( const Auto& autito ) {
-	const Auto::auto_t serie = autito.obtenerEstructura(5);
+	const Auto::auto_t serie = autito.obtenerEstructura();
 	ssize_t escrito;
 	try{
 		escrito = envio.escribir(serie);
