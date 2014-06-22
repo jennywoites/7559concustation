@@ -19,8 +19,10 @@ class Auto {
 		static const unsigned int CANTIDAD_LETRAS = 3;
 		static const unsigned int CANTIDAD_NUMEROS = 3;
 		static const unsigned int CAR_TANQUE = 2; //El tanque tiene dos caracteres para definir la capacidad
+		static const unsigned int CAR_PRIO = 1; //La prioridad tiene un caracter
 		static const unsigned int CANTIDAD_BOOL = 1;
-		static const unsigned int LARGO_SERIE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + CAR_TANQUE + CANTIDAD_BOOL + 2; //2: cantidad de separadores
+		static const unsigned int LARGO_PATENTE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + 1;
+		static const unsigned int LARGO_SERIE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + CAR_TANQUE + CAR_PRIO + CANTIDAD_BOOL + 2; //2: cantidad de separadores
 
 		static const int CAPACIDAD_MIN = 10;
 		static const int CAPACIDAD_MAX = 90;
@@ -31,9 +33,12 @@ class Auto {
 
 	public:
 
+		static const int PRIOR_MIN = 1;
+		static const int PRIOR_MAX = 2;
+
 		struct auto_t{
 			long mtype;
-			std::string patente_auto;
+			char patente_auto[LARGO_PATENTE];
 			int capacidad;
 			bool estaLleno;
 		};
@@ -49,6 +54,8 @@ class Auto {
 		/*Devuelve la patente del auto*/
 		std::string getPatente() const;
 
+		long getPrioridad() const;
+
 		/*Llena el tanque del auto, informando cuanto se lleno. Esto demora un cierto tiempo.*/
 		int llenar();
 
@@ -60,6 +67,7 @@ class Auto {
 
 	private:
 		int generarTanqueRandom() const;
+		long generarPrioridadRandom() const;
 		std::string generarPatenteRandom() const;
 };
 
