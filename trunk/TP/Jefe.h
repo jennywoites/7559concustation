@@ -11,6 +11,7 @@
 #include "Auto.h"
 #include "MecanismoConcurrencia/MemoriaCompartida.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
+#include "MecanismoConcurrencia/ColaAutos.h"
 #include "MecanismoConcurrencia/SIGPIPE_Handler.h"
 #include "MecanismoConcurrencia/SignalHandler.h"
 #include "Log.h"
@@ -22,13 +23,13 @@ private:
 	std::string nombre;
 	int cantidadAtendida;
 	int cantidadDespachada;
-	PipeAutos arribos;
+	ColaAutos arribos;
 	PipeAutos envios;
 	Log log;
 	SIGPIPE_Handler sigpipe_handler;
 
 public:
-	Jefe(std::string, const PipeAutos&, const PipeAutos&);
+	Jefe(std::string, const ColaAutos&, const PipeAutos&);
 	virtual ~Jefe();
 
 	pid_t atenderAutos();
@@ -38,7 +39,7 @@ private:
 
 	bool hayEmpleados();
 	bool atenderUnAuto(const Auto&);
-	void mensajeDespachante(std::string );
+	void mensajeDespachante(const Auto& );
 	bool tomarEmpleado();
 	bool comenzarDia();
 	void finalizarDia();

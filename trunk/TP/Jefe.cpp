@@ -9,13 +9,14 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <sstream>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "constantesArchivos.h"
 
-Jefe::Jefe(std::string n, const PipeAutos& gen, const PipeAutos& aten):
+Jefe::Jefe(std::string n, const ColaAutos& gen, const PipeAutos& aten):
 		nombre(n),	cantidadAtendida(0),	cantidadDespachada(0),	arribos(gen),	envios(aten){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
@@ -35,7 +36,7 @@ bool Jefe::atenderUnAuto(const Auto& autito){
 	if (!hayEmpleados()){
 		cantidadDespachada++;
 		log.escribirEntrada("La cantidad de autos despachados es de: ", cantidadDespachada);
-		mensajeDespachante(autito.getPatente());
+		mensajeDespachante(autito);
 		return true;
 	}
 
@@ -55,7 +56,6 @@ bool Jefe::comenzarDia(){
 	log.setEscritor("Jefe " + nombre);
 
 	try{
-		arribos.setearModo(Pipe::LECTURA);
 		envios.setearModo(Pipe::ESCRITURA);
 	}catch (const std::string &e){
 		log.escribirEntrada("No pude setear modos de comunicacion en Pipes: " + e);
@@ -94,7 +94,6 @@ void Jefe::cerrarPipe(PipeAutos& pipe, const std::string& tipo){
 }
 
 void Jefe::cerrarCanales(){
-	cerrarPipe(arribos, "generacion");
 	cerrarPipe(envios, "atencion");
 }
 
@@ -164,9 +163,15 @@ bool Jefe::tomarEmpleado(){
 	return true;
 }
 
-void Jefe::mensajeDespachante(std::string patente){
-	log.escribirEntrada("Se ha despachado al auto de patente " + patente + " por no haber empleados libres");
-	cout << "\033[1;32m" << "Jefe ha despachado al auto de patente " + patente + " por no haber empleados libres" + "\033[0m" << endl;
+void Jefe::mensajeDespachante(const Auto& autito){
+	std::string mensaje  = "Se ha despachado al auto de patente ";
+	mensaje += autito.getPatente() + " y prioridad ";
+	stringstream ss;
+	ss << autito.getPrioridad();
+	mensaje += ss.str();
+	mensaje += " por no haber empleados libres";
+	log.escribirEntrada(mensaje);
+	cout << "\033[1;32mJefe: " << mensaje << "\033[0m" << endl;
 }
 
 bool Jefe::enviarAutoAEmpleado(const Auto& autito){
