@@ -104,14 +104,14 @@ void Auto::deserializar(const std::string& serial){
 	free(serie);
 }
 
-/*struct auto_t Auto::obtenerEstructura(long tipo){
+Auto::auto_t Auto::obtenerEstructura(long tipo){
 	struct auto_t estructura;
 	estructura.capacidad = capacidadTanque;
 	estructura.estaLleno = lleno;
 	estructura.patente_auto = patente;
 	estructura.mtype = tipo;
 	return estructura;
-}*/
+}
 
 void Auto::reconstruir(struct auto_t autito){
 	capacidadTanque = autito.capacidad;
