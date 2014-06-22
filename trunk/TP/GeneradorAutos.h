@@ -9,7 +9,7 @@
 #define GENERADORAUTOS_H_
 
 #include "Auto.h"
-#include "MecanismoConcurrencia/PipeAutos.h"
+#include "MecanismoConcurrencia/ColaAutos.h"
 #include "MecanismoConcurrencia/SIGINT_Handler.h"
 #include "MecanismoConcurrencia/SIGPIPE_Handler.h"
 #include "MecanismoConcurrencia/SignalHandler.h"
@@ -19,13 +19,13 @@ class GeneradorAutos {
 private:
 	float media; //en tiempo, de generacion
 	int numAuto;
-	PipeAutos envios;
+	ColaAutos envios;
 	SIGINT_Handler sigint_handler;
 	SIGPIPE_Handler sigpipe_handler;
 	Log log;
 
 public:
-	GeneradorAutos(float media, const PipeAutos&);
+	GeneradorAutos(float media, const ColaAutos&);
 	virtual ~GeneradorAutos();
 
 	pid_t generar();
@@ -35,6 +35,7 @@ private:
 	void finalizarDia();
 	void cerrarPipe();
 	void destruir();
+	std::string mensajeCreacion(const Auto& autito);
 
 };
 
