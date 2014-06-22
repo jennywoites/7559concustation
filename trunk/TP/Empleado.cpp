@@ -16,9 +16,9 @@
 const bool Empleado::USO;
 const bool Empleado::DESUSO;
 
-Empleado::Empleado(std::string name, const PipeAutos& generacion, const PipeAutos& atencion, const Semaforo& semaforo, int tiempoCaja) :
+Empleado::Empleado(std::string name, const PipeAutos& atencion, const Semaforo& semaforo, int tiempoCaja) :
 	nombre (name), cantidadAtendidos (0),
-	arribos (atencion),	generacion (generacion),
+	arribos (atencion),
 	accesoSurtidores(semaforo),
 	tiempoDeposito(tiempoCaja){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
@@ -79,8 +79,6 @@ bool Empleado::indicarDisponible(bool crear){
 bool Empleado::comenzarDia(){
 	log.setEscritor("Empleado " + nombre);
 	log.escribirEntrada("Se ha iniciado el Proceso.");
-
-	cerrarPipe(generacion, "generacion");
 
 	bool abriCaja = caja.abrir();
 	if(!abriCaja){

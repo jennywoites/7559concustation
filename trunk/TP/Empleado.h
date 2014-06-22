@@ -29,7 +29,6 @@ private:
 	MemoriaCompartida<int> disponibilidad;
 	Caja caja;	//donde deposito el dinero obtenido
 	PipeAutos arribos;	//llegan los autos a atender
-	PipeAutos generacion;
 	Semaforo accesoSurtidores;
 	std::vector< MemoriaCompartida<bool> > surtidores;
 	Log log;
@@ -39,7 +38,7 @@ private:
 	static const bool DESUSO = false;	//al devolver un surtidor
 
 public:
-	Empleado(std::string, const PipeAutos&, const PipeAutos&, const Semaforo&, int tiempoCaja);
+	Empleado(std::string, const PipeAutos&, const Semaforo&, int tiempoCaja);
 	virtual ~Empleado();
 
 	pid_t atenderAutos(int);
