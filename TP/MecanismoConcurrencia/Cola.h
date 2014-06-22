@@ -6,6 +6,7 @@
 #include <sys/ipc.h>
 #include <stdio.h>
 #include <string>
+#include <string.h>
 #include <errno.h>
 
 using namespace std;
@@ -16,14 +17,19 @@ template <class T> class Cola {
 		int	id;
 
 	public:
-		Cola ( const std::string& archivo,const char letra );
+		Cola ();
 		~Cola();
+		void crear(const std::string& archivo,const char letra);
 		int escribir ( const T& dato ) const;
 		int leer ( const int tipo,T* buffer ) const;
 		int destruir () const;
 };
 
-template <class T> Cola<T> :: Cola ( const std::string& archivo,const char letra ) {
+template <class T> Cola<T> :: Cola(): clave(0), id(0) {
+}
+
+
+template <class T> void Cola<T> :: crear (const std::string& archivo,const char letra) {
 	this->clave = ftok ( archivo.c_str(),letra );
 	if ( this->clave == -1 ){
 		std::string mensaje = std::string("Error en ftok() de Cola: ") + std::string(strerror(errno));
@@ -35,7 +41,6 @@ template <class T> Cola<T> :: Cola ( const std::string& archivo,const char letra
 		std::string mensaje = std::string("Error en msgget(): ") + std::string(strerror(errno));
 		throw mensaje;
 	}
-
 }
 
 template <class T> Cola<T> :: ~Cola () {}
