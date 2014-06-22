@@ -30,14 +30,13 @@ bool ColaAutos :: leerAuto ( Auto& autito ) {
 
 	ssize_t leido;
 	try{
-		//FIXME
-		leido = envio.leer(-10, &serie);
+		leido = envio.leer(-1*Auto::PRIOR_MAX, &serie);
 	}catch(const std::string &e){
-		cerr << "No pudo leerse auto desde el Cola: " + e << endl;
+		cerr << "No pudo leerse auto desde Cola: " + e << endl;
 		return false;
 	}
 
-	if (leido != sizeof(Auto::auto_t))
+	if (leido + sizeof(long) != sizeof(Auto::auto_t))
 		return false;
 
 	autito.reconstruir(serie);
@@ -50,10 +49,10 @@ bool ColaAutos :: escribirAuto ( const Auto& autito ) {
 	try{
 		escrito = envio.escribir(serie);
 	}catch(const std::string &e){
-		cerr << "No pudo escribirse auto hacia el Cola: " + e << endl;
+		cerr << "No pudo escribirse auto hacia Cola: " + e << endl;
 		return false;
 	}
-	return (escrito == Auto::LONG_SERIE);
+	return (escrito == 0);
 }
 
 void ColaAutos::liberar(){
