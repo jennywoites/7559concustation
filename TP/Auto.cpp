@@ -25,12 +25,14 @@ using namespace std;
 Auto::Auto():
 	patente ( generarPatenteRandom() ),
 	capacidadTanque ( generarTanqueRandom() ),
-	lleno (false) {}
+	lleno (false),
+	prioridad(1){}
 
-Auto::Auto(std::string patente, int capacidad):
+Auto::Auto(std::string patente, int capacidad, long priority=1):
 	patente(patente),
 	capacidadTanque(capacidad),
-	lleno(false) {}
+	lleno(false),
+	prioridad(priority){}
 
 void Auto::imprimir() const{
 	cout << "\033[1;34m" << "Se atendio el auto, cuya patente es: " + patente +  ". Se le cargaron " << capacidadTanque << " litros." << "\033[0m" << endl;
@@ -104,12 +106,12 @@ void Auto::deserializar(const std::string& serial){
 	free(serie);
 }
 
-Auto::auto_t Auto::obtenerEstructura(long tipo){
+Auto::auto_t Auto::obtenerEstructura() const{
 	struct auto_t estructura;
 	estructura.capacidad = capacidadTanque;
 	estructura.estaLleno = lleno;
 	estructura.patente_auto = patente;
-	estructura.mtype = tipo;
+	estructura.mtype = prioridad;
 	return estructura;
 }
 
@@ -117,4 +119,5 @@ void Auto::reconstruir(struct auto_t autito){
 	capacidadTanque = autito.capacidad;
 	lleno = autito.estaLleno;
 	patente = autito.patente_auto;
+	prioridad = autito.mtype;
 }

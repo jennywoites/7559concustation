@@ -14,6 +14,7 @@ class Auto {
 		std::string patente;
 		int capacidadTanque;
 		bool lleno;
+		long prioridad;
 
 		static const unsigned int CANTIDAD_LETRAS = 3;
 		static const unsigned int CANTIDAD_NUMEROS = 3;
@@ -42,7 +43,7 @@ class Auto {
 
 		/*Crea auto con patente aleatoria, y tanque aleatorio*/
 		Auto();
-		Auto(std::string, int);
+		Auto(std::string, int, long);
 		virtual ~Auto();
 
 		/*Devuelve la patente del auto*/
@@ -55,7 +56,7 @@ class Auto {
 		void deserializar(const std::string&);	//reconstruir a partir de bytes
 		void imprimir() const;
 		void reconstruir(struct auto_t);
-		auto_t obtenerEstructura(long);
+		auto_t obtenerEstructura() const;
 
 	private:
 		int generarTanqueRandom() const;
