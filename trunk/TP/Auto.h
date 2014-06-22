@@ -55,7 +55,7 @@ class Auto {
 		void deserializar(const std::string&);	//reconstruir a partir de bytes
 		void imprimir() const;
 		void reconstruir(struct auto_t);
-		//struct auto_t obtenerEstructura(long);
+		auto_t obtenerEstructura(long);
 
 	private:
 		int generarTanqueRandom() const;
