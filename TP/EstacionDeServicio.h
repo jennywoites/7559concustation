@@ -16,6 +16,7 @@
 #include "Administrador.h"
 #include "GeneradorAutos.h"
 #include "MecanismoConcurrencia/PipeAutos.h"
+#include "MecanismoConcurrencia/ColaAutos.h"
 #include "MecanismoConcurrencia/Semaforo.h"
 #include "Log.h"
 
@@ -32,12 +33,12 @@ private:
 	int cantHijos;
 	Caja caja;
 	PipeAutos atencion;
-	PipeAutos generacion;
+	ColaAutos generacion;
 	Semaforo surtidores;
 	Log log;
 
 	static const std::string PIPE_ATENCION;
-	static const std::string PIPE_GENERACION;
+	static const std::string COLA_GENERACION;
 
 private:
 
