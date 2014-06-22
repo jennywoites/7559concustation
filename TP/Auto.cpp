@@ -26,7 +26,7 @@ Auto::Auto():
 	patente ( generarPatenteRandom() ),
 	capacidadTanque ( generarTanqueRandom() ),
 	lleno (false),
-	prioridad(1){}
+	prioridad(generarPrioridadRandom()){}
 
 Auto::Auto(std::string patente, int capacidad, long priority=1):
 	patente(patente),
@@ -35,13 +35,17 @@ Auto::Auto(std::string patente, int capacidad, long priority=1):
 	prioridad(priority){}
 
 void Auto::imprimir() const{
-	cout << "\033[1;34m" << "Se atendio el auto, cuya patente es: " + patente +  ". Se le cargaron " << capacidadTanque << " litros." << "\033[0m" << endl;
+	cout << "\033[1;34m" << "Se atendio el auto, cuya patente es: " + patente +  ", de prioridad " << prioridad << ". Se le cargaron " << capacidadTanque << " litros." << "\033[0m" << endl;
 }
 
 Auto::~Auto() {}
 
 std::string Auto::getPatente() const{
 	return patente;
+}
+
+long Auto::getPrioridad() const{
+	return prioridad;
 }
 
 int Auto::llenar(){
@@ -59,6 +63,10 @@ int Auto::llenar(){
 
 int Auto::generarTanqueRandom() const{
 	return numeroAlAzar(CAPACIDAD_MIN,CAPACIDAD_MAX);
+}
+
+long Auto::generarPrioridadRandom() const{
+	return numeroAlAzar(PRIOR_MIN,PRIOR_MAX);
 }
 
 std::string Auto::generarPatenteRandom() const{
@@ -86,7 +94,10 @@ std::string Auto::serializar() const{
 		llen << TRUE;
 	else
 		llen << FALSE;
-	serial += llen.str();
+	serial += llen.str() + SEPARADOR;
+	stringstream pri;
+	pri << prioridad;
+	serial += pri.str() ;
 	return serial;
 }
 
@@ -96,6 +107,7 @@ void Auto::deserializar(const std::string& serial){
 		patente = "ERR-DS";
 		capacidadTanque = 0;
 		lleno = true;
+		prioridad = 0;
 		return;
 	}
 	strcpy(serie,serial.c_str());
@@ -103,6 +115,7 @@ void Auto::deserializar(const std::string& serial){
 	patente = strtok(serie,SEPARADOR);
 	capacidadTanque = atoi(strtok(NULL,SEPARADOR));
 	lleno = atoi(strtok(NULL,SEPARADOR));
+	prioridad = atoi(strtok(NULL,SEPARADOR));
 	free(serie);
 }
 
@@ -110,7 +123,7 @@ Auto::auto_t Auto::obtenerEstructura() const{
 	struct auto_t estructura;
 	estructura.capacidad = capacidadTanque;
 	estructura.estaLleno = lleno;
-	estructura.patente_auto = patente;
+	strcpy(estructura.patente_auto, patente.c_str());
 	estructura.mtype = prioridad;
 	return estructura;
 }
