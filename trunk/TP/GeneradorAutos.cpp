@@ -8,6 +8,7 @@
 #include "GeneradorAutos.h"
 
 #include <unistd.h>
+#include <sstream>
 #include <iostream>
 #include <string>
 #include <stdlib.h>
@@ -16,7 +17,7 @@
 
 using namespace std;
 
-GeneradorAutos::GeneradorAutos(float media, const PipeAutos& canal):
+GeneradorAutos::GeneradorAutos(float media, const ColaAutos& canal):
 	media(media),	numAuto(0),	envios(canal){
 	log.setTipo(Log::ENTRADA_PERSONAJE);
 }
@@ -27,13 +28,6 @@ bool GeneradorAutos::comenzarDia(){
 	inicializarRandom();
 	log.setEscritor("FordMachine");
 	log.escribirEntrada("llamenme Ford. Roque Ford");
-
-	try{
-		envios.setearModo(Pipe::ESCRITURA);
-	}catch(const std::string &e){
-		log.escribirEntrada("No pude setear modo de comunicacion Escritura." + e);
-		return false;
-	}
 
 	try{
 		SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
@@ -54,18 +48,7 @@ bool GeneradorAutos::comenzarDia(){
 	return true;
 }
 
-void GeneradorAutos::cerrarPipe(){
-	try{
-		//cierra su Pipe de generacion
-		envios.cerrar();
-		log.escribirEntrada("Me desadoso del pipe de generacion");
-	}catch(const std::string &e){
-		log.escribirEntrada("No se pudo desadosar de pipe de generacion." + e);
-	}
-}
-
 void GeneradorAutos::destruir(){
-	cerrarPipe();
 	SignalHandler :: destruir ();
 }
 
@@ -76,6 +59,16 @@ void GeneradorAutos::finalizarDia(){
 	cout << "\033[1;31m" << "Generador deja de generar y se cierra" << "\033[0m" << endl;
 
 	log.escribirEntrada("Fin de proceso Generador de Autos");
+}
+
+std::string GeneradorAutos::mensajeCreacion(const Auto& autito){
+	std::string mensaje  = "Se ha generado el auto de patente ";
+	mensaje += autito.getPatente() + " y prioridad ";
+	stringstream ss;
+	ss << autito.getPrioridad();
+	mensaje += ss.str();
+	mensaje += ".";
+	return mensaje;
 }
 
 pid_t GeneradorAutos::generar(){
@@ -97,8 +90,9 @@ pid_t GeneradorAutos::generar(){
 	while (sigint_handler.getGracefulQuit() == 0 and sigpipe_handler.getGracefulQuit() == 0 ) {
 		//crea un auto aleatorio
 		Auto autito;
-		log.escribirEntrada("creado el auto: " + autito.getPatente() + ", numero " , numAuto);
-		cout << "\033[1;31m" << "Se ha generado el auto de patente " + autito.getPatente() + "\033[0m" << endl;
+		std::string mensaje = mensajeCreacion(autito);
+		log.escribirEntrada(mensaje + " Numero: ", numAuto);
+		cout << "\033[1;31m" << mensaje << "\033[0m" << endl;
 
 		if(! envios.escribirAuto(autito)){
 			log.escribirEntrada("se cerro mi lector inesperadamente");

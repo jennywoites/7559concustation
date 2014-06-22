@@ -18,7 +18,7 @@
 #include "constantesArchivos.h"
 
 const std::string EstacionDeServicio::PIPE_ATENCION  = "atencion";
-const std::string EstacionDeServicio::PIPE_GENERACION  = "generacion";
+const std::string EstacionDeServicio::COLA_GENERACION  = "generacion";
 
 
 EstacionDeServicio::EstacionDeServicio(int empleados, int surtidores, int mediaGenAutos, int mediaAdmin): cantEmpleados (empleados),
@@ -68,7 +68,7 @@ bool EstacionDeServicio::crearEmpleados(int tiempo){
 
 		//crea al empleado con su nombre, pipes y semaforo de surtidores
 		try{
-			Empleado e (nombre, generacion, atencion, surtidores, tiempo);
+			Empleado e (nombre, atencion, surtidores, tiempo);
 			log.escribirEntrada("Cree el empleado " + nombre);
 			pidEmpleado = e.atenderAutos(cantSurtidores);
 		}catch(const std::string &e){
@@ -157,9 +157,9 @@ int EstacionDeServicio::abrir(int tiempoCaja){
 	}
 
 	if(generacion.crear(ARCHIVO_GENERACION))
-		log.escribirEntrada("Creo el pipe de generacion de autos.");
+		log.escribirEntrada("Creo la cola de generacion de autos.");
 	else{
-		log.escribirEntrada("No se pudo crear el pipe de generacion");
+		log.escribirEntrada("No se pudo crear la cola de generacion");
 		cerrar();
 		return ERROR;
 	}
@@ -179,8 +179,6 @@ int EstacionDeServicio::abrir(int tiempoCaja){
 	crearGenerador();
 	if(pidGen == 0)
 		return SOY_HIJO;
-
-	cerrarPipe(generacion, PIPE_GENERACION);
 
 	return OK;
 }
