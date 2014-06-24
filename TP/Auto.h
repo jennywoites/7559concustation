@@ -22,7 +22,9 @@ class Auto {
 		static const unsigned int CAR_PRIO = 1; //La prioridad tiene un caracter
 		static const unsigned int CANTIDAD_BOOL = 1;
 		static const unsigned int LARGO_PATENTE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + 1;
-		static const unsigned int LARGO_SERIE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + CAR_TANQUE + CAR_PRIO + CANTIDAD_BOOL + 2; //2: cantidad de separadores
+		static const unsigned int CANT_CAMPOS = 4;
+		static const unsigned int CANT_SEP = CANT_CAMPOS - 1;
+		static const unsigned int LARGO_SERIE = CANTIDAD_LETRAS + CANTIDAD_NUMEROS + CAR_TANQUE + CAR_PRIO + CANTIDAD_BOOL + CANT_SEP;
 
 		static const int CAPACIDAD_MIN = 10;
 		static const int CAPACIDAD_MAX = 90;
