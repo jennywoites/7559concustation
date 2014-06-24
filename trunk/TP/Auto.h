@@ -35,8 +35,8 @@ class Auto {
 
 	public:
 
-		static const int PRIOR_MIN = 1;
-		static const int PRIOR_MAX = 2;
+		static const long PRIOR_MIN = 1;
+		static const long PRIOR_MAX = 2;
 
 		struct auto_t{
 			long mtype;
