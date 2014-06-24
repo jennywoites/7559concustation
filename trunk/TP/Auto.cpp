@@ -98,7 +98,10 @@ std::string Auto::serializar() const{
 		llen << TRUE;
 	else
 		llen << FALSE;
-	serial += llen.str();
+	serial += llen.str() + SEPARADOR;
+	stringstream pri;
+	pri << prioridad;
+	serial += pri.str() ;
 	return serial;
 }
 
@@ -116,11 +119,13 @@ void Auto::deserializar(const std::string& serial){
 	patente = strtok(serie,SEPARADOR);
 	capacidadTanque = atoi(strtok(NULL,SEPARADOR));
 	lleno = atoi(strtok(NULL,SEPARADOR));
+	prioridad = atoi(strtok(NULL,SEPARADOR));
 	free(serie);
 }
 
 Auto::auto_t Auto::obtenerEstructura() const{
 	struct auto_t estructura;
+	memset(&estructura, 0, sizeof(struct auto_t));
 	estructura.capacidad = capacidadTanque;
 	estructura.estaLleno = lleno;
 	strcpy(estructura.patente_auto, patente.c_str());
