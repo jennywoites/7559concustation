@@ -55,6 +55,7 @@ class Auto {
 		std::string getPatente() const;
 
 		long getPrioridad() const;
+		void setPrioridad(long);
 
 		/*Llena el tanque del auto, informando cuanto se lleno. Esto demora un cierto tiempo.*/
 		int llenar();
