@@ -48,6 +48,10 @@ long Auto::getPrioridad() const{
 	return prioridad;
 }
 
+void Auto::setPrioridad(long nueva) {
+	prioridad = nueva;
+}
+
 int Auto::llenar(){
 	if (lleno)
 		return 0;
@@ -94,10 +98,7 @@ std::string Auto::serializar() const{
 		llen << TRUE;
 	else
 		llen << FALSE;
-	serial += llen.str() + SEPARADOR;
-	stringstream pri;
-	pri << prioridad;
-	serial += pri.str() ;
+	serial += llen.str();
 	return serial;
 }
 
@@ -115,7 +116,6 @@ void Auto::deserializar(const std::string& serial){
 	patente = strtok(serie,SEPARADOR);
 	capacidadTanque = atoi(strtok(NULL,SEPARADOR));
 	lleno = atoi(strtok(NULL,SEPARADOR));
-	prioridad = atoi(strtok(NULL,SEPARADOR));
 	free(serie);
 }
 

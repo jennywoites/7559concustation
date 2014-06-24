@@ -30,7 +30,7 @@ bool ColaAutos :: leerAuto ( Auto& autito ) {
 
 	ssize_t leido;
 	try{
-		leido = envio.leer(-1*Auto::PRIOR_MAX, &serie);
+		leido = envio.leer(-1*(Auto::PRIOR_MAX+1), &serie);
 	}catch(const std::string &e){
 		cerr << "No pudo leerse auto desde Cola: " + e << endl;
 		return false;
@@ -40,6 +40,10 @@ bool ColaAutos :: leerAuto ( Auto& autito ) {
 		return false;
 
 	autito.reconstruir(serie);
+
+	if (serie.mtype == Auto::PRIOR_MAX+1)
+		return false;
+
 	return true;
 }
 

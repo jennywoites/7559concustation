@@ -54,6 +54,12 @@ void GeneradorAutos::destruir(){
 
 void GeneradorAutos::finalizarDia(){
 	log.escribirEntrada("Llego la crisis del 30, ya no hay mas trabajo por hacer");
+
+	Auto autito;
+	autito.setPrioridad(Auto::PRIOR_MAX + 1);
+	envios.escribirAuto(autito);
+
+
 	log.escribirEntrada("Cierro el canal de autos");
 	destruir();
 	cout << "\033[1;31m" << "Generador deja de generar y se cierra" << "\033[0m" << endl;

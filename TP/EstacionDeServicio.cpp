@@ -210,7 +210,6 @@ void EstacionDeServicio::finalizarAdministrador(){
 
 void EstacionDeServicio::liberarMediosDeComunicacion(){
 	atencion.liberar();
-	generacion.liberar();
 	surtidores.eliminar();
 }
 
@@ -220,6 +219,7 @@ void EstacionDeServicio::cerrar(){
 	enviarSenial(pidGen, "generador");
 
 	esperarCierre(); //Espero a que la estacion termine de atender los autos que quedaron pendientes
+	generacion.liberar();
 
 	try{
 		liberarMediosDeComunicacion();
