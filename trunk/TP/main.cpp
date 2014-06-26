@@ -41,7 +41,7 @@ void imprimir_ayuda(){
 
 //imprime la version del programa al stdout
 void imprimir_version(){
-	cout << "Primer Proyecto - 75.59 - TPCI" << endl;
+	cout << "Segundo Proyecto - 75.59 - TPCI" << endl;
 	cout << "ConcuStation" << endl;
 	cout << "Primer Cuatrimestre - 2014" << endl;
 	cout << "Grupo:" << endl;
