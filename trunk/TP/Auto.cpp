@@ -28,7 +28,7 @@ Auto::Auto():
 	lleno (false),
 	prioridad(generarPrioridadRandom()){}
 
-Auto::Auto(std::string patente, int capacidad, long priority = PRIOR_MIN):
+Auto::Auto(std::string patente, int capacidad, long priority = PRIOR_MAX):
 	patente(patente),
 	capacidadTanque(capacidad),
 	lleno(false),
